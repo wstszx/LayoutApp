@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
+
+        <ImageView
+            android:id="@+id/iv_setup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/round_blue"
+            android:padding="10dp"
+            android:src="@mipmap/setup"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <!--        <ImageView-->
+        <!--            android:id="@+id/iv_less"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginStart="16dp"-->
+        <!--            android:layout_marginBottom="16dp"-->
+        <!--            android:background="@drawable/round_blue"-->
+        <!--            android:padding="10dp"-->
+        <!--            android:src="@mipmap/less"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent" />-->
+
+        <!--        <SeekBar-->
+        <!--            android:id="@+id/seekBar"-->
+        <!--            android:layout_width="120dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginStart="16dp"-->
+        <!--            android:max="5"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@+id/iv_less"-->
+        <!--            app:layout_constraintStart_toEndOf="@+id/iv_less"-->
+        <!--            app:layout_constraintTop_toTopOf="@+id/iv_less" />-->
+
+        <!--        <ImageView-->
+        <!--            android:id="@+id/iv_add"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginStart="16dp"-->
+        <!--            android:background="@drawable/round_blue"-->
+        <!--            android:padding="10dp"-->
+        <!--            android:src="@mipmap/add"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@id/iv_less"-->
+        <!--            app:layout_constraintStart_toEndOf="@id/seekBar"-->
+        <!--            app:layout_constraintTop_toTopOf="@id/iv_less" />-->
+
+        <ImageView
+            android:id="@+id/iv_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/round_blue"
+            android:padding="10dp"
+            android:src="@mipmap/toggle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/rectangle_white"
+            android:drawableStart="@mipmap/search"
+            android:drawablePadding="16dp"
+            android:hint="请输入编号"
+            android:imeOptions="actionDone"
+            android:inputType="number"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="6dp"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/smart_table"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_pos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="显示起始状态"
+            app:layout_constraintBaseline_toBaselineOf="@id/et_search"
+            app:layout_constraintEnd_toStartOf="@id/et_search" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switch_material"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_pos"
+            app:layout_constraintEnd_toStartOf="@+id/tv_pos"
+            app:layout_constraintTop_toTopOf="@+id/tv_pos" />
+
+
+        <TextView
+            android:id="@+id/tv_stationary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="静止"
+            app:layout_constraintBaseline_toBaselineOf="@id/tv_pos"
+            app:layout_constraintEnd_toStartOf="@id/switch_material" />
+
+        <ImageView
+            android:id="@+id/air_stationary"
+            android:layout_width="20dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="4dp"
+            android:src="@mipmap/air3"
+            app:layout_constraintBottom_toBottomOf="@id/tv_stationary"
+            app:layout_constraintEnd_toStartOf="@id/tv_stationary"
+            app:layout_constraintTop_toTopOf="@id/tv_stationary" />
+
+        <TextView
+            android:id="@+id/tv_spare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="备用"
+            app:layout_constraintBaseline_toBaselineOf="@id/tv_pos"
+            app:layout_constraintEnd_toStartOf="@id/air_stationary" />
+
+        <ImageView
+            android:id="@+id/air_spare"
+            android:layout_width="20dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="4dp"
+            android:src="@mipmap/air2"
+            app:layout_constraintBottom_toBottomOf="@id/tv_stationary"
+            app:layout_constraintEnd_toStartOf="@id/tv_spare"
+            app:layout_constraintTop_toTopOf="@id/tv_stationary" />
+
+        <TextView
+            android:id="@+id/tv_mission"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="任务"
+            app:layout_constraintBaseline_toBaselineOf="@id/tv_pos"
+            app:layout_constraintEnd_toStartOf="@id/air_spare" />
+
+        <ImageView
+            android:id="@+id/air_mission"
+            android:layout_width="20dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="4dp"
+            android:src="@mipmap/air1"
+            app:layout_constraintBottom_toBottomOf="@id/tv_stationary"
+            app:layout_constraintEnd_toStartOf="@id/tv_mission"
+            app:layout_constraintTop_toTopOf="@id/tv_stationary" />
+
+
+        <com.bin.david.form.core.SmartTable
+            android:id="@+id/smart_table"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/et_search">
+
+        </com.bin.david.form.core.SmartTable>
+
+        <com.example.layoutapp.view.ScaleView3
+            android:id="@+id/iv_pic"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="8dp"
+            app:layout_constraintBottom_toTopOf="@id/iv_toggle"
+            app:layout_constraintEnd_toStartOf="@id/smart_table"
+            app:layout_constraintStart_toEndOf="@id/iv_toggle"
+            app:layout_constraintTop_toBottomOf="@id/iv_setup" />
+        <!--                <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView-->
+        <!--                    android:id="@+id/iv_pic"-->
+        <!--                    android:layout_width="0dp"-->
+        <!--                    android:layout_height="0dp"-->
+        <!--                    android:layout_margin="8dp"-->
+        <!--                    app:layout_constraintBottom_toTopOf="@id/iv_less"-->
+        <!--                    app:layout_constraintEnd_toStartOf="@id/smart_table"-->
+        <!--                    app:layout_constraintStart_toEndOf="@id/iv_less"-->
+        <!--                    app:layout_constraintTop_toBottomOf="@id/iv_setup" />-->
+        <!--                <com.example.layoutapp.view.PinchImageView-->
+        <!--                    android:id="@+id/iv_pic"-->
+        <!--                    android:layout_width="0dp"-->
+        <!--                    android:layout_height="0dp"-->
+        <!--                    android:layout_margin="16dp"-->
+        <!--                    android:scaleType="centerCrop"-->
+        <!--                    app:layout_constraintBottom_toTopOf="@id/iv_less"-->
+        <!--                    app:layout_constraintEnd_toStartOf="@id/smart_table"-->
+        <!--                    app:layout_constraintStart_toEndOf="@id/iv_less"-->
+        <!--                    app:layout_constraintTop_toBottomOf="@id/iv_setup"-->
+        <!--                     />-->
+
+        <!--        <ImageView-->
+        <!--            android:id="@+id/iv_pic"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="0dp"-->
+        <!--            android:layout_margin="8dp"-->
+        <!--            app:layout_constraintBottom_toTopOf="@id/iv_less"-->
+        <!--            app:layout_constraintEnd_toStartOf="@id/smart_table"-->
+        <!--            app:layout_constraintStart_toEndOf="@id/iv_less"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/iv_setup" />-->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

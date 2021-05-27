@@ -29,10 +29,15 @@ import com.example.layoutapp.R;
 
 import java.util.ArrayList;
 
-/** Mock data for each of the Notification Style Demos. */
-public final class MockDatabase {
+/**
+ * Mock data for each of the Notification Style Demos.
+ */
+public class MockDatabase {
 
-    public static BigTextStyleReminderAppData getBigTextStyleData() {
+    private static String planDate;
+
+    public static BigTextStyleReminderAppData getBigTextStyleData(String planDate) {
+        MockDatabase.planDate = planDate;
         return BigTextStyleReminderAppData.getInstance();
     }
 
@@ -48,7 +53,9 @@ public final class MockDatabase {
         return MessagingStyleCommsAppData.getInstance(context);
     }
 
-    /** Represents data needed for BigTextStyle Notification. */
+    /**
+     * Represents data needed for BigTextStyle Notification.
+     */
     public static class BigTextStyleReminderAppData extends MockNotificationData {
 
         private static BigTextStyleReminderAppData sInstance = null;
@@ -74,19 +81,18 @@ public final class MockDatabase {
             return sInstance;
         }
 
-        private BigTextStyleReminderAppData() {
+        public BigTextStyleReminderAppData() {
 
             // Standard Notification values:
             // Title for API <16 (4.0 and below) devices.
-            mContentTitle = "新布列:2021-10-11";
+            mContentTitle = "新布列:" + planDate;
             // Content for API <24 (4.0 and below) devices.
-            mContentText = "新布列:2021-10-11";
+            mContentText = "新布列:" + planDate;
             mPriority = NotificationCompat.PRIORITY_DEFAULT;
 
             // BigText Style Notification values:
-            mBigContentTitle = "新布列:2021-10-11";
-            mBigText =
-                    "机场列表";
+            mBigContentTitle = "新布列:" + planDate;
+            mBigText = "机场列表";
             mSummaryText = "下达新任务";
 
             // Notification channel values (for devices targeting 26 and above):
@@ -118,7 +124,9 @@ public final class MockDatabase {
         }
     }
 
-    /** Represents data needed for BigPictureStyle Notification. */
+    /**
+     * Represents data needed for BigPictureStyle Notification.
+     */
     public static class BigPictureStyleSocialAppData extends MockNotificationData {
 
         private static BigPictureStyleSocialAppData sInstance = null;
@@ -160,7 +168,7 @@ public final class MockDatabase {
             mSummaryText = "Like my shot of Earth?";
 
             // This would be possible responses based on the contents of the post.
-            mPossiblePostResponses = new CharSequence[] {"Yes", "No", "Maybe?"};
+            mPossiblePostResponses = new CharSequence[]{"Yes", "No", "Maybe?"};
 
             mParticipants = new ArrayList<>();
             mParticipants.add("Bob Smith");
@@ -202,7 +210,9 @@ public final class MockDatabase {
         }
     }
 
-    /** Represents data needed for InboxStyle Notification. */
+    /**
+     * Represents data needed for InboxStyle Notification.
+     */
     public static class InboxStyleEmailAppData extends MockNotificationData {
 
         private static InboxStyleEmailAppData sInstance = null;
@@ -296,7 +306,9 @@ public final class MockDatabase {
         }
     }
 
-    /** Represents data needed for MessagingStyle Notification. */
+    /**
+     * Represents data needed for MessagingStyle Notification.
+     */
     public static class MessagingStyleCommsAppData extends MockNotificationData {
 
         private static MessagingStyleCommsAppData sInstance = null;
@@ -396,7 +408,7 @@ public final class MockDatabase {
             // Responses based on the last messages of the conversation. You would use
             // Machine Learning to get these (https://developers.google.com/ml-kit/).
             mReplyChoicesBasedOnLastMessages =
-                    new CharSequence[] {"Me too!", "How's the weather?", "You have good eyesight."};
+                    new CharSequence[]{"Me too!", "How's the weather?", "You have good eyesight."};
 
             // Notification channel values (for devices targeting 26 and above):
             mChannelId = "channel_messaging_1";
@@ -443,7 +455,9 @@ public final class MockDatabase {
         }
     }
 
-    /** Represents standard data needed for a Notification. */
+    /**
+     * Represents standard data needed for a Notification.
+     */
     public abstract static class MockNotificationData {
 
         // Standard notification values:

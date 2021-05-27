@@ -126,10 +126,11 @@ class MainActivity : AppCompatActivity() {
                             getPlan(taskList[0].plan_id)
                             isShowPlan = false
                         }
-                        SPUtils.getInstance().put("min_id", taskList.last().id.toString())
+                        val last = taskList.last()
+                        SPUtils.getInstance().put("min_id", last.id.toString())
                         bottomSheetAdapter.data = taskList
                         bottomSheetAdapter.notifyDataSetChanged()
-                        generateBigTextStyleNotification()
+                        generateBigTextStyleNotification(last.plan_date)
                     }
                 }
 
@@ -436,7 +437,7 @@ class MainActivity : AppCompatActivity() {
      * on API level 16 (4.1.x - Jelly Bean) and after, displays BIG_TEXT_STYLE. Otherwise, displays
      * a basic notification.
      */
-    private fun generateBigTextStyleNotification() {
+    private fun generateBigTextStyleNotification(planDate: String) {
 
         // Main steps for building a BIG_TEXT_STYLE notification:
         //      0. Get your data
@@ -448,7 +449,8 @@ class MainActivity : AppCompatActivity() {
 
         // 0. Get your data (everything unique per Notification).
         val bigTextStyleReminderAppData: MockDatabase.BigTextStyleReminderAppData =
-            MockDatabase.getBigTextStyleData()
+            MockDatabase.getBigTextStyleData(planDate)
+
 
         // 1. Create/Retrieve Notification Channel for O and beyond devices (26+).
         val notificationChannelId: String =
@@ -458,7 +460,7 @@ class MainActivity : AppCompatActivity() {
         // 2. Build the BIG_TEXT_STYLE.
         val bigTextStyle =
             NotificationCompat.BigTextStyle() // Overrides ContentText in the big form of the template.
-                .bigText(bigTextStyleReminderAppData.bigText) // Overrides ContentTitle in the big form of the template.
+//                .bigText(bigTextStyleReminderAppData.bigText) // Overrides ContentTitle in the big form of the template.
                 .setBigContentTitle(bigTextStyleReminderAppData.bigContentTitle) // Summary line after the detail section in the big form of the template.
                 // Note: To improve readability, don't overload the user with info. If Summary Text
                 // doesn't add critical information, you should skip it.

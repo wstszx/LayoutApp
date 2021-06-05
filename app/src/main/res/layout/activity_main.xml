@@ -73,7 +73,7 @@
 
         <EditText
             android:id="@+id/et_search"
-            android:layout_width="0dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:background="@mipmap/rectangle_white"
             android:drawableStart="@mipmap/search"
@@ -85,7 +85,6 @@
             android:paddingVertical="6dp"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/smart_table"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -166,7 +165,7 @@
 
         <com.bin.david.form.core.SmartTable
             android:id="@+id/smart_table"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -174,7 +173,7 @@
 
         </com.bin.david.form.core.SmartTable>
 
-        <com.example.layoutapp.view.ScaleView3
+        <com.example.layoutapp.view.ScaleView4
             android:id="@+id/iv_pic"
             android:layout_width="0dp"
             android:layout_height="0dp"

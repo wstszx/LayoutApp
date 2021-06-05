@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 
-public class ScaleView3 extends androidx.appcompat.widget.AppCompatImageView implements View.OnTouchListener {
+public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView implements View.OnTouchListener {
 //    private final String path = "M345.768,8.462l-16.779,0l-1.798,2.308l-64.12,0l0,-7.692l-14.981,0l0,7.692l-14.382,0l-1.199,-0.769l-1.199,0l-1.198,0.769l-116.854,0l0,0.769l-10.787,0l-11.985,54.615l-4.794,-10l-8.989,0.769l-2.397,10.769l-73.708,9.231l0.599,3.077l-1.199,0l12.584,115.385l1.798,0.769l1.199,3.846l16.779,-3.077l14.981,21.538l72.509,7.692l0,6.923l1.199,0l0,6.154l6.592,0l0,5.385l61.723,0l0,0.769l30.562,0.769l1.199,3.846l7.191,0l1.199,-4.615l50.936,0l0.599,-0.769l25.169,0l1.198,2.308l6.592,0l1.198,-2.308l61.723,0l0.599,0.769l47.94,0l0,-0.769l62.322,0l0,0.769l66.517,0l2.996,-2.308l2.996,3.846l11.985,-10l5.393,-12.308l33.558,-30l13.783,0l4.195,-7.692l11.985,-0.769l4.195,5.385l104.869,-12.308l3.595,-3.846l25.768,-3.077l0,6.154l16.18,-2.308l-1.199,-5.385l2.397,-2.308l2.996,0l0,-80.769l-2.397,0l-2.397,-2.308l-40.15,-3.077l-4.794,-5.385l-75.506,-8.462l-38.352,0l-4.794,-3.846l-22.771,-0.769l-64.12,-60.769l-5.393,0l0,-3.077l-67.715,0.769l-49.738,12.308l-8.989,0l-0.599,-2.308l-20.375,0l0,-5.385l-2.397,0l0,7.692l-20.974,0l-0.599,0l-1.199,-2.308l-19.176,0z";
 
 //    private final String path = "M7.52,21.48C4.25,19.94 1.91,16.76 1.55,13L0.05,13C0.56,19.16 5.71,24 12,24l0.66,-0.03 -3.81,-3.81 -1.33,1.32zM8.41,14.96c-0.19,0 -0.37,-0.03 -0.52,-0.08 -0.16,-0.06 -0.29,-0.13 -0.4,-0.24 -0.11,-0.1 -0.2,-0.22 -0.26,-0.37 -0.06,-0.14 -0.09,-0.3 -0.09,-0.47h-1.3c0,0.36 0.07,0.68 0.21,0.95 0.14,0.27 0.33,0.5 0.56,0.69 0.24,0.18 0.51,0.32 0.82,0.41 0.3,0.1 0.62,0.15 0.96,0.15 0.37,0 0.72,-0.05 1.03,-0.15 0.32,-0.1 0.6,-0.25 0.83,-0.44s0.42,-0.43 0.55,-0.72c0.13,-0.29 0.2,-0.61 0.2,-0.97 0,-0.19 -0.02,-0.38 -0.07,-0.56 -0.05,-0.18 -0.12,-0.35 -0.23,-0.51 -0.1,-0.16 -0.24,-0.3 -0.4,-0.43 -0.17,-0.13 -0.37,-0.23 -0.61,-0.31 0.2,-0.09 0.37,-0.2 0.52,-0.33 0.15,-0.13 0.27,-0.27 0.37,-0.42 0.1,-0.15 0.17,-0.3 0.22,-0.46 0.05,-0.16 0.07,-0.32 0.07,-0.48 0,-0.36 -0.06,-0.68 -0.18,-0.96 -0.12,-0.28 -0.29,-0.51 -0.51,-0.69 -0.2,-0.19 -0.47,-0.33 -0.77,-0.43C9.1,8.05 8.76,8 8.39,8c-0.36,0 -0.69,0.05 -1,0.16 -0.3,0.11 -0.57,0.26 -0.79,0.45 -0.21,0.19 -0.38,0.41 -0.51,0.67 -0.12,0.26 -0.18,0.54 -0.18,0.85h1.3c0,-0.17 0.03,-0.32 0.09,-0.45s0.14,-0.25 0.25,-0.34c0.11,-0.09 0.23,-0.17 0.38,-0.22 0.15,-0.05 0.3,-0.08 0.48,-0.08 0.4,0 0.7,0.1 0.89,0.31 0.19,0.2 0.29,0.49 0.29,0.86 0,0.18 -0.03,0.34 -0.08,0.49 -0.05,0.15 -0.14,0.27 -0.25,0.37 -0.11,0.1 -0.25,0.18 -0.41,0.24 -0.16,0.06 -0.36,0.09 -0.58,0.09L7.5,11.4v1.03h0.77c0.22,0 0.42,0.02 0.6,0.07s0.33,0.13 0.45,0.23c0.12,0.11 0.22,0.24 0.29,0.4 0.07,0.16 0.1,0.35 0.1,0.57 0,0.41 -0.12,0.72 -0.35,0.93 -0.23,0.23 -0.55,0.33 -0.95,0.33zM16.96,9.04c-0.32,-0.33 -0.7,-0.59 -1.14,-0.77 -0.43,-0.18 -0.92,-0.27 -1.46,-0.27L12,8v8h2.3c0.55,0 1.06,-0.09 1.51,-0.27 0.45,-0.18 0.84,-0.43 1.16,-0.76 0.32,-0.33 0.57,-0.73 0.74,-1.19 0.17,-0.47 0.26,-0.99 0.26,-1.57v-0.4c0,-0.58 -0.09,-1.1 -0.26,-1.57 -0.18,-0.47 -0.43,-0.87 -0.75,-1.2zM16.57,12.2c0,0.42 -0.05,0.79 -0.14,1.13 -0.1,0.33 -0.24,0.62 -0.43,0.85 -0.19,0.23 -0.43,0.41 -0.71,0.53 -0.29,0.12 -0.62,0.18 -0.99,0.18h-0.91L13.39,9.12h0.97c0.72,0 1.27,0.23 1.64,0.69 0.38,0.46 0.57,1.12 0.57,1.99v0.4zM12,0l-0.66,0.03 3.81,3.81 1.33,-1.33c3.27,1.55 5.61,4.72 5.96,8.48h1.5C23.44,4.84 18.29,0 12,0z";
@@ -93,6 +93,10 @@ public class ScaleView3 extends androidx.appcompat.widget.AppCompatImageView imp
     private float doubleFingerScrole = 0;
     //上次触碰的手指数量
     private int lastFingerNum = 0;
+    private float maxX;
+    private float minX;
+    private float maxY;
+    private float minY;
 
     //缩放的三个状态
     public class ZoomMode {
@@ -102,15 +106,15 @@ public class ScaleView3 extends androidx.appcompat.widget.AppCompatImageView imp
     }
 
 
-    public ScaleView3(Context context) {
+    public ScaleView4(Context context) {
         this(context, null);
     }
 
-    public ScaleView3(Context context, @Nullable AttributeSet attrs) {
+    public ScaleView4(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ScaleView3(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ScaleView4(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
@@ -132,104 +136,48 @@ public class ScaleView3 extends androidx.appcompat.widget.AppCompatImageView imp
         currentMatrix = new Matrix();
 
         deckOutline = new Path();
-        deckOutline.moveTo(13461.5730337079f, 15580.5243445693f);
-        deckOutline.lineTo(13710.861423221f, 14583.3707865169f);
-        deckOutline.lineTo(13212.2846441948f, 14583.3707865169f);
-        deckOutline.lineTo(18447.34082397f, -22809.8876404494f);
-        deckOutline.lineTo(19195.2059925094f, -23059.1760299626f);
-        deckOutline.lineTo(19693.7827715356f, -24305.6179775281f);
-        deckOutline.lineTo(26673.8576779026f, -23308.4644194757f);
-        deckOutline.lineTo(32906.0674157303f, -30288.5393258427f);
-        deckOutline.lineTo(63069.9625468165f, -32781.4232209738f);
-        deckOutline.lineTo(63069.9625468165f, -35025.0187265918f);
-        deckOutline.lineTo(63568.5393258427f, -35025.0187265918f);
-        deckOutline.lineTo(63568.5393258427f, -37019.3258426966f);
-        deckOutline.lineTo(66310.7116104869f, -37019.3258426966f);
-        deckOutline.lineTo(66310.7116104869f, -38764.3445692884f);
-        deckOutline.lineTo(91987.4157303371f, -38764.3445692884f);
-        deckOutline.lineTo(91987.4157303371f, -39013.6329588015f);
-        deckOutline.lineTo(104701.123595506f, -39262.9213483146f);
-        deckOutline.lineTo(105199.700374532f, -40509.3632958802f);
-        deckOutline.lineTo(108191.161048689f, -40509.3632958802f);
-        deckOutline.lineTo(108689.737827715f, -39013.6329588015f);
-        deckOutline.lineTo(129879.25093633f, -39013.6329588015f);
-        deckOutline.lineTo(130128.539325843f, -38764.3445692884f);
-        deckOutline.lineTo(140598.651685393f, -38764.3445692884f);
-        deckOutline.lineTo(141097.228464419f, -39512.2097378277f);
-        deckOutline.lineTo(143839.400749064f, -39512.2097378277f);
-        deckOutline.lineTo(144337.97752809f, -38764.3445692884f);
-        deckOutline.lineTo(170014.68164794f, -38764.3445692884f);
-        deckOutline.lineTo(170263.970037453f, -39013.6329588015f);
-        deckOutline.lineTo(190207.041198502f, -39013.6329588015f);
-        deckOutline.lineTo(190207.041198502f, -38764.3445692884f);
-        deckOutline.lineTo(216133.033707865f, -38764.3445692884f);
-        deckOutline.lineTo(216133.033707865f, -39013.6329588015f);
-        deckOutline.lineTo(243804.04494382f, -39013.6329588015f);
-        deckOutline.lineTo(245050.486891386f, -38265.7677902622f);
-        deckOutline.lineTo(246296.928838951f, -39512.2097378277f);
-        deckOutline.lineTo(251282.696629213f, -36271.4606741573f);
-        deckOutline.lineTo(253526.292134831f, -32282.8464419476f);
-        deckOutline.lineTo(267486.441947566f, -22560.5992509363f);
-        deckOutline.lineTo(273220.074906367f, -22560.5992509363f);
-        deckOutline.lineTo(274965.093632959f, -20067.7153558052f);
-        deckOutline.lineTo(279950.861423221f, -19818.4269662921f);
-        deckOutline.lineTo(281695.880149813f, -21563.4456928839f);
-        deckOutline.lineTo(325321.348314607f, -17574.8314606742f);
-        deckOutline.lineTo(326817.078651685f, -16328.3895131086f);
-        deckOutline.lineTo(337536.479400749f, -15331.2359550562f);
-        deckOutline.lineTo(337536.479400749f, -17325.5430711611f);
-        deckOutline.lineTo(344267.265917603f, -16577.6779026217f);
-        deckOutline.lineTo(343768.689138577f, -14832.6591760299f);
-        deckOutline.lineTo(344765.842696629f, -14084.7940074906f);
-        deckOutline.lineTo(346012.284644195f, -14084.7940074906f);
-        deckOutline.lineTo(346012.284644195f, 12090.4868913858f);
-        deckOutline.lineTo(345015.131086142f, 12090.4868913858f);
-        deckOutline.lineTo(344017.97752809f, 12838.3520599251f);
-        deckOutline.lineTo(327315.655430712f, 13835.5056179775f);
-        deckOutline.lineTo(325321.348314607f, 15580.5243445693f);
-        deckOutline.lineTo(293911.011235955f, 18322.6966292135f);
-        deckOutline.lineTo(277956.554307116f, 18322.6966292135f);
-        deckOutline.lineTo(275962.247191011f, 19569.138576779f);
-        deckOutline.lineTo(266489.288389513f, 19818.4269662921f);
-        deckOutline.lineTo(239815.430711611f, 39512.2097378277f);
-        deckOutline.lineTo(237571.835205993f, 39512.2097378277f);
-        deckOutline.lineTo(237571.835205993f, 40509.3632958801f);
-        deckOutline.lineTo(209402.247191011f, 40260.074906367f);
-        deckOutline.lineTo(188711.310861423f, 36271.4606741573f);
-        deckOutline.lineTo(184971.985018727f, 36271.4606741573f);
-        deckOutline.lineTo(184722.696629213f, 37019.3258426966f);
-        deckOutline.lineTo(176246.891385768f, 37019.3258426966f);
-        deckOutline.lineTo(176246.891385768f, 38764.3445692884f);
-        deckOutline.lineTo(175249.737827715f, 38764.3445692884f);
-        deckOutline.lineTo(175249.737827715f, 36271.4606741573f);
-        deckOutline.lineTo(166524.644194757f, 36271.4606741573f);
-        deckOutline.lineTo(166275.355805243f, 36271.4606741573f);
-        deckOutline.lineTo(165776.779026217f, 37019.3258426966f);
-        deckOutline.lineTo(157799.550561798f, 37019.3258426966f);
-        deckOutline.lineTo(157051.685393258f, 37767.191011236f);
-        deckOutline.lineTo(150071.610486891f, 37767.191011236f);
-        deckOutline.lineTo(149323.745318352f, 37019.3258426966f);
-        deckOutline.lineTo(122649.887640449f, 37019.3258426966f);
-        deckOutline.lineTo(122649.887640449f, 39512.2097378277f);
-        deckOutline.lineTo(116417.677902622f, 39512.2097378277f);
-        deckOutline.lineTo(116417.677902622f, 37019.3258426966f);
-        deckOutline.lineTo(110434.756554307f, 37019.3258426966f);
-        deckOutline.lineTo(109936.179775281f, 37268.6142322097f);
-        deckOutline.lineTo(109437.602996255f, 37268.6142322097f);
-        deckOutline.lineTo(108939.026217228f, 37019.3258426966f);
-        deckOutline.lineTo(60327.7902621723f, 37019.3258426966f);
-        deckOutline.lineTo(60327.7902621723f, 36770.0374531835f);
-        deckOutline.lineTo(55840.5992509363f, 36770.0374531835f);
-        deckOutline.lineTo(50854.8314606742f, 19070.5617977528f);
-        deckOutline.lineTo(48860.5243445693f, 22311.3108614232f);
-        deckOutline.lineTo(45121.1985018727f, 22062.0224719101f);
-        deckOutline.lineTo(44124.0449438202f, 18571.9850187266f);
+        deckOutline.moveTo(1254232.4181f, -565097.1457f);
+        deckOutline.lineTo(1286039.0393f, -562697.0784f);
+        deckOutline.lineTo(1286039.0393f, -557597.0784f);
+        deckOutline.lineTo(1286839.0393f, -556797.0784f);
+        deckOutline.lineTo(1290339.0393f, -556797.0784f);
+        deckOutline.lineTo(1296940.1657f, -556097.0864f);
+        deckOutline.lineTo(1297689.0393f, -556097.0864f);
+        deckOutline.lineTo(1297689.0393f, -552056.6517f);
+        deckOutline.lineTo(1298539.0104f, -551952.2884f);
+        deckOutline.lineTo(1298539.0393f, -551097.0784f);
+        deckOutline.lineTo(1299239.0393f, -550097.0784f);
+        deckOutline.lineTo(1378539.0393f, -550097.0784f);
+        deckOutline.lineTo(1378539.0393f, -547497.0784f);
+        deckOutline.lineTo(1379289.0393f, -547497.0784f);
+        deckOutline.lineTo(1379289.0393f, -543997.0784f);
+        deckOutline.lineTo(1383552.2039f, -543997.0784f);
+        deckOutline.lineTo(1384289.0393f, -547497.0784f);
+        deckOutline.lineTo(1385539.0393f, -547496.8832f);
+        deckOutline.lineTo(1385539.0393f, -550097.0784f);
+        deckOutline.lineTo(1408539.0703f, -550097.0784f);
+        deckOutline.lineTo(1408891.4117f, -549227.7047f);
+        deckOutline.lineTo(1424467.0381f, -546161.2537f);
+        deckOutline.lineTo(1450847.0592f, -546161.2537f);
+        deckOutline.lineTo(1463129.5192f, -567870.4485f);
+        deckOutline.lineTo(1560629.0393f, -576241.8312f);
+        deckOutline.lineTo(1560629.0393f, -594137.0784f);
+        deckOutline.lineTo(1472539.0393f, -601595.5584f);
+        deckOutline.lineTo(1472539.0393f, -602664.3384f);
+        deckOutline.lineTo(1472539.0393f, -604597.0784f);
+        deckOutline.lineTo(1467431.0302f, -611892.0714f);
+        deckOutline.lineTo(1445446.6096f, -613654.3675f);
+        deckOutline.lineTo(1415200.2206f, -614837.1065f);
+        deckOutline.lineTo(1336312.9217f, -615947.0784f);
+        deckOutline.lineTo(1334941.7895f, -612903.3409f);
+        deckOutline.lineTo(1259144.7305f, -605097.0784f);
+        deckOutline.lineTo(1254232.4181f, -565097.1457f);
         deckOutline.close();
 
-        float maxX = 346012.284644195f;
-        float minX = 13212.2846441948f;
-        float maxY = 40509.3632958801f;
-        float minY = -40509.3632958802f;
+        maxX = 1560629.0393f;
+        minX = 1254232.4181f;
+        maxY = -543997.0784f;
+        minY = -615947.0784f;
 
 //        甲板宽高
         baseWidth = (maxX - minX);
@@ -652,11 +600,11 @@ public class ScaleView3 extends androidx.appcompat.widget.AppCompatImageView imp
             matrix.setScale(this.currentScale, this.currentScale);
             matrix.postRotate(plan.getAngle());
 //            位移到开始或结束坐标位置
-            if (isChecked) {
-                matrix.postTranslate(plan.getCox() * currentScale, plan.getCoy() * currentScale);
+            if (!isChecked) {
+                matrix.postTranslate(plan.getCox() * currentScale - minX * currentScale + left, plan.getCoy() * currentScale - minY * currentScale + top);
 //                matrix.postTranslate(planList.get(i).getCox() * currentScale + left, planList.get(i).getCoy() * currentScale + top);
             } else {
-                matrix.postTranslate(plan.getPlancox() * currentScale, plan.getPlancoy() * currentScale);
+                matrix.postTranslate(plan.getPlancox() * currentScale - minX * currentScale + left, plan.getPlancoy() * currentScale - minY * currentScale + top);
 //                matrix.postTranslate(planList.get(i).getPlancox() * currentScale + left, planList.get(i).getPlancoy() * currentScale + top);
             }
             plan.setMatrix(matrix);

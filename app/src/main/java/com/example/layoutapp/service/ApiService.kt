@@ -2,12 +2,13 @@ package com.example.layoutapp.service
 
 import com.blankj.utilcode.util.SPUtils
 import com.example.layoutapp.bean.Plan
+import com.example.layoutapp.bean.Station
 import com.example.layoutapp.bean.Task
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -31,6 +32,13 @@ interface ApiService {
         @Query("id") planId: String,
     ): Call<ArrayList<Plan>?>
 
+
+    //    获取站位信息
+    @GET("/Station")
+    suspend fun getStation(
+        @Query("stano") stano: String?,
+    ): Station
+
     companion object {
         fun create(): ApiService {
             val logger =
@@ -40,12 +48,13 @@ interface ApiService {
                 .addInterceptor(logger)
                 .build()
 
+//            val urlStr = SPUtils.getInstance().getString("url", "http://192.168.101.137:8087")
             val urlStr = SPUtils.getInstance().getString("url", "http://www.wstszx.com")
             return Retrofit.Builder()
                 .baseUrl(urlStr)
                 .client(client)
-                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(CoroutineCallAdapterFactory())
                 .build()
                 .create(ApiService::class.java)
         }

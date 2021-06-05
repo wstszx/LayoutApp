@@ -23,10 +23,7 @@ import androidx.recyclerview.widget.LinearSnapHelper
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
-import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.StringUtils
-import com.blankj.utilcode.util.TimeUtils
-import com.blankj.utilcode.util.ToastUtils
+import com.blankj.utilcode.util.*
 import com.example.layoutapp.adapter.BottomSheetAdapter
 import com.example.layoutapp.bean.Plan
 import com.example.layoutapp.bean.Table
@@ -37,9 +34,9 @@ import com.example.layoutapp.service.ApiService
 import com.example.layoutapp.service.BigTextIntentService
 import com.example.layoutapp.utils.MockDatabase
 import com.example.layoutapp.utils.NotificationUtil
-import com.example.layoutapp.view.ScaleView3
+import com.example.layoutapp.view.ScaleView4
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import retrofit2.Call
+import kotlinx.coroutines.*
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
@@ -51,7 +48,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomSheetDialog: BottomSheetDialog
     lateinit var bottomSheetAdapter: BottomSheetAdapter
     lateinit var view: View
-    private lateinit var ivPic: ScaleView3
+    private lateinit var ivPic: ScaleView4
     private val a = arrayOf("top", "com.cn", "com", "net", "cn", "cc", "gov", "cn", "hk");
     private lateinit var mSourceData: ArrayList<Table>
     private lateinit var mFilterData: ArrayList<Table>
@@ -88,7 +85,7 @@ class MainActivity : AppCompatActivity() {
                 ApiService.create().getTaskByDate(nowDate)
                     .enqueue(object : Callback<ArrayList<Task>> {
                         override fun onResponse(
-                            call: Call<ArrayList<Task>>,
+                            call: retrofit2.Call<ArrayList<Task>>,
                             response: Response<ArrayList<Task>>
                         ) {
                             val taskList: ArrayList<Task>? = response.body()
@@ -101,7 +98,10 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
 
-                        override fun onFailure(call: Call<ArrayList<Task>>, t: Throwable) {
+                        override fun onFailure(
+                            call: retrofit2.Call<ArrayList<Task>>,
+                            t: Throwable
+                        ) {
 
                         }
                     })
@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity() {
         ApiService.create().getTaskById(minId)
             .enqueue(object : Callback<ArrayList<Task>?> {
                 override fun onResponse(
-                    call: Call<ArrayList<Task>?>,
+                    call: retrofit2.Call<ArrayList<Task>?>,
                     response: Response<ArrayList<Task>?>
                 ) {
                     val taskList: ArrayList<Task>? = response.body()
@@ -134,7 +134,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                override fun onFailure(call: Call<ArrayList<Task>?>, t: Throwable) {
+                override fun onFailure(call: retrofit2.Call<ArrayList<Task>?>, t: Throwable) {
 
                 }
             })
@@ -318,7 +318,7 @@ class MainActivity : AppCompatActivity() {
         ApiService.create().getPlan(planId)
             .enqueue(object : Callback<ArrayList<Plan>?> {
                 override fun onResponse(
-                    call: Call<ArrayList<Plan>?>,
+                    call: retrofit2.Call<ArrayList<Plan>?>,
                     response: Response<ArrayList<Plan>?>
                 ) {
                     if (response.body() != null) {
@@ -327,7 +327,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                override fun onFailure(call: Call<ArrayList<Plan>?>, t: Throwable) {
+                override fun onFailure(call: retrofit2.Call<ArrayList<Plan>?>, t: Throwable) {
 
                 }
             })
@@ -363,19 +363,69 @@ class MainActivity : AppCompatActivity() {
     private fun initTable(planList: ArrayList<Plan>?) {
         mSourceData = arrayListOf()
         if (planList != null && planList.size > 0) {
-            for (plan in planList) {
-                val table = Table(plan.goodno, plan.stano, plan.planstano)
-                mSourceData.add(table)
+            setPosition(planList, mSourceData)
+        }
+    }
+
+    private fun setPosition(
+        planList: java.util.ArrayList<Plan>,
+        mSourceData: ArrayList<Table>
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            try {
+
+                for (plan in planList) {
+                    val table = Table(plan.goodno, plan.stano, plan.planstano)
+                    mSourceData.add(table)
+                    withContext(Dispatchers.IO) {
+                        val station = ApiService.create().getStation(plan.stano)
+                        plan.cox = station.cox
+                        plan.coy = station.coy
+                        plan.angle = station.angle
+                        Log.d(
+                            "may",
+                            "plan.cox: ${plan.cox}plan.coy: ${plan.coy}plan.angle: ${plan.angle}"
+                        )
+                    }
+
+
+                    withContext(Dispatchers.IO) {
+                        val planStation = ApiService.create().getStation(plan.planstano)
+                        plan.plancox = planStation.cox
+                        plan.plancoy = planStation.coy
+                        plan.planangle = planStation.angle
+                        Log.d(
+                            "may",
+                            "plan.plancox: ${plan.plancox}plan.plancoy: ${plan.plancoy}plan.planangle: ${plan.planangle}"
+                        )
+                    }
+
+//                    Log.d("MainAcitivity", "setPosition: $plan.cox")
+                }
+//                for (plan in planList) {
+//                    Log.d(
+//                        "may===",
+//                        "plan.cox: ${plan.cox}plan.coy: ${plan.coy}plan.angle: ${plan.angle}"
+//                    )
+//                    Log.d(
+//                        "may===",
+//                        "plan.plancox: ${plan.plancox}plan.plancoy: ${plan.plancoy}plan.planangle: ${plan.planangle}"
+//                    )
+//                }
+                Log.d("may===", "isMainThread=" + ThreadUtils.isMainThread())
+
+            } catch (e: Exception) {
+                ToastUtils.showShort("获取站位信息失败")
             }
             ivPic.drawAir(planList, false)
+            smartTable.setData(mSourceData as List<Any>?)
+            smartTable.setZoom(false)
+            val config = smartTable.config
+            config.isShowXSequence = false
+            config.isShowYSequence = false
+            config.isShowTableTitle = false
+            config.horizontalPadding = 0
         }
-        smartTable.setData(mSourceData as List<Any>?)
-        smartTable.setZoom(false)
-        val config = smartTable.config
-        config.isShowXSequence = false
-        config.isShowYSequence = false
-        config.isShowTableTitle = false
-        config.horizontalPadding = 0
 
     }
 

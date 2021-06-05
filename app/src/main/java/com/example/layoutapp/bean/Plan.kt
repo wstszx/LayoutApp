@@ -17,7 +17,7 @@ data class Plan(
     var layoutid: Int? = null,
     var cox: Float = 0.0f,
     var plandate: String? = null,
-    var planstano: Any? = null,
+    var planstano: String? = null,
     var historyid: String? = null,
     var planorder: Any? = null,
     var angle: Float = 0.0f,

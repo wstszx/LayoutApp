@@ -44,6 +44,7 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView imp
     public Matrix currentMatrix = new Matrix();
     public float currentRotateDegrees = 1.0f;
     public float currentScale = 1.0f;
+    public float realCurrentScale = 1.0f;
     public float baseWidth;
     public float baseHeight;
     public float baseCenterX;
@@ -97,6 +98,12 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView imp
     private float minX;
     private float maxY;
     private float minY;
+    private float realBaseWidth;
+    private float realBaseHeight;
+    private float realBaseCenterX;
+    private float realBaseCenterY;
+    private float realDx;
+    private float realDy;
 
     //缩放的三个状态
     public class ZoomMode {
@@ -179,12 +186,28 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView imp
         maxY = -543997.0784f;
         minY = -615947.0784f;
 
+
 //        甲板宽高
         baseWidth = (maxX - minX);
         baseHeight = (maxY - minY);
 //算出甲板中心点坐标
         baseCenterX = (maxX + minX) / 2;
         baseCenterY = (maxY + minY) / 2;
+
+        //        真实轮廓大小
+        float realMaxX = 159090f;
+        float realMinX = -147306f;
+        float realMaxY = 41100f;
+        float realMinY = -33053f;
+
+//        真实甲板宽高
+        realBaseWidth = realMaxX - realMinX;
+        realBaseHeight = realMaxY - realMinY;
+
+        //真实甲板中心点坐标
+        realBaseCenterX = (realMaxX + realMinX) / 2;
+        realBaseCenterY = (realMaxY + realMinY) / 2;
+
 
 //飞机轮廓
         airOutline = new Path();
@@ -239,16 +262,23 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView imp
 
         if (ratioT > ratioScreen) {
             this.currentScale = width / baseWidth;
+            realCurrentScale = width / realBaseWidth;
+            float testScale = width / (realBaseWidth);
             bitmapOriginPoint.x = 0;
             bitmapOriginPoint.y = viewSize.y / 2 - currentScale * baseHeight / 2;
             Log.d("ScaleViewSize", "bitmapOriginPoint.x : " + bitmapOriginPoint.x + ", bitmapOriginPoint.y : " + bitmapOriginPoint.y);
         } else {
             this.currentScale = height / baseHeight;
+            realCurrentScale = height / realBaseHeight;
             bitmapOriginPoint.x = viewSize.x / 2 - currentScale * baseWidth / 2;
             bitmapOriginPoint.y = 0;
         }
         float dx = (width / 2f - this.currentScale * baseCenterX);
         float dy = (height / 2f - this.currentScale * baseCenterY);
+
+
+        realDx = (width / 2f - this.realCurrentScale * realBaseCenterX);
+        realDy = (height / 2f - this.realCurrentScale * realBaseCenterY);
         Log.d("ScaleView", "onMeasure: dx:" + dx + "dy:" + dy);
 
         this.currentMatrix.setScale(this.currentScale, this.currentScale);
@@ -287,14 +317,14 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView imp
 //            this.currentMatrix.postTranslate(left, top);
 //            isFirstDraw = false;
 //        }
+        canvas.save();
         canvas.concat(this.currentMatrix);
         canvas.drawPath(deckOutline, deskPaint);
-//        canvas.save();
 
 
         if (planList != null && planList.size() > 0) {
             for (Plan plan : planList) {
-//                canvas.restore();
+                canvas.restore();
                 if (plan.getAlternative() == 0) {
                     airPaint.setColor(Color.BLUE);
                 } else if (plan.getAlternative() == 1) {
@@ -302,7 +332,7 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView imp
                 } else {
                     airPaint.setColor(Color.BLACK);
                 }
-                canvas.setMatrix(plan.getMatrix());
+                canvas.concat(plan.getMatrix());
                 canvas.drawPath(airOutline, airPaint);
             }
         }
@@ -597,15 +627,13 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView imp
         for (int i = 0; i < planList.size(); i++) {
             Plan plan = planList.get(i);
             Matrix matrix = new Matrix();
-            matrix.setScale(this.currentScale, this.currentScale);
+            matrix.setScale(this.realCurrentScale, this.realCurrentScale);
             matrix.postRotate(plan.getAngle());
 //            位移到开始或结束坐标位置
             if (!isChecked) {
-                matrix.postTranslate(plan.getCox() * currentScale - minX * currentScale + left, plan.getCoy() * currentScale - minY * currentScale + top);
-//                matrix.postTranslate(planList.get(i).getCox() * currentScale + left, planList.get(i).getCoy() * currentScale + top);
+                matrix.postTranslate(realDx + plan.getCox() * realCurrentScale + realBaseCenterX * realCurrentScale, realDy + plan.getCoy() * realCurrentScale + realBaseCenterY * realCurrentScale);
             } else {
-                matrix.postTranslate(plan.getPlancox() * currentScale - minX * currentScale + left, plan.getPlancoy() * currentScale - minY * currentScale + top);
-//                matrix.postTranslate(planList.get(i).getPlancox() * currentScale + left, planList.get(i).getPlancoy() * currentScale + top);
+                matrix.postTranslate(realDx + plan.getPlancox() * realCurrentScale + realBaseCenterX * realCurrentScale, realDy + plan.getPlancoy() * realCurrentScale + realBaseCenterY * realCurrentScale);
             }
             plan.setMatrix(matrix);
         }

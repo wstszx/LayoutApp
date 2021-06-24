@@ -37,6 +37,7 @@ import com.example.layoutapp.utils.MockDatabase
 import com.example.layoutapp.utils.NotificationUtil
 import com.example.layoutapp.view.ScaleView4
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.switchmaterial.SwitchMaterial
 import kotlinx.coroutines.*
 import retrofit2.Callback
 import retrofit2.Response
@@ -49,6 +50,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomSheetDialog: BottomSheetDialog
     lateinit var bottomSheetAdapter: BottomSheetAdapter
     lateinit var view: View
+    private lateinit var switchMaterial: SwitchMaterial
     private lateinit var ivPic: ScaleView4
     private lateinit var tvPos: TextView
     private val a = arrayOf("top", "com.cn", "com", "net", "cn", "cc", "gov", "cn", "hk");
@@ -62,6 +64,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var pollingTask: PollingTask
     private lateinit var notifyReceiver: NotifyReceiver
     private lateinit var min_id: String
+    private lateinit var planId: String
     private var isShowPlan: Boolean = true
 
 
@@ -76,7 +79,7 @@ class MainActivity : AppCompatActivity() {
 
         timer = Timer()
         pollingTask = PollingTask()
-        timer.schedule(pollingTask, 0, 5000 * 1000)
+        timer.schedule(pollingTask, 0, 50 * 1000)
     }
 
     inner class PollingTask : TimerTask() {
@@ -129,10 +132,11 @@ class MainActivity : AppCompatActivity() {
                             isShowPlan = false
                         }
                         val last = taskList.last()
+                        planId = last.plan_id
                         SPUtils.getInstance().put("min_id", last.id.toString())
                         bottomSheetAdapter.data = taskList
                         bottomSheetAdapter.notifyDataSetChanged()
-                        generateBigTextStyleNotification(last.plan_date)
+                        generateBigTextStyleNotification(last)
                     }
                 }
 
@@ -195,7 +199,7 @@ class MainActivity : AppCompatActivity() {
 //        ivPic.setBackgroundResource(R.drawable.ic_desk_test)
 
         smartTable = activityMainBinding.smartTable
-        val switchMaterial = activityMainBinding.switchMaterial
+        switchMaterial = activityMainBinding.switchMaterial
         activityMainBinding.ivSetup.setOnClickListener { popSetupDialog() }
 
         notifyReceiver = NotifyReceiver()
@@ -495,7 +499,7 @@ class MainActivity : AppCompatActivity() {
      * on API level 16 (4.1.x - Jelly Bean) and after, displays BIG_TEXT_STYLE. Otherwise, displays
      * a basic notification.
      */
-    private fun generateBigTextStyleNotification(planDate: String) {
+    private fun generateBigTextStyleNotification(task: Task) {
 
         // Main steps for building a BIG_TEXT_STYLE notification:
         //      0. Get your data
@@ -507,7 +511,7 @@ class MainActivity : AppCompatActivity() {
 
         // 0. Get your data (everything unique per Notification).
         val bigTextStyleReminderAppData: MockDatabase.BigTextStyleReminderAppData =
-            MockDatabase.getBigTextStyleData(planDate)
+            MockDatabase.getBigTextStyleData(task.plan_date)
 
 
         // 1. Create/Retrieve Notification Channel for O and beyond devices (26+).
@@ -641,7 +645,8 @@ class MainActivity : AppCompatActivity() {
                 "FILE" -> {
                     min_id = SPUtils.getInstance().getString("min_id", "")
                     if (!StringUtils.isEmpty(min_id)) {
-//                        getPlan(min_id)
+                        getPlan(planId)
+                        switchMaterial.isChecked = false
                         if (bottomSheetAdapter.data.size > 0) {
                             for (index in bottomSheetAdapter.data.indices) {
                                 if (StringUtils.equals(

@@ -14,7 +14,7 @@ class BottomSheetAdapter :
     RecyclerView.Adapter<BottomSheetAdapter.ViewHolder>() {
     var data = ArrayList<Task>()
     private lateinit var onItemClickListener: OnItemClickListener
-    public var currentIndex = 0
+    var currentIndex = 0
 
     fun setOnItemClickListener(listener: OnItemClickListener) {
         this.onItemClickListener = listener

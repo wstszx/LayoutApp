@@ -13,6 +13,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -49,6 +50,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var bottomSheetAdapter: BottomSheetAdapter
     lateinit var view: View
     private lateinit var ivPic: ScaleView4
+    private lateinit var tvPos: TextView
     private val a = arrayOf("top", "com.cn", "com", "net", "cn", "cc", "gov", "cn", "hk");
     private lateinit var mSourceData: ArrayList<Table>
     private lateinit var mFilterData: ArrayList<Table>
@@ -155,6 +157,7 @@ class MainActivity : AppCompatActivity() {
 //        val ivLess = activityMainBinding.ivLess
 //        val seekBar = activityMainBinding.seekBar
         ivPic = activityMainBinding.ivPic
+        tvPos = activityMainBinding.tvPos
 //        val svg = SVG.getFromResource(resources, R.raw.test2)
 //        svg.documentWidth = 800f
 //        svg.documentHeight = 250f
@@ -335,6 +338,11 @@ class MainActivity : AppCompatActivity() {
 
     //切换起始开关
     private fun switchStartAndEnd(checked: Boolean) {
+        if (checked) {
+            tvPos.text = "正在显示终止状态"
+        } else {
+            tvPos.text = "正在显示起始状态"
+        }
         if (planList.size > 0) {
             ivPic.drawAir(planList, checked)
         }
@@ -633,7 +641,7 @@ class MainActivity : AppCompatActivity() {
                 "FILE" -> {
                     min_id = SPUtils.getInstance().getString("min_id", "")
                     if (!StringUtils.isEmpty(min_id)) {
-                        getPlan(min_id)
+//                        getPlan(min_id)
                         if (bottomSheetAdapter.data.size > 0) {
                             for (index in bottomSheetAdapter.data.indices) {
                                 if (StringUtils.equals(

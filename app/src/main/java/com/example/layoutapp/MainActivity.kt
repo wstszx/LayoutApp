@@ -43,7 +43,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 import java.util.regex.Pattern
-import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
     private lateinit var smartTable: com.bin.david.form.core.SmartTable<Any>
@@ -79,7 +78,7 @@ class MainActivity : AppCompatActivity() {
 
         timer = Timer()
         pollingTask = PollingTask()
-        timer.schedule(pollingTask, 0, 50 * 1000)
+        timer.schedule(pollingTask, 0, 5000 * 1000)
     }
 
     inner class PollingTask : TimerTask() {
@@ -390,10 +389,13 @@ class MainActivity : AppCompatActivity() {
                     val table = Table(plan.goodno, plan.stano, plan.planstano)
                     mSourceData.add(table)
                     withContext(Dispatchers.IO) {
-                        val station = ApiService.create().getStation(plan.stano)
-                        plan.cox = station.cox
-                        plan.coy = station.coy
-                        plan.angle = station.angle
+                        val stations = ApiService.create().getStation(plan.stano)
+                        if (stations.size > 0) {
+                            val station = stations[0]
+                            plan.cox = station.cox
+                            plan.coy = station.coy
+                            plan.angle = station.angle
+                        }
                         Log.d(
                             "may",
                             "plan.cox: ${plan.cox}plan.coy: ${plan.coy}plan.angle: ${plan.angle}"
@@ -402,10 +404,14 @@ class MainActivity : AppCompatActivity() {
 
 
                     withContext(Dispatchers.IO) {
-                        val planStation = ApiService.create().getStation(plan.planstano)
-                        plan.plancox = planStation.cox
-                        plan.plancoy = planStation.coy
-                        plan.planangle = planStation.angle
+                        val planStations = ApiService.create().getStation(plan.planstano)
+                        if (planStations.size > 0) {
+                            val planStation = planStations[0]
+                            plan.plancox = planStation.cox
+                            plan.plancoy = planStation.coy
+                            plan.planangle = planStation.angle
+                        }
+
                         Log.d(
                             "may",
                             "plan.plancox: ${plan.plancox}plan.plancoy: ${plan.plancoy}plan.planangle: ${plan.planangle}"

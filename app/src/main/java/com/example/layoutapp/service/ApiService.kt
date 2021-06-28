@@ -1,6 +1,7 @@
 package com.example.layoutapp.service
 
 import com.blankj.utilcode.util.SPUtils
+import com.example.layoutapp.bean.GoodInfo
 import com.example.layoutapp.bean.Plan
 import com.example.layoutapp.bean.Station
 import com.example.layoutapp.bean.Task
@@ -32,12 +33,17 @@ interface ApiService {
         @Query("id") planId: String,
     ): Call<ArrayList<Plan>?>
 
-
     //    获取站位信息
     @GET("/Station")
     suspend fun getStation(
         @Query("stano") stano: String?,
-    ): Station
+    ): ArrayList<Station>
+
+    //    获取编号
+    @GET("/GoodInfo")
+    fun getGoodInfo(
+        @Query("goodno") goodno: Int,
+    ): Call<ArrayList<GoodInfo>?>
 
     companion object {
         fun create(): ApiService {

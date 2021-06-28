@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.TimeUtils
 import com.example.layoutapp.bean.Task
 import com.example.layoutapp.databinding.ItemLegendBinding
 
@@ -31,7 +32,7 @@ class BottomSheetAdapter :
         fun bind(item: Task) {
             tvDate = itemLegendBinding.tvDate
             itemLegendBinding.apply {
-                itemLegendBinding.tvDate
+                itemLegendBinding.tvDate.text = TimeUtils.millis2String(item.create_time)
                 task = item
                 executePendingBindings()
             }

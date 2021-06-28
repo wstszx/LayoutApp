@@ -15,6 +15,7 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import com.blankj.utilcode.util.StringUtils;
 import com.example.layoutapp.bean.Plan;
 import com.example.layoutapp.bean.Position;
 import com.example.layoutapp.utils.MapMath;
@@ -277,6 +278,7 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView imp
         float dy = (height / 2f - this.currentScale * baseCenterY);
 
 
+//        计算位移
         realDx = (width / 2f - this.realCurrentScale * realBaseCenterX);
         realDy = (height / 2f - this.realCurrentScale * realBaseCenterY);
         Log.d("ScaleView", "onMeasure: dx:" + dx + "dy:" + dy);
@@ -329,7 +331,7 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView imp
                     airPaint.setColor(Color.BLUE);
                 } else if (plan.getAlternative() == 1) {
                     airPaint.setColor(Color.YELLOW);
-                } else {
+                } else if (StringUtils.isEmpty(plan.getStano())) {
                     airPaint.setColor(Color.BLACK);
                 }
                 canvas.concat(plan.getMatrix());
@@ -628,12 +630,16 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView imp
             Plan plan = planList.get(i);
             Matrix matrix = new Matrix();
             matrix.setScale(this.realCurrentScale, this.realCurrentScale);
-            matrix.postRotate(plan.getAngle());
+            matrix.postRotate(360 - plan.getAngle());
 //            位移到开始或结束坐标位置
+//            realBaseCenter * realCurrentScale 真实坐标相对原点的偏移
+            Log.d("mylog", "drawAir: " + width / 2 + "=-==" + height / 2);
             if (!isChecked) {
-                matrix.postTranslate(realDx + plan.getCox() * realCurrentScale + realBaseCenterX * realCurrentScale, realDy + plan.getCoy() * realCurrentScale + realBaseCenterY * realCurrentScale);
+                matrix.postTranslate(realDx + realBaseCenterX * realCurrentScale + plan.getCox() * realCurrentScale,
+                        realDy + realBaseCenterY * realCurrentScale - plan.getCoy() * realCurrentScale);
             } else {
-                matrix.postTranslate(realDx + plan.getPlancox() * realCurrentScale + realBaseCenterX * realCurrentScale, realDy + plan.getPlancoy() * realCurrentScale + realBaseCenterY * realCurrentScale);
+                matrix.postTranslate(realDx + realBaseCenterX * realCurrentScale + plan.getPlancox() * realCurrentScale,
+                        realDy + realBaseCenterY * realCurrentScale - plan.getPlancoy() * realCurrentScale);
             }
             plan.setMatrix(matrix);
         }

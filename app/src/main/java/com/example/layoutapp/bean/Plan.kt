@@ -5,15 +5,15 @@ import android.graphics.Matrix
 
 data class Plan(
     var planangle: Any? = null,
-    var shapetype: Int? = null,
+    var shapetype: Int = 1,
     var waveno: Int? = null,
-    var planshapetype: Any? = null,
+    var planshapetype: Int = 1,
     var alternative: Int = 0,
     var stano: String? = null,
     var plancoy: Float = 0.0f,
     var coy: Float = 0.0f,
     var plancox: Float = 0.0f,
-    var goodno: Int? = null,
+    var goodno: Int = 0,
     var layoutid: Int? = null,
     var cox: Float = 0.0f,
     var plandate: String? = null,
@@ -25,6 +25,7 @@ data class Plan(
     var state: String? = null,
     var tag: Int? = null,
     var initwaveno: Int? = null,
-    var matrix: Matrix? = null
+    var matrix: Matrix? = null,
+    var goodInfo: GoodInfo?
 )
 

@@ -86,35 +86,38 @@ class MainActivity : AppCompatActivity() {
             Log.d("mylog", "run: ")
             if (StringUtils.isEmpty(this@MainActivity.min_id)) {
                 val nowDate = TimeUtils.getNowString().split(" ")[0]
-                ApiService.create().getTaskByDate(nowDate)
-                    .enqueue(object : Callback<ArrayList<Task>> {
-                        override fun onResponse(
-                            call: retrofit2.Call<ArrayList<Task>>,
-                            response: Response<ArrayList<Task>>
-                        ) {
-                            val taskList: ArrayList<Task>? = response.body()
-                            if (taskList != null && taskList.size > 0) {
-                                this@MainActivity.min_id = taskList.last().id.toString()
-                                SPUtils.getInstance().put("min_id", taskList.last().id.toString())
-                                bottomSheetAdapter.data = taskList
-                                bottomSheetAdapter.notifyDataSetChanged()
-                                getPlan(taskList[0].plan_id)
-                            }
-                        }
-
-                        override fun onFailure(
-                            call: retrofit2.Call<ArrayList<Task>>,
-                            t: Throwable
-                        ) {
-
-                        }
-                    })
+                getTaskByDate(nowDate)
             } else {
                 getTaskById(this@MainActivity.min_id)
-
             }
         }
 
+    }
+
+    private fun getTaskByDate(nowDate: String) {
+        ApiService.create().getTaskByDate(nowDate)
+            .enqueue(object : Callback<ArrayList<Task>> {
+                override fun onResponse(
+                    call: retrofit2.Call<ArrayList<Task>>,
+                    response: Response<ArrayList<Task>>
+                ) {
+                    val taskList: ArrayList<Task>? = response.body()
+                    if (taskList != null && taskList.size > 0) {
+                        this@MainActivity.min_id = taskList.last().id.toString()
+                        SPUtils.getInstance().put("min_id", taskList.last().id.toString())
+                        bottomSheetAdapter.data = taskList
+                        bottomSheetAdapter.notifyDataSetChanged()
+                        getPlan(taskList[0].plan_id)
+                    }
+                }
+
+                override fun onFailure(
+                    call: retrofit2.Call<ArrayList<Task>>,
+                    t: Throwable
+                ) {
+
+                }
+            })
     }
 
     private fun getTaskById(minId: String) {
@@ -132,6 +135,7 @@ class MainActivity : AppCompatActivity() {
                         }
                         val last = taskList.last()
                         planId = last.plan_id
+                        this@MainActivity.min_id = last.id.toString()
                         SPUtils.getInstance().put("min_id", last.id.toString())
                         bottomSheetAdapter.data = taskList
                         bottomSheetAdapter.notifyDataSetChanged()
@@ -281,34 +285,6 @@ class MainActivity : AppCompatActivity() {
                 Log.d("mylog", "onCreate: " + switchMaterial.isChecked)
                 switchStartAndEnd(switchMaterial.isChecked)
 
-//                if (switchMaterial.isChecked) {
-//                    // TODO: 2021/5/11
-//                    val planList = arrayListOf<Plan>()
-//                    val plan = Plan()
-//                    plan.cox = 300000f
-//                    plan.coy = 100000f
-//                    plan.angle = 120f
-//                    val plan1 = Plan()
-//                    plan1.cox = 250000f
-//                    plan1.coy = 150000f
-//                    plan1.angle = 250f
-//                    planList.add(plan)
-//                    planList.add(plan1)
-//                    ivPic.drawAir(planList, true)
-//                } else {
-//                    val planList = arrayListOf<Plan>()
-//                    val plan = Plan()
-//                    plan.cox = 200000f
-//                    plan.coy = 150000f
-//                    plan.angle = 40f
-//                    val plan1 = Plan()
-//                    plan1.cox = 150000f
-//                    plan1.coy = 170000f
-//                    plan1.angle = 200f
-//                    planList.add(plan)
-//                    planList.add(plan1)
-//                    ivPic.drawAir(planList, false)
-//                }
             }
         }
 
@@ -378,8 +354,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //获取坐标信息
     private fun setPosition(
-        planList: java.util.ArrayList<Plan>,
+        planList: ArrayList<Plan>,
         mSourceData: ArrayList<Table>
     ) {
         GlobalScope.launch(Dispatchers.Main) {
@@ -395,6 +372,11 @@ class MainActivity : AppCompatActivity() {
                             plan.cox = station.cox
                             plan.coy = station.coy
                             plan.angle = station.angle
+                        }
+                        val goodInfos = ApiService.create().getGoodInfo(plan.goodno)
+                        if (goodInfos.size > 0) {
+                            val goodInfo = goodInfos[0]
+                            plan.goodInfo = goodInfo
                         }
                         Log.d(
                             "may",
@@ -417,19 +399,7 @@ class MainActivity : AppCompatActivity() {
                             "plan.plancox: ${plan.plancox}plan.plancoy: ${plan.plancoy}plan.planangle: ${plan.planangle}"
                         )
                     }
-
-//                    Log.d("MainAcitivity", "setPosition: $plan.cox")
                 }
-//                for (plan in planList) {
-//                    Log.d(
-//                        "may===",
-//                        "plan.cox: ${plan.cox}plan.coy: ${plan.coy}plan.angle: ${plan.angle}"
-//                    )
-//                    Log.d(
-//                        "may===",
-//                        "plan.plancox: ${plan.plancox}plan.plancoy: ${plan.plancoy}plan.planangle: ${plan.planangle}"
-//                    )
-//                }
                 Log.d("may===", "isMainThread=" + ThreadUtils.isMainThread())
 
             } catch (e: Exception) {

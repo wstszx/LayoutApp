@@ -41,9 +41,9 @@ interface ApiService {
 
     //    获取编号
     @GET("/GoodInfo")
-    fun getGoodInfo(
+    suspend fun getGoodInfo(
         @Query("goodno") goodno: Int,
-    ): Call<ArrayList<GoodInfo>?>
+    ): ArrayList<GoodInfo>
 
     companion object {
         fun create(): ApiService {

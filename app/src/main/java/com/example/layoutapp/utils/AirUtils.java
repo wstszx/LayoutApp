@@ -432,4 +432,88 @@ public class AirUtils {
         path.close();
         return path;
     }
+
+    public static Path getZ9Expand() {
+        Path path = new Path();
+        path.lineTo(5242f, 0f);
+        path.lineTo(5134f, 198f);
+        path.lineTo(4364f, 532f);
+        path.lineTo(2752f, 874f);
+        path.lineTo(1491f, 994f);
+        path.lineTo(-190f, 1020f);
+        path.lineTo(-4187f, 276f);
+        path.lineTo(-4407f, 1593f);
+        path.lineTo(-5208f, 1602.9f);
+        path.lineTo(-5232f, 332.58f);
+        path.lineTo(-6955.9f, 145.9f);
+        path.lineTo(-6955.9f, -145.9f);
+        path.lineTo(-5525f, -332.58f);
+        path.lineTo(-5208f, -1602.9f);
+        path.lineTo(-4407f, -1593.9f);
+        path.lineTo(-189.99f, -1020f);
+        path.lineTo(1491f, -994.68f);
+        path.lineTo(2752f, -874f);
+        path.lineTo(4364f, -532.8f);
+        path.lineTo(5134f, -197.98f);
+        path.lineTo(5242f, 0.01f);
+
+        path.close();
+        return path;
+    }
+
+    public static Path getZ9Collapse() {
+        Path path = new Path();
+        path.lineTo(5242f, 0f);
+        path.lineTo(5152f, 184f);
+        path.lineTo(4591f, 459f);
+        path.lineTo(3609f, 730f);
+        path.lineTo(1491f, 997f);
+        path.lineTo(190f, 1020f);
+        path.lineTo(-4122f, 1366f);
+        path.lineTo(-4156f, 1594f);
+        path.lineTo(-5450f, 1605f);
+        path.lineTo(-5233f, 333f);
+        path.lineTo(-6956f, 146f);
+        path.lineTo(-6956f, -146f);
+        path.lineTo(-5233f, -333f);
+        path.lineTo(-5450f, -1605f);
+        path.lineTo(-4156f, -1594f);
+        path.lineTo(-4122f, -1366f);
+        path.lineTo(-190f, -1020f);
+        path.lineTo(1491f, -997f);
+        path.lineTo(3517f, -750f);
+        path.lineTo(4497f, -492f);
+        path.lineTo(5152f, -184f);
+        path.lineTo(5242f, 0f);
+        path.close();
+        return path;
+    }
+
+    public static Path getZ9ExpandCircle() {
+        Path path = new Path();
+        path.lineTo(-173.6068f, 5926.13f);
+        path.lineTo(-1958.943f, 5346.0391f);
+        path.lineTo(-3477.6407f, 4242.6407f);
+        path.lineTo(-4581.0391f, 2723.943f);
+        path.lineTo(-5161.13f, 938.6068f);
+        path.lineTo(-5161.13f, -938.6068f);
+        path.lineTo(-4581.0391f, -2723.943f);
+        path.lineTo(-3477.6407f, -4242.6407f);
+        path.lineTo(-1958.943f, -5346.0391f);
+        path.lineTo(-173.6068f, -5926.13f);
+        path.lineTo(1703.6068f, -5926.13f);
+        path.lineTo(3488.943f, -5346.0391f);
+        path.lineTo(5007.6407f, -4242.6407f);
+        path.lineTo(6111.0391f, -2723.943f);
+        path.lineTo(6691.13f, -938.6068f);
+        path.lineTo(6691.13f, 938.6068f);
+        path.lineTo(6111.0391f, 2723.943f);
+        path.lineTo(5007.6407f, 4242.6407f);
+        path.lineTo(3488.943f, 5346.0391f);
+        path.lineTo(1703.6068f, 5926.13f);
+        path.lineTo(-173.6068f, 5926.13f);
+        path.close();
+        return path;
+    }
+
 }

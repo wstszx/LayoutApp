@@ -24,7 +24,7 @@ interface ApiService {
     //    通过id获取任务列表
     @GET("/TaskOrder")
     fun getTaskById(
-        @Query("min_id") min_id: String,
+        @Query("min_id") min_id: Int,
     ): Call<ArrayList<Task>>
 
     //    获取指定计划

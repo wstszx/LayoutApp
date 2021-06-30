@@ -3,6 +3,49 @@ package com.example.layoutapp.utils;
 import android.graphics.Path;
 
 public class AirUtils {
+
+    public static Path getDeskPath() {
+        Path path = new Path();
+        path.moveTo(1254232.4181f, 565097.1457f);
+        path.lineTo(1286039.0393f, 562697.0784f);
+        path.lineTo(1286039.0393f, 557597.0784f);
+        path.lineTo(1286839.0393f, 556797.0784f);
+        path.lineTo(1290339.0393f, 556797.0784f);
+        path.lineTo(1296940.1657f, 556097.0864f);
+        path.lineTo(1297689.0393f, 556097.0864f);
+        path.lineTo(1297689.0393f, 552056.6517f);
+        path.lineTo(1298539.0104f, 551952.2884f);
+        path.lineTo(1298539.0393f, 551097.0784f);
+        path.lineTo(1299239.0393f, 550097.0784f);
+        path.lineTo(1378539.0393f, 550097.0784f);
+        path.lineTo(1378539.0393f, 547497.0784f);
+        path.lineTo(1379289.0393f, 547497.0784f);
+        path.lineTo(1379289.0393f, 543997.0784f);
+        path.lineTo(1383552.2039f, 543997.0784f);
+        path.lineTo(1384289.0393f, 547497.0784f);
+        path.lineTo(1385539.0393f, 547496.8832f);
+        path.lineTo(1385539.0393f, 550097.0784f);
+        path.lineTo(1408539.0703f, 550097.0784f);
+        path.lineTo(1408891.4117f, 549227.7047f);
+        path.lineTo(1424467.0381f, 546161.2537f);
+        path.lineTo(1450847.0592f, 546161.2537f);
+        path.lineTo(1463129.5192f, 567870.4485f);
+        path.lineTo(1560629.0393f, 576241.8312f);
+        path.lineTo(1560629.0393f, 594137.0784f);
+        path.lineTo(1472539.0393f, 601595.5584f);
+        path.lineTo(1472539.0393f, 602664.3384f);
+        path.lineTo(1472539.0393f, 604597.0784f);
+        path.lineTo(1467431.0302f, 611892.0714f);
+        path.lineTo(1445446.6096f, 613654.3675f);
+        path.lineTo(1415200.2206f, 614837.1065f);
+        path.lineTo(1336312.9217f, 615947.0784f);
+        path.lineTo(1334941.7895f, 612903.3409f);
+        path.lineTo(1259144.7305f, 605097.0784f);
+        path.lineTo(1254232.4181f, 565097.1457f);
+        path.close();
+        return path;
+    }
+
     public static Path getJ15Collapse() {
         Path path = new Path();
         path.lineTo(13812f, 0);
@@ -491,7 +534,7 @@ public class AirUtils {
 
     public static Path getZ9ExpandCircle() {
         Path path = new Path();
-        path.lineTo(-173.6068f, 5926.13f);
+        path.moveTo(-173.6068f, 5926.13f);
         path.lineTo(-1958.943f, 5346.0391f);
         path.lineTo(-3477.6407f, 4242.6407f);
         path.lineTo(-4581.0391f, 2723.943f);
@@ -516,4 +559,164 @@ public class AirUtils {
         return path;
     }
 
+//    public static Path getJK() {
+//        Path path = new Path();
+//        path.lineTo(0f, -25278f);
+//        path.lineTo(5077f, -25278f);
+//        path.lineTo(5644f, -24229f);
+//        path.lineTo(14700f, -24229f);
+//        path.lineTo(14703f, -17102f);
+//        path.lineTo(14350f, -17102f);
+//        path.lineTo(14350f, -16401f);
+//        path.lineTo(14700f, -16401f);
+//        path.lineTo(14700f, -14000f);
+//        path.lineTo(31350f, -14000f);
+//        path.lineTo(31350f, -16600f);
+//        path.lineTo(31750f, -16600f);
+//        path.lineTo(31750f, -17300f);
+//        path.lineTo(31350f, -17300f);
+//        path.lineTo(31350f, -23290f);
+//        path.lineTo(49100f, -23290f);
+//        path.lineTo(60201f, -23250f);
+//        path.lineTo(83854f, -21738f);
+//        path.lineTo(85884f, -21462f);
+//        path.lineTo(87555f, -20920f);
+//        path.lineTo(88695f, -20005f);
+//        path.lineTo(89895f, -18310f);
+//        path.lineTo(90868f, -15841f);
+//        path.lineTo(91625f, -12751f);
+//        path.lineTo(114200f, -9350f);
+//        path.lineTo(127700f, -6963f);
+//        path.lineTo(131500f, -6062f);
+//        path.lineTo(141141f, -2937f);
+//        path.lineTo(142830f, -1739f);
+//        path.lineTo(143444f, -893f);
+//        path.lineTo(143706f, 0f);
+//        path.lineTo(143346f, 1076f);
+//        path.lineTo(142765f, 1806f);
+//        path.lineTo(141139f, 2926f);
+//        path.lineTo(131500f, 6064f);
+//        path.lineTo(127700f, 6963f);
+//        path.lineTo(124000f, 7721f);
+//        path.lineTo(120000f, 8420f);
+//        path.lineTo(114200f, 9350f);
+//        path.lineTo(105500f, 10715f);
+//        path.lineTo(92000f, 12702f);
+//        path.lineTo(91625f, 12751f);
+//        path.lineTo(90671f, 16512f);
+//        path.lineTo(89346f, 19214f);
+//        path.lineTo(87824f, 20773f);
+//        path.lineTo(87000f, 21122f);
+//        path.lineTo(84500f, 21683f);
+//        path.lineTo(73500f, 22412f);
+//        path.lineTo(57400f, 23201f);
+//        path.lineTo(56361f, 25278f);
+//        path.lineTo(-21000f, 25278f);
+//        path.lineTo(-21000f, 23201f);
+//        path.lineTo(-28000f, 23201f);
+//        path.lineTo(-28000f, 25278f);
+//        path.lineTo(-35600f, 25278f);
+//        path.lineTo(-35600f, 22627f);
+//        path.lineTo(-63000f, 22627f);
+//        path.lineTo(-63000f, 25186f);
+//        path.lineTo(-70000f, 25186f);
+//        path.lineTo(-70000f, 22627f);
+//        path.lineTo(-83500f, 22627f);
+//        path.lineTo(-83500f, 25147f);
+//        path.lineTo(-135397f, 25147f);
+//        path.lineTo(-136995f, 19149f);
+//        path.lineTo(-139041f, 19149f);
+//        path.lineTo(-141489f, 18935f);
+//        path.lineTo(-141870f, 18777f);
+//        path.lineTo(-142117f, 18502f);
+//        path.lineTo(-142531f, 17080f);
+//        path.lineTo(-142990f, 13000f);
+//        path.lineTo(-139998f, 13000f);
+//        path.lineTo(-139998f, 11750f);
+//        path.lineTo(-143089f, 11750f);
+//        path.lineTo(-143759f, 2977f);
+//        path.lineTo(-142494f, 1716f);
+//        path.lineTo(-142000f, 0f);
+//        path.lineTo(-142494f, -1716f);
+//        path.lineTo(-143759f, -2977f);
+//        path.lineTo(-143089f, -11750f);
+//        path.lineTo(-139998f, -11750f);
+//        path.lineTo(-139998f, -13000f);
+//        path.lineTo(-142990f, -13000f);
+//        path.lineTo(-142593f, -16745f);
+//        path.lineTo(-141906f, -18750f);
+//        path.lineTo(-140192f, -19115f);
+//        path.lineTo(-136995f, -19149f);
+//        path.lineTo(-135500f, -24765f);
+//        path.lineTo(-108000f, -24765f);
+//        path.lineTo(-108000f, -23671f);
+//        path.lineTo(-83350f, -23671f);
+//        path.lineTo(-83350f, -17200f);
+//        path.lineTo(-83650f, -17200f);
+//        path.lineTo(-83650f, -16500f);
+//        path.lineTo(-83350f, -16500f);
+//        path.lineTo(-83350f, -14000f);
+//        path.lineTo(-66650f, -14000f);
+//        path.lineTo(-66650f, -16500f);
+//        path.lineTo(-66300f, -16500f);
+//        path.lineTo(-66300f, -17200f);
+//        path.lineTo(-66650f, -17200f);
+//        path.lineTo(-66649f, -23770f);
+//        path.lineTo(-54000f, -23770f);
+//        path.lineTo(-54000f, -25278f);
+//        path.lineTo(-18000f, -25278f);
+//        path.lineTo(-18000f, -23770f);
+//        path.lineTo(-11200f, -23770f);
+//        path.lineTo(-11200f, -25278f);
+//        path.lineTo(0f, -25278f);
+//        path.close();
+//        return path;
+//    }
+
+    public static Path getLifts1() {
+        Path path = new Path();
+        path.lineTo(15400f, -14000f);
+        path.lineTo(31404.0011f, -14000f);
+        path.lineTo(31406.6931f, -27993.4827f);
+        path.lineTo(26525.025f, -28971.0275f);
+        path.lineTo(20400.5866f, -28998.3249f);
+        path.lineTo(15401.3099f, -27993.4827f);
+        path.close();
+        return path;
+    }
+
+    public static Path getLifts2() {
+        Path path = new Path();
+        path.lineTo(-82600f, -14000f);
+        path.lineTo(-66595.9989f, -14000f);
+        path.lineTo(-66593.3069f, -27993.4827f);
+        path.lineTo(-71474.975f, -28971.0275f);
+        path.lineTo(-77599.4134f, -28998.3249f);
+        path.lineTo(-82598.6901f, -27993.4827f);
+        path.close();
+        return path;
+    }
+
+    public static Path getJK() {
+        Path path = new Path();
+        path.moveTo(1283539.0393f, 654315.6353f);
+        path.lineTo(1436539.0393f, 654315.6353f);
+        path.lineTo(1436539.0393f, 680315.6353f);
+        path.lineTo(1432539.0393f, 680315.6353f);
+        path.lineTo(1432539.0393f, 695315.6351f);
+        path.lineTo(1427500.2189f, 696278.7950f);
+        path.lineTo(1421535.6244f, 696278.7950f);
+        path.lineTo(1416536.3477f, 695309.1179f);
+        path.lineTo(1416539.0393f, 680315.6353f);
+        path.lineTo(1334539.0393f, 680315.6353f);
+        path.lineTo(1334541.7309f, 695309.1179f);
+        path.lineTo(1329542.4542f, 696313.9600f);
+        path.lineTo(1323535.6244f, 696313.9600f);
+        path.lineTo(1318536.3477f, 695309.1179f);
+        path.lineTo(1318539.0393f, 680315.6353f);
+        path.lineTo(1283539.0393f, 680315.6353f);
+//        path.lineTo(1283539.0393f, 654315.6353f);
+        path.close();
+        return path;
+    }
 }

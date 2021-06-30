@@ -15,7 +15,6 @@ import androidx.annotation.Nullable;
 import com.blankj.utilcode.util.StringUtils;
 import com.example.layoutapp.bean.GoodInfo;
 import com.example.layoutapp.bean.Plan;
-import com.example.layoutapp.bean.Position;
 import com.example.layoutapp.utils.AirUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +40,7 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
     private boolean isChecked;
     private boolean isFirstDraw = true;
 
-    public Matrix currentMatrix = new Matrix();
+    public Matrix deskMatrix = new Matrix();
     public float currentRotateDegrees = 1.0f;
     public float currentScale = 1.0f;
     public float realCurrentScale = 1.0f;
@@ -50,7 +49,6 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
     public float baseCenterX;
     public float baseCenterY;
 
-    public Position center;
     private Path airOutline;
     private float baseAirWidth;
     private float baseAirHeight;
@@ -104,6 +102,17 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
     private float realBaseCenterY;
     private float realDx;
     private float realDy;
+    private Path jkPath;
+    private Path lifts1Path;
+    private Path lifts2Path;
+    private float jkWidth;
+    private float jkCenterX;
+    private float jkCenterY;
+    private float jkHeight;
+    private float jkScale;
+    private Matrix jkMatrix;
+    private Paint numberPaint;
+    private float centerFontY;
 
     //缩放的三个状态
     public class ZoomMode {
@@ -138,54 +147,22 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
         airPaint.setStyle(Paint.Style.STROKE);
         airPaint.setAntiAlias(true);
 
-        center = new Position((float) (this.getWidth() / 2), (float) (this.getHeight() / 2));
+        numberPaint = new Paint();
+        numberPaint.setColor(Color.RED);
+        numberPaint.setAntiAlias(true);
+        numberPaint.setTextAlign(Paint.Align.CENTER);
+        Paint.FontMetrics numberFontMetrics = numberPaint.getFontMetrics();
+        centerFontY = (numberFontMetrics.bottom - numberFontMetrics.top) / 2 - numberFontMetrics.bottom;//计算文字居中的位移
 
-        currentMatrix = new Matrix();
 
-        deckOutline = new Path();
-        deckOutline.moveTo(1254232.4181f, -565097.1457f);
-        deckOutline.lineTo(1286039.0393f, -562697.0784f);
-        deckOutline.lineTo(1286039.0393f, -557597.0784f);
-        deckOutline.lineTo(1286839.0393f, -556797.0784f);
-        deckOutline.lineTo(1290339.0393f, -556797.0784f);
-        deckOutline.lineTo(1296940.1657f, -556097.0864f);
-        deckOutline.lineTo(1297689.0393f, -556097.0864f);
-        deckOutline.lineTo(1297689.0393f, -552056.6517f);
-        deckOutline.lineTo(1298539.0104f, -551952.2884f);
-        deckOutline.lineTo(1298539.0393f, -551097.0784f);
-        deckOutline.lineTo(1299239.0393f, -550097.0784f);
-        deckOutline.lineTo(1378539.0393f, -550097.0784f);
-        deckOutline.lineTo(1378539.0393f, -547497.0784f);
-        deckOutline.lineTo(1379289.0393f, -547497.0784f);
-        deckOutline.lineTo(1379289.0393f, -543997.0784f);
-        deckOutline.lineTo(1383552.2039f, -543997.0784f);
-        deckOutline.lineTo(1384289.0393f, -547497.0784f);
-        deckOutline.lineTo(1385539.0393f, -547496.8832f);
-        deckOutline.lineTo(1385539.0393f, -550097.0784f);
-        deckOutline.lineTo(1408539.0703f, -550097.0784f);
-        deckOutline.lineTo(1408891.4117f, -549227.7047f);
-        deckOutline.lineTo(1424467.0381f, -546161.2537f);
-        deckOutline.lineTo(1450847.0592f, -546161.2537f);
-        deckOutline.lineTo(1463129.5192f, -567870.4485f);
-        deckOutline.lineTo(1560629.0393f, -576241.8312f);
-        deckOutline.lineTo(1560629.0393f, -594137.0784f);
-        deckOutline.lineTo(1472539.0393f, -601595.5584f);
-        deckOutline.lineTo(1472539.0393f, -602664.3384f);
-        deckOutline.lineTo(1472539.0393f, -604597.0784f);
-        deckOutline.lineTo(1467431.0302f, -611892.0714f);
-        deckOutline.lineTo(1445446.6096f, -613654.3675f);
-        deckOutline.lineTo(1415200.2206f, -614837.1065f);
-        deckOutline.lineTo(1336312.9217f, -615947.0784f);
-        deckOutline.lineTo(1334941.7895f, -612903.3409f);
-        deckOutline.lineTo(1259144.7305f, -605097.0784f);
-        deckOutline.lineTo(1254232.4181f, -565097.1457f);
-        deckOutline.close();
+        deskMatrix = new Matrix();// 甲板矩阵
 
+//        甲板轮廓
+        deckOutline = AirUtils.getDeskPath();
         maxX = 1560629.0393f;
         minX = 1254232.4181f;
-        maxY = -543997.0784f;
-        minY = -615947.0784f;
-
+        maxY = 615947.0784f;
+        minY = 543997.0784f;
 
 //        甲板宽高
         baseWidth = (maxX - minX);
@@ -209,41 +186,22 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
         realBaseCenterY = (realMaxY + realMinY) / 2;
 
 
-//飞机轮廓
-        airOutline = new Path();
-        airOutline.moveTo(11217.9775280898f, 0);
-        airOutline.lineTo(5235.05617977529f, -1246.44194756556f);
-        airOutline.lineTo(2243.59550561798f, -1745.01872659178f);
-        airOutline.lineTo(1246.44194756554f, -4237.90262172287f);
-        airOutline.lineTo(-1246.44194756553f, -4487.19101123596f);
-        airOutline.lineTo(-1495.73033707864f, -1994.3071161049f);
-        airOutline.lineTo(-3490.03745318351f, -2243.595505618f);
-        airOutline.lineTo(-4985.76779026217f, -3739.32584269665f);
-        airOutline.lineTo(-5982.9213483146f, -3490.03745318353f);
-        airOutline.lineTo(-5235.05617977527f, -1495.73033707868f);
-        airOutline.lineTo(-5235.05617977527f, 1495.73033707862f);
-        airOutline.lineTo(-5982.9213483146f, 3490.0374531835f);
-        airOutline.lineTo(-4985.76779026217f, 3739.32584269662f);
-        airOutline.lineTo(-3490.03745318351f, 2243.59550561797f);
-        airOutline.lineTo(-1495.73033707864f, 1994.30711610484f);
-        airOutline.lineTo(-1246.44194756553f, 4487.19101123593f);
-        airOutline.lineTo(1246.44194756554f, 4237.90262172284f);
-        airOutline.lineTo(2243.59550561798f, 1745.01872659175f);
-        airOutline.lineTo(5235.05617977529f, 1246.44194756553f);
-        airOutline.close();
+        //        机库轮廓
+        jkPath = AirUtils.getJK();
+//        lifts1Path = AirUtils.getLifts1();
+//        lifts2Path = AirUtils.getLifts2();
 
-        float airMaxX = 11217.9775280898f;
-        float airMinX = -5982.9213483146f;
-        float airMaxY = 4487.19101123593f;
-        float airMinY = -4487.19101123596f;
-
-//        飞机宽高
-        baseAirWidth = (airMaxX - airMinX);
-        baseAirHeight = (airMaxY - airMinY);
-
-        //飞机中心点坐标
-        baseAirCenterX = (airMaxX + airMinX) / 2;
-        baseAirCenterY = (airMaxY + airMinY) / 2;
+        float jkPathMaxX = 1436539.0393f;
+        float jkPathMinX = 1283539.0393f;
+        float jkPathMaxY = 696313.9600f;
+        float jkPathMinY = 654315.6353f;
+        jkMatrix = new Matrix();// 机库矩阵
+//        机库宽高
+        jkWidth = jkPathMaxX - jkPathMinX;
+        jkHeight = jkPathMaxY - jkPathMinY;
+//        机库中心点坐标
+        jkCenterX = (jkPathMaxX + jkPathMinX) / 2;
+        jkCenterY = (jkPathMaxY + jkPathMinY) / 2;
     }
 
     @Override
@@ -263,7 +221,6 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
         if (ratioT > ratioScreen) {
             this.currentScale = width / baseWidth;
             realCurrentScale = width / realBaseWidth;
-            float testScale = width / (realBaseWidth);
             bitmapOriginPoint.x = 0;
             bitmapOriginPoint.y = viewSize.y / 2 - currentScale * baseHeight / 2;
             Log.d("ScaleViewSize", "bitmapOriginPoint.x : " + bitmapOriginPoint.x + ", bitmapOriginPoint.y : " + bitmapOriginPoint.y);
@@ -274,16 +231,31 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
             bitmapOriginPoint.y = 0;
         }
         float dx = (width / 2f - this.currentScale * baseCenterX);
-        float dy = (height / 2f - this.currentScale * baseCenterY);
+        float dy = (height / 4f - this.currentScale * baseCenterY);
 
-
-//        计算位移
+//        计算甲板原点位移
         realDx = (width / 2f - this.realCurrentScale * realBaseCenterX);
         realDy = (height / 2f - this.realCurrentScale * realBaseCenterY);
         Log.d("ScaleView", "onMeasure: dx:" + dx + "dy:" + dy);
 
-        this.currentMatrix.setScale(this.currentScale, this.currentScale);
-        this.currentMatrix.postTranslate(dx, dy);
+        this.deskMatrix.setScale(this.currentScale, this.currentScale);
+        this.deskMatrix.postTranslate(dx, dy);
+
+
+        float jkDy = (height / 4f * 3 - this.currentScale * jkCenterY);
+        jkMatrix.setScale(this.currentScale, this.currentScale);
+        jkMatrix.postTranslate(dx, jkDy);
+
+//根据甲板计算机库的缩放
+//        float jkRatio = jkWidth / jkHeight;
+//        if (jkRatio > ratioScreen) {
+//            jkScale = width / jkWidth;
+//        } else {
+//            jkScale = height / jkHeight;
+//        }
+
+//        计算机库位移
+
 
         scaleSize.set(currentScale * baseWidth, currentScale * baseHeight);
 
@@ -312,7 +284,6 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
 
         left = getLeft();
         top = getTop();
-        Log.d("mylog", "onDraw:save ");
 
         if (planList != null && planList.size() > 0) {
             for (Plan plan : planList) {
@@ -326,62 +297,115 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
                         airPaint.setColor(Color.YELLOW);
                     }
                 }
-//                canvas.drawCircle(100 * i, 100 * i, 100, airPaint);
-//                canvas.drawCircle(200, 200, 200, airPaint);
-                Log.d("mylog", "plan.getCox(): " + plan.getCox() + "plan.getCoy():" + plan.getCoy());
 //                移动到真实坐标原点
                 if (!isChecked) {
-                    canvas.translate(width / 2 + realBaseCenterX * realCurrentScale + plan.getCox() * realCurrentScale,
-                            height / 2 + realBaseCenterY * realCurrentScale - plan.getCoy() * realCurrentScale);
+                    if (plan.getStatypeno() == 0) {
+                        //                        判断显示在甲板还是机库  0机库 1甲板
+                        canvas.translate(width / 2 + realBaseCenterX * realCurrentScale + plan.getCox() * realCurrentScale,
+                                height / 4 * 3 + realBaseCenterY * realCurrentScale - plan.getCoy() * realCurrentScale);
+                    } else if (plan.getStatypeno() == 1) {
+                        canvas.translate(width / 2 + realBaseCenterX * realCurrentScale + plan.getCox() * realCurrentScale,
+                                height / 4 + realBaseCenterY * realCurrentScale - plan.getCoy() * realCurrentScale);
+                    }
                     canvas.rotate(360 - plan.getAngle());
+                    //                机型1-7    2567 直18   3直9    1,4歼15
+                    GoodInfo goodInfo = plan.getGoodInfo();
+                    if (goodInfo != null) {
+//                        绘制飞机编号
+                        canvas.drawText(goodInfo.getGoodname(), 0,
+                                centerFontY, numberPaint);
+                        canvas.scale(this.realCurrentScale, this.realCurrentScale);
+                        int typeNo = goodInfo.getTypeno();
+                        switch (typeNo) {
+                            case 2:
+                            case 5:
+                            case 6:
+                            case 7:
+                                if (plan.getShapetype() == 0) {
+                                    canvas.drawPath(AirUtils.getJ18Collapse(), airPaint);
+                                } else if (plan.getShapetype() == 1) {
+                                    canvas.drawPath(AirUtils.getJ18Expand(), airPaint);
+                                }
+                                break;
+                            case 3:
+                                if (plan.getShapetype() == 0) {
+                                    canvas.drawPath(AirUtils.getZ9Collapse(), airPaint);
+                                } else if (plan.getShapetype() == 1) {
+                                    canvas.drawPath(AirUtils.getZ9Expand(), airPaint);
+                                    canvas.drawPath(AirUtils.getZ9ExpandCircle(), airPaint);
+                                }
+                                break;
+                            case 1:
+                            case 4:
+                                if (plan.getShapetype() == 0) {
+                                    canvas.drawPath(AirUtils.getJ15Collapse(), airPaint);
+                                } else if (plan.getShapetype() == 1) {
+                                    canvas.drawPath(AirUtils.getJ15Expand(), airPaint);
+                                }
+                                break;
+                        }
+                    }
                 } else {
-                    canvas.translate(width / 2 + realBaseCenterX * realCurrentScale + plan.getPlancox() * realCurrentScale,
-                            height / 2 + realBaseCenterY * realCurrentScale - plan.getPlancoy() * realCurrentScale);
-                    canvas.rotate(360 - plan.getPlanangle());
-                }
-                canvas.scale(this.realCurrentScale, this.realCurrentScale);
-
-//
-//                canvas.concat(plan.getMatrix());
-//                机型1-7    2567 直18   3直9    1,4歼15
-                GoodInfo goodInfo = plan.getGoodInfo();
-                if (goodInfo != null) {
-//                    canvas.drawText(goodInfo.getGoodname(),100,100,deskPaint);
-                    int typeNo = goodInfo.getTypeno();
-                    switch (typeNo) {
-                        case 2:
-                        case 5:
-                        case 6:
-                        case 7:
-                            if (plan.getShapetype() == 0) {
-                                canvas.drawPath(AirUtils.getJ18Collapse(), airPaint);
-                            } else if (plan.getShapetype() == 1) {
-                                canvas.drawPath(AirUtils.getJ18Expand(), airPaint);
+                    if (!StringUtils.isEmpty(plan.getPlanstano())) {
+//                        判断显示在甲板还是机库
+                        if (plan.getPlanstatypeno() == 0) {
+                            canvas.translate(width / 2 + realBaseCenterX * realCurrentScale + plan.getPlancox() * realCurrentScale,
+                                    height / 4 * 3 + realBaseCenterY * realCurrentScale - plan.getPlancoy() * realCurrentScale);
+                        } else if (plan.getPlanstatypeno() == 1) {
+                            canvas.translate(width / 2 + realBaseCenterX * realCurrentScale + plan.getPlancox() * realCurrentScale,
+                                    height / 4 + realBaseCenterY * realCurrentScale - plan.getPlancoy() * realCurrentScale);
+                        }
+                        canvas.rotate(360 - plan.getPlanangle());
+                        //                机型1-7    2567 直18   3直9    1,4歼15
+                        GoodInfo goodInfo = plan.getGoodInfo();
+                        if (goodInfo != null) {
+                            //                        绘制飞机编号
+                            canvas.drawText(goodInfo.getGoodname(), 0,
+                                    centerFontY, numberPaint);
+                            canvas.scale(this.realCurrentScale, this.realCurrentScale);
+                            int typeNo = goodInfo.getTypeno();
+                            switch (typeNo) {
+                                case 2:
+                                case 5:
+                                case 6:
+                                case 7:
+                                    if (plan.getShapetype() == 0) {
+                                        canvas.drawPath(AirUtils.getJ18Collapse(), airPaint);
+                                    } else if (plan.getShapetype() == 1) {
+                                        canvas.drawPath(AirUtils.getJ18Expand(), airPaint);
+                                    }
+                                    break;
+                                case 3:
+                                    if (plan.getShapetype() == 0) {
+                                        canvas.drawPath(AirUtils.getZ9Collapse(), airPaint);
+                                    } else if (plan.getShapetype() == 1) {
+                                        canvas.drawPath(AirUtils.getZ9Expand(), airPaint);
+                                        canvas.drawPath(AirUtils.getZ9ExpandCircle(), airPaint);
+                                    }
+                                    break;
+                                case 1:
+                                case 4:
+                                    if (plan.getShapetype() == 0) {
+                                        canvas.drawPath(AirUtils.getJ15Collapse(), airPaint);
+                                    } else if (plan.getShapetype() == 1) {
+                                        canvas.drawPath(AirUtils.getJ15Expand(), airPaint);
+                                    }
+                                    break;
                             }
-                            break;
-                        case 3:
-                            if (plan.getShapetype() == 0) {
-                                canvas.drawPath(AirUtils.getZ9Collapse(), airPaint);
-                            } else if (plan.getShapetype() == 1) {
-                                canvas.drawPath(AirUtils.getZ9Expand(), airPaint);
-                                canvas.drawPath(AirUtils.getZ9ExpandCircle(), airPaint);
-                            }
-                            break;
-                        case 1:
-                        case 4:
-                            if (plan.getShapetype() == 0) {
-                                canvas.drawPath(AirUtils.getJ15Collapse(), airPaint);
-                            } else if (plan.getShapetype() == 1) {
-                                canvas.drawPath(AirUtils.getJ15Expand(), airPaint);
-                            }
-                            break;
+                        }
                     }
                 }
+
+                Log.d("mylog", "plan.getCox(): " + plan.getCox() + "plan.getCoy():" + plan.getCoy());
                 canvas.restore();
             }
         }
-        canvas.concat(this.currentMatrix);
+        canvas.save();
+        canvas.concat(this.deskMatrix);
         canvas.drawPath(deckOutline, deskPaint);
+        canvas.restore();
+        canvas.concat(jkMatrix);
+        canvas.drawPath(AirUtils.getJK(), deskPaint);
     }
 
     public void drawAir(@NotNull ArrayList<Plan> planList, boolean isChecked) {
@@ -566,9 +590,9 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
 //    }
 
 //    public void scaleImage(PointF scaleXY) {
-//        currentMatrix.setScale(scaleXY.x, scaleXY.y);
+//        deskMatrix.setScale(scaleXY.x, scaleXY.y);
 //        scaleSize.set(scaleXY.x * baseWidth, scaleXY.y * baseHeight);
-//        setImageMatrix(currentMatrix);
+//        setImageMatrix(deskMatrix);
 //    }
 
     /**
@@ -578,8 +602,8 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
      */
 //    public void translationImage(PointF pointF) {
 //        Log.d("ScaleView", "translationImage: ");
-//        currentMatrix.postTranslate(pointF.x, pointF.y);
-//        setImageMatrix(currentMatrix);
+//        deskMatrix.postTranslate(pointF.x, pointF.y);
+//        setImageMatrix(deskMatrix);
 //    }
 
     /**
@@ -691,17 +715,16 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
 //    }
 
 
-
 //    public void mapCenterWithPoint(float x, float y) {
 //        float[] goal = {x, y};
-//        this.currentMatrix.mapPoints(goal);
+//        this.deskMatrix.mapPoints(goal);
 //        float deltaX = this.getWidth() / 2.0f - goal[0];
 //        float deltaY = this.getHeight() / 2.0f - goal[1];
-//        this.currentMatrix.postTranslate(deltaX, deltaY);
+//        this.deskMatrix.postTranslate(deltaX, deltaY);
 //    }
 //
 //    public void setCurrentRotateDegrees(float degrees, float x, float y) {
-//        currentMatrix.postRotate(degrees - this.currentRotateDegrees, x, y);
+//        deskMatrix.postRotate(degrees - this.currentRotateDegrees, x, y);
 //
 //        currentRotateDegrees = degrees % 360;
 //    }
@@ -712,11 +735,11 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
 //    }
 //
 //    public void scaleImg(int progress) {
-////        currentMatrix.setScale(originScale.x * doubleClickZoom,originScale.y * doubleClickZoom);
-//        currentMatrix.setScale(originScale.x * 3f, originScale.y * 3f);
-////        currentMatrix.postTranslate(200, 200);
+////        deskMatrix.setScale(originScale.x * doubleClickZoom,originScale.y * doubleClickZoom);
+//        deskMatrix.setScale(originScale.x * 3f, originScale.y * 3f);
+////        deskMatrix.postTranslate(200, 200);
 //        invalidate();
-////        setImageMatrix(currentMatrix);
-////        currentMatrix.postScale(progress, progress, width / 2, height / 2);
+////        setImageMatrix(deskMatrix);
+////        deskMatrix.postScale(progress, progress, width / 2, height / 2);
 //    }
 }

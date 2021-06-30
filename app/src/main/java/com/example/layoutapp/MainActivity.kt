@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearSnapHelper
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
+import com.blankj.utilcode.constant.RegexConstants
 import com.blankj.utilcode.util.*
 import com.example.layoutapp.adapter.BottomSheetAdapter
 import com.example.layoutapp.bean.Plan
@@ -42,7 +43,6 @@ import kotlinx.coroutines.*
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
-import java.util.regex.Pattern
 
 class MainActivity : AppCompatActivity() {
     private lateinit var smartTable: com.bin.david.form.core.SmartTable<Any>
@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var timer: Timer
     private lateinit var pollingTask: PollingTask
     private lateinit var notifyReceiver: NotifyReceiver
-    private lateinit var min_id: String
+    private var min_id: Int = 0
     private lateinit var planId: String
     private var isShowPlan: Boolean = true
 
@@ -74,24 +74,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initData() {
-        min_id = SPUtils.getInstance().getString("min_id", "")
-
+//        min_id = SPUtils.getInstance().getString("min_id", "")
         timer = Timer()
         pollingTask = PollingTask()
-        timer.schedule(pollingTask, 0, 5000 * 1000)
+        val nowDate = TimeUtils.getNowString().split(" ")[0]
+        getTaskByDate(nowDate)
+
     }
 
     inner class PollingTask : TimerTask() {
         override fun run() {
             Log.d("mylog", "run: ")
-            if (StringUtils.isEmpty(this@MainActivity.min_id)) {
-                val nowDate = TimeUtils.getNowString().split(" ")[0]
-                getTaskByDate(nowDate)
-            } else {
-                getTaskById(this@MainActivity.min_id)
-            }
-        }
+//            if (StringUtils.isEmpty(this@MainActivity.min_id)) {
 
+//            } else {
+            getTaskById(this@MainActivity.min_id)
+//            }
+        }
     }
 
     private fun getTaskByDate(nowDate: String) {
@@ -103,11 +102,12 @@ class MainActivity : AppCompatActivity() {
                 ) {
                     val taskList: ArrayList<Task>? = response.body()
                     if (taskList != null && taskList.size > 0) {
-                        this@MainActivity.min_id = taskList.last().id.toString()
-                        SPUtils.getInstance().put("min_id", taskList.last().id.toString())
+                        this@MainActivity.min_id = taskList.last().id + 1
+//                        SPUtils.getInstance().put("min_id", (taskList.last().id + 1).toString())
                         bottomSheetAdapter.data = taskList
                         bottomSheetAdapter.notifyDataSetChanged()
                         getPlan(taskList[0].plan_id)
+                        timer.schedule(pollingTask, 0, 5000 * 1000)
                     }
                 }
 
@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity() {
             })
     }
 
-    private fun getTaskById(minId: String) {
+    private fun getTaskById(minId: Int) {
         ApiService.create().getTaskById(minId)
             .enqueue(object : Callback<ArrayList<Task>?> {
                 override fun onResponse(
@@ -135,8 +135,8 @@ class MainActivity : AppCompatActivity() {
                         }
                         val last = taskList.last()
                         planId = last.plan_id
-                        this@MainActivity.min_id = last.id.toString()
-                        SPUtils.getInstance().put("min_id", last.id.toString())
+                        this@MainActivity.min_id = last.id + 1
+//                        SPUtils.getInstance().put("min_id", (last.id + 1).toString())
                         bottomSheetAdapter.data = taskList
                         bottomSheetAdapter.notifyDataSetChanged()
                         generateBigTextStyleNotification(last)
@@ -361,51 +361,57 @@ class MainActivity : AppCompatActivity() {
         mSourceData: ArrayList<Table>
     ) {
         GlobalScope.launch(Dispatchers.Main) {
-            try {
+//            try {
 
-                for (plan in planList) {
-                    val table = Table(plan.goodno, plan.stano, plan.planstano)
-                    mSourceData.add(table)
-                    withContext(Dispatchers.IO) {
+            for (plan in planList) {
+                val table = Table(plan.goodno, plan.stano, plan.planstano)
+                mSourceData.add(table)
+                withContext(Dispatchers.IO) {
+                    if (!StringUtils.isEmpty(plan.stano)) {
                         val stations = ApiService.create().getStation(plan.stano)
                         if (stations.size > 0) {
                             val station = stations[0]
                             plan.cox = station.cox
                             plan.coy = station.coy
                             plan.angle = station.angle
+                            plan.statypeno = station.typeno
                         }
-                        val goodInfos = ApiService.create().getGoodInfo(plan.goodno)
-                        if (goodInfos.size > 0) {
-                            val goodInfo = goodInfos[0]
-                            plan.goodInfo = goodInfo
-                        }
-                        Log.d(
-                            "may",
-                            "plan.cox: ${plan.cox}plan.coy: ${plan.coy}plan.angle: ${plan.angle}"
-                        )
                     }
 
+                    val goodInfos = ApiService.create().getGoodInfo(plan.goodno)
+                    if (goodInfos.size > 0) {
+                        val goodInfo = goodInfos[0]
+                        plan.goodInfo = goodInfo
+                    }
+                    Log.d(
+                        "may",
+                        "plan.cox: ${plan.cox}plan.coy: ${plan.coy}plan.angle: ${plan.angle}"
+                    )
+                }
 
-                    withContext(Dispatchers.IO) {
+                withContext(Dispatchers.IO) {
+                    if (!StringUtils.isEmpty(plan.planstano)) {
                         val planStations = ApiService.create().getStation(plan.planstano)
                         if (planStations.size > 0) {
                             val planStation = planStations[0]
                             plan.plancox = planStation.cox
                             plan.plancoy = planStation.coy
                             plan.planangle = planStation.angle
+                            plan.planstatypeno = planStation.typeno
                         }
-
-                        Log.d(
-                            "may",
-                            "plan.plancox: ${plan.plancox}plan.plancoy: ${plan.plancoy}plan.planangle: ${plan.planangle}"
-                        )
                     }
-                }
-                Log.d("may===", "isMainThread=" + ThreadUtils.isMainThread())
 
-            } catch (e: Exception) {
-                ToastUtils.showShort("获取站位信息失败")
+                    Log.d(
+                        "may",
+                        "plan.plancox: ${plan.plancox}plan.plancoy: ${plan.plancoy}plan.planangle: ${plan.planangle}"
+                    )
+                }
             }
+            Log.d("may===", "isMainThread=" + ThreadUtils.isMainThread())
+
+//            } catch (e: Exception) {
+//                ToastUtils.showShort("获取站位信息失败")
+//            }
             ivPic.drawAir(planList, false)
             smartTable.setData(mSourceData as List<Any>?)
             smartTable.setZoom(false)
@@ -433,13 +439,36 @@ class MainActivity : AppCompatActivity() {
                     val customView = getCustomView()
                     val etUrl = customView.findViewById<EditText>(R.id.et_url)
                     if (!StringUtils.isEmpty(etUrl.text)) {
-                        val completeUrl = getCompleteUrl("http://" + etUrl.text.toString())
-                        if (completeUrl) {
-                            materialDialog.cancel()
-                            SPUtils.getInstance().put("url", completeUrl)
-                            ToastUtils.showShort("已更换新的网址")
+//                        val completeUrl = getCompleteUrl("http://" + etUrl.text.toString())
+                        if (etUrl.text.contains(":")) {
+                            val split = etUrl.text.split(":")
+                            val ip = split[0]
+                            val port = split[1]
+                            if (!StringUtils.isEmpty(ip) && port.isNotEmpty() && RegexUtils.isMatch(
+                                    RegexConstants.REGEX_INTEGER,
+                                    port
+                                )
+                            ) {
+                                val isIp = RegexUtils.isIP(ip)
+                                if (isIp) {
+                                    materialDialog.cancel()
+                                    SPUtils.getInstance().put("url", etUrl.text.toString())
+                                    ToastUtils.showShort("已更换新的网址")
+                                } else {
+                                    ToastUtils.showShort("请输入正确的网址")
+                                }
+                            } else {
+                                ToastUtils.showShort("请输入正确的网址")
+                            }
                         } else {
-                            ToastUtils.showShort("请输入正确的网址")
+                            val isIp = RegexUtils.isIP(etUrl.text)
+                            if (isIp) {
+                                materialDialog.cancel()
+                                SPUtils.getInstance().put("url", etUrl.text.toString())
+                                ToastUtils.showShort("已更换新的网址")
+                            } else {
+                                ToastUtils.showShort("请输入正确的网址")
+                            }
                         }
                     } else {
                         ToastUtils.showShort("网址不能为空")
@@ -452,23 +481,23 @@ class MainActivity : AppCompatActivity() {
 
 
     //    验证是否是合理的网址
-    private fun getCompleteUrl(text: String): Boolean {
-        val sb = StringBuilder();
-        sb.append("(");
-        for (f in a) {
-            sb.append(f);
-            sb.append("|");
-        }
-        sb.deleteCharAt(sb.length - 1);
-        sb.append(")");
-
-        val p = Pattern.compile(
-            "((https?|s?ftp|irc[6s]?|git|afp|telnet|smb)://)?((\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})|((www\\.|[a-zA-Z\\.\\-]+\\.)?[a-zA-Z0-9\\-]+\\.$sb(:[0-9]{1,5})?))((/[a-zA-Z0-9\\./,;\\?'\\+&%\\$#=~_\\-]*)|([^\\u4e00-\\u9fa5\\s0-9a-zA-Z\\./,;\\?'\\+&%\\$#=~_\\-]*))",
-            Pattern.CASE_INSENSITIVE
-        );
-        val matcher = p.matcher(text);
-        return matcher.matches()
-    }
+//    private fun getCompleteUrl(text: String): Boolean {
+//        val sb = StringBuilder();
+//        sb.append("(");
+//        for (f in a) {
+//            sb.append(f);
+//            sb.append("|");
+//        }
+//        sb.deleteCharAt(sb.length - 1);
+//        sb.append(")");
+//
+//        val p = Pattern.compile(
+//            "((https?|s?ftp|irc[6s]?|git|afp|telnet|smb)://)?((\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})|((www\\.|[a-zA-Z\\.\\-]+\\.)?[a-zA-Z0-9\\-]+\\.$sb(:[0-9]{1,5})?))((/[a-zA-Z0-9\\./,;\\?'\\+&%\\$#=~_\\-]*)|([^\\u4e00-\\u9fa5\\s0-9a-zA-Z\\./,;\\?'\\+&%\\$#=~_\\-]*))",
+//            Pattern.CASE_INSENSITIVE
+//        );
+//        val matcher = p.matcher(text);
+//        return matcher.matches()
+//    }
 
 
     /*
@@ -620,20 +649,14 @@ class MainActivity : AppCompatActivity() {
         override fun onReceive(context: Context?, intent: Intent?) {
             when (intent?.getStringExtra("action")) {
                 "FILE" -> {
-                    min_id = SPUtils.getInstance().getString("min_id", "")
-                    if (!StringUtils.isEmpty(min_id)) {
-                        getPlan(planId)
-                        switchMaterial.isChecked = false
-                        if (bottomSheetAdapter.data.size > 0) {
-                            for (index in bottomSheetAdapter.data.indices) {
-                                if (StringUtils.equals(
-                                        min_id,
-                                        bottomSheetAdapter.data[index].id.toString()
-                                    )
-                                ) {
-                                    bottomSheetAdapter.currentIndex = index
-                                    bottomSheetAdapter.notifyDataSetChanged()
-                                }
+//                    min_id = SPUtils.getInstance().getString("min_id", "")
+                    getPlan(planId)
+                    switchMaterial.isChecked = false
+                    if (bottomSheetAdapter.data.size > 0) {
+                        for (index in bottomSheetAdapter.data.indices) {
+                            if (min_id == bottomSheetAdapter.data[index].id) {
+                                bottomSheetAdapter.currentIndex = index
+                                bottomSheetAdapter.notifyDataSetChanged()
                             }
                         }
                     }

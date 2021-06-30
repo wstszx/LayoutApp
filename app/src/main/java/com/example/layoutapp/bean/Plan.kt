@@ -4,7 +4,7 @@ import android.graphics.Matrix
 
 
 data class Plan(
-    var planangle: Any? = null,
+    var planangle: Float = 0.0f,
     var shapetype: Int = 1,
     var waveno: Int? = null,
     var planshapetype: Int = 1,

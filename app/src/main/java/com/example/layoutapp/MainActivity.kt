@@ -296,6 +296,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getPlan(planId: String) {
+        switchMaterial.isChecked = false
         planList = arrayListOf()
         ApiService.create().getPlan(planId)
             .enqueue(object : Callback<ArrayList<Plan>?> {

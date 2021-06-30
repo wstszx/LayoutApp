@@ -38,6 +38,7 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
     private Paint deskPaint;
     private Path deckOutline;
     private ArrayList<Plan> planList;
+    private boolean isChecked;
     private boolean isFirstDraw = true;
 
     public Matrix currentMatrix = new Matrix();
@@ -329,10 +330,17 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
 //                canvas.drawCircle(200, 200, 200, airPaint);
                 Log.d("mylog", "plan.getCox(): " + plan.getCox() + "plan.getCoy():" + plan.getCoy());
 //                移动到真实坐标原点
-                canvas.translate(width / 2 + realBaseCenterX * realCurrentScale + plan.getCox() * realCurrentScale,
-                        height / 2 + realBaseCenterY * realCurrentScale - plan.getCoy() * realCurrentScale);
+                if (!isChecked) {
+                    canvas.translate(width / 2 + realBaseCenterX * realCurrentScale + plan.getCox() * realCurrentScale,
+                            height / 2 + realBaseCenterY * realCurrentScale - plan.getCoy() * realCurrentScale);
+                    canvas.rotate(360 - plan.getAngle());
+                } else {
+                    canvas.translate(width / 2 + realBaseCenterX * realCurrentScale + plan.getPlancox() * realCurrentScale,
+                            height / 2 + realBaseCenterY * realCurrentScale - plan.getPlancoy() * realCurrentScale);
+                    canvas.rotate(360 - plan.getPlanangle());
+                }
                 canvas.scale(this.realCurrentScale, this.realCurrentScale);
-                canvas.rotate(360 - plan.getAngle());
+
 //
 //                canvas.concat(plan.getMatrix());
 //                机型1-7    2567 直18   3直9    1,4歼15
@@ -376,6 +384,29 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
         canvas.drawPath(deckOutline, deskPaint);
     }
 
+    public void drawAir(@NotNull ArrayList<Plan> planList, boolean isChecked) {
+        this.planList = planList;
+        this.isChecked = isChecked;
+//        matrixList = new ArrayList<>();
+//        for (int i = 0; i < planList.size(); i++) {
+//            Plan plan = planList.get(i);
+//            Matrix matrix = new Matrix();
+//            matrix.setScale(this.realCurrentScale, this.realCurrentScale);
+//            matrix.postRotate(360 - plan.getAngle());
+////            位移到开始或结束坐标位置
+////            realBaseCenter * realCurrentScale 真实坐标相对原点的偏移
+////            Log.d("mylog", "drawAir: " + width / 2 + "=-==" + height / 2);
+//            if (!isChecked) {
+//                matrix.postTranslate(realDx + realBaseCenterX * realCurrentScale + plan.getCox() * realCurrentScale,
+//                        realDy + realBaseCenterY * realCurrentScale - plan.getCoy() * realCurrentScale);
+//            } else {
+//                matrix.postTranslate(realDx + realBaseCenterX * realCurrentScale + plan.getPlancox() * realCurrentScale,
+//                        realDy + realBaseCenterY * realCurrentScale - plan.getPlancoy() * realCurrentScale);
+//            }
+//            plan.setMatrix(matrix);
+//        }
+        invalidate();
+    }
 
 //    @Override
 //    public boolean onTouch(View v, MotionEvent event) {
@@ -658,28 +689,7 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
 //            return true;
 //        }
 //    }
-    public void drawAir(@NotNull ArrayList<Plan> planList, boolean isChecked) {
-        this.planList = planList;
-//        matrixList = new ArrayList<>();
-        for (int i = 0; i < planList.size(); i++) {
-            Plan plan = planList.get(i);
-            Matrix matrix = new Matrix();
-            matrix.setScale(this.realCurrentScale, this.realCurrentScale);
-            matrix.postRotate(360 - plan.getAngle());
-//            位移到开始或结束坐标位置
-//            realBaseCenter * realCurrentScale 真实坐标相对原点的偏移
-//            Log.d("mylog", "drawAir: " + width / 2 + "=-==" + height / 2);
-            if (!isChecked) {
-                matrix.postTranslate(realDx + realBaseCenterX * realCurrentScale + plan.getCox() * realCurrentScale,
-                        realDy + realBaseCenterY * realCurrentScale - plan.getCoy() * realCurrentScale);
-            } else {
-                matrix.postTranslate(realDx + realBaseCenterX * realCurrentScale + plan.getPlancox() * realCurrentScale,
-                        realDy + realBaseCenterY * realCurrentScale - plan.getPlancoy() * realCurrentScale);
-            }
-            plan.setMatrix(matrix);
-        }
-        invalidate();
-    }
+
 
 
 //    public void mapCenterWithPoint(float x, float y) {

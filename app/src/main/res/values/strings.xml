@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LayoutApp</string>
+    <string name="app_name">任务下达</string>
     <string name="Service_Address">服务地址</string>
     <string name="confirm">确认</string>
     <string name="cancel">取消</string>

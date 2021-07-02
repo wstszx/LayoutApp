@@ -54,7 +54,7 @@ interface ApiService {
                 .addInterceptor(logger)
                 .build()
 
-//            val urlStr = SPUtils.getInstance().getString("url", "http://192.168.101.137:8087")
+//            val urlStr = SPUtils.getInstance().getString("url", "http://192.168.101.10:8087")
             val urlStr = SPUtils.getInstance().getString("url", "http://www.wstszx.com")
             return Retrofit.Builder()
                 .baseUrl(urlStr)

@@ -48,7 +48,7 @@ public class AirUtils {
 
     public static Path getJ15Collapse() {
         Path path = new Path();
-        path.lineTo(13812f, 0);
+        path.moveTo(13812f, 0);
         path.lineTo(12940.2f, 355.373f);
         path.lineTo(11810f, 585.377f);
         path.lineTo(9271.64f, 809.285f);
@@ -107,7 +107,7 @@ public class AirUtils {
 
     public static Path getJ15Expand() {
         Path path = new Path();
-        path.lineTo(12940.2f, 355.381f);
+        path.moveTo(12940.2f, 355.381f);
         path.lineTo(11810f, 585.386f);
         path.lineTo(9271.64f, 809.293f);
         path.lineTo(7481.66f, 1121.74f);
@@ -176,7 +176,7 @@ public class AirUtils {
 
     public static Path getJ18Collapse() {
         Path path = new Path();
-        path.lineTo(6499.99f, -8.9584f);
+        path.moveTo(6499.99f, -8.9584f);
         path.lineTo(6492.32f, 249.155f);
         path.lineTo(6462.96f, 433.203f);
         path.lineTo(6396.07f, 618.135f);
@@ -307,7 +307,7 @@ public class AirUtils {
 
     public static Path getJ18Expand() {
         Path path = new Path();
-        path.lineTo(9434.0464f, 55.8736f);
+        path.moveTo(9434.0464f, 55.8736f);
         path.lineTo(8942.9237f, 134.4675f);
         path.lineTo(8942.9237f, 134.4675f);
         path.lineTo(6442.7163f, 441.5776f);
@@ -409,7 +409,7 @@ public class AirUtils {
 
     public static Path getZ20Expand() {
         Path path = new Path();
-        path.lineTo(7662f, 30f);
+        path.moveTo(7662f, 30f);
         path.lineTo(7586.888f, 420.006f);
         path.lineTo(7344.36f, 759.996f);
         path.lineTo(6008.322f, 1170.54f);
@@ -478,7 +478,7 @@ public class AirUtils {
 
     public static Path getZ9Expand() {
         Path path = new Path();
-        path.lineTo(5242f, 0f);
+        path.moveTo(5242f, 0f);
         path.lineTo(5134f, 198f);
         path.lineTo(4364f, 532f);
         path.lineTo(2752f, 874f);
@@ -499,14 +499,13 @@ public class AirUtils {
         path.lineTo(4364f, -532.8f);
         path.lineTo(5134f, -197.98f);
         path.lineTo(5242f, 0.01f);
-
         path.close();
         return path;
     }
 
     public static Path getZ9Collapse() {
         Path path = new Path();
-        path.lineTo(5242f, 0f);
+        path.moveTo(5242f, 0f);
         path.lineTo(5152f, 184f);
         path.lineTo(4591f, 459f);
         path.lineTo(3609f, 730f);
@@ -559,119 +558,6 @@ public class AirUtils {
         return path;
     }
 
-//    public static Path getJK() {
-//        Path path = new Path();
-//        path.lineTo(0f, -25278f);
-//        path.lineTo(5077f, -25278f);
-//        path.lineTo(5644f, -24229f);
-//        path.lineTo(14700f, -24229f);
-//        path.lineTo(14703f, -17102f);
-//        path.lineTo(14350f, -17102f);
-//        path.lineTo(14350f, -16401f);
-//        path.lineTo(14700f, -16401f);
-//        path.lineTo(14700f, -14000f);
-//        path.lineTo(31350f, -14000f);
-//        path.lineTo(31350f, -16600f);
-//        path.lineTo(31750f, -16600f);
-//        path.lineTo(31750f, -17300f);
-//        path.lineTo(31350f, -17300f);
-//        path.lineTo(31350f, -23290f);
-//        path.lineTo(49100f, -23290f);
-//        path.lineTo(60201f, -23250f);
-//        path.lineTo(83854f, -21738f);
-//        path.lineTo(85884f, -21462f);
-//        path.lineTo(87555f, -20920f);
-//        path.lineTo(88695f, -20005f);
-//        path.lineTo(89895f, -18310f);
-//        path.lineTo(90868f, -15841f);
-//        path.lineTo(91625f, -12751f);
-//        path.lineTo(114200f, -9350f);
-//        path.lineTo(127700f, -6963f);
-//        path.lineTo(131500f, -6062f);
-//        path.lineTo(141141f, -2937f);
-//        path.lineTo(142830f, -1739f);
-//        path.lineTo(143444f, -893f);
-//        path.lineTo(143706f, 0f);
-//        path.lineTo(143346f, 1076f);
-//        path.lineTo(142765f, 1806f);
-//        path.lineTo(141139f, 2926f);
-//        path.lineTo(131500f, 6064f);
-//        path.lineTo(127700f, 6963f);
-//        path.lineTo(124000f, 7721f);
-//        path.lineTo(120000f, 8420f);
-//        path.lineTo(114200f, 9350f);
-//        path.lineTo(105500f, 10715f);
-//        path.lineTo(92000f, 12702f);
-//        path.lineTo(91625f, 12751f);
-//        path.lineTo(90671f, 16512f);
-//        path.lineTo(89346f, 19214f);
-//        path.lineTo(87824f, 20773f);
-//        path.lineTo(87000f, 21122f);
-//        path.lineTo(84500f, 21683f);
-//        path.lineTo(73500f, 22412f);
-//        path.lineTo(57400f, 23201f);
-//        path.lineTo(56361f, 25278f);
-//        path.lineTo(-21000f, 25278f);
-//        path.lineTo(-21000f, 23201f);
-//        path.lineTo(-28000f, 23201f);
-//        path.lineTo(-28000f, 25278f);
-//        path.lineTo(-35600f, 25278f);
-//        path.lineTo(-35600f, 22627f);
-//        path.lineTo(-63000f, 22627f);
-//        path.lineTo(-63000f, 25186f);
-//        path.lineTo(-70000f, 25186f);
-//        path.lineTo(-70000f, 22627f);
-//        path.lineTo(-83500f, 22627f);
-//        path.lineTo(-83500f, 25147f);
-//        path.lineTo(-135397f, 25147f);
-//        path.lineTo(-136995f, 19149f);
-//        path.lineTo(-139041f, 19149f);
-//        path.lineTo(-141489f, 18935f);
-//        path.lineTo(-141870f, 18777f);
-//        path.lineTo(-142117f, 18502f);
-//        path.lineTo(-142531f, 17080f);
-//        path.lineTo(-142990f, 13000f);
-//        path.lineTo(-139998f, 13000f);
-//        path.lineTo(-139998f, 11750f);
-//        path.lineTo(-143089f, 11750f);
-//        path.lineTo(-143759f, 2977f);
-//        path.lineTo(-142494f, 1716f);
-//        path.lineTo(-142000f, 0f);
-//        path.lineTo(-142494f, -1716f);
-//        path.lineTo(-143759f, -2977f);
-//        path.lineTo(-143089f, -11750f);
-//        path.lineTo(-139998f, -11750f);
-//        path.lineTo(-139998f, -13000f);
-//        path.lineTo(-142990f, -13000f);
-//        path.lineTo(-142593f, -16745f);
-//        path.lineTo(-141906f, -18750f);
-//        path.lineTo(-140192f, -19115f);
-//        path.lineTo(-136995f, -19149f);
-//        path.lineTo(-135500f, -24765f);
-//        path.lineTo(-108000f, -24765f);
-//        path.lineTo(-108000f, -23671f);
-//        path.lineTo(-83350f, -23671f);
-//        path.lineTo(-83350f, -17200f);
-//        path.lineTo(-83650f, -17200f);
-//        path.lineTo(-83650f, -16500f);
-//        path.lineTo(-83350f, -16500f);
-//        path.lineTo(-83350f, -14000f);
-//        path.lineTo(-66650f, -14000f);
-//        path.lineTo(-66650f, -16500f);
-//        path.lineTo(-66300f, -16500f);
-//        path.lineTo(-66300f, -17200f);
-//        path.lineTo(-66650f, -17200f);
-//        path.lineTo(-66649f, -23770f);
-//        path.lineTo(-54000f, -23770f);
-//        path.lineTo(-54000f, -25278f);
-//        path.lineTo(-18000f, -25278f);
-//        path.lineTo(-18000f, -23770f);
-//        path.lineTo(-11200f, -23770f);
-//        path.lineTo(-11200f, -25278f);
-//        path.lineTo(0f, -25278f);
-//        path.close();
-//        return path;
-//    }
 
     public static Path getLifts1() {
         Path path = new Path();
@@ -716,6 +602,78 @@ public class AirUtils {
         path.lineTo(1318539.0393f, 680315.6353f);
         path.lineTo(1283539.0393f, 680315.6353f);
 //        path.lineTo(1283539.0393f, 654315.6353f);
+        path.close();
+        return path;
+    }
+
+    public static Path getRealJK() {
+        Path path = new Path();
+        path.moveTo(-118000f, -13000f);
+        path.lineTo(-118000f, 13000f);
+        path.lineTo(-83004.0015f, 13000f);
+        path.lineTo(-83002.6916f, 27993.4825f);
+        path.lineTo(-78003.4149f, 28998.3247f);
+        path.lineTo(-71996.5851f, 28998.3247f);
+        path.lineTo(-66997.3084f, 27993.4825f);
+        path.lineTo(-67000f, 13000f);
+        path.lineTo(14995.9985f, 13000f);
+        path.lineTo(14997.3084f, 27993.4825f);
+        path.lineTo(19969.9936f, 28963.1596f);
+        path.lineTo(25961.1796f, 28963.1596f);
+        path.lineTo(31000f, 27993.4729f);
+        path.lineTo(31000f, 13000f);
+        path.lineTo(35000f, 13000f);
+        path.lineTo(35000f, -13000f);
+        path.close();
+        return path;
+    }
+
+    public static Path getRealDesk() {
+        Path path = new Path();
+        path.moveTo(-114700f, -28300f);
+        path.lineTo(-115500f, -27500f);
+        path.lineTo(-115500f, -22400f);
+        path.lineTo(-145790.6737f, -20116.1605f);
+        path.lineTo(-141267.8558f, 19999.8343f);
+        path.lineTo(-130000f, 19999.5762f);
+        path.lineTo(-130000f, 22565.6009f);
+        path.lineTo(-121000f, 22565.6009f);
+        path.lineTo(-121000f, 27500f);
+        path.lineTo(-115500f, 27500f);
+        path.lineTo(-114699.8263f, 28300.1738f);
+        path.lineTo(-83004.0015f, 28299.0758f);
+        path.lineTo(-78003.4149f, 28998.3147f);
+        path.lineTo(-71996.5851f, 28998.3147f);
+        path.lineTo(-67002.1245f, 28309.6646f);
+        path.lineTo(-65226.1176f, 30850f);
+        path.lineTo(-32000f, 30850f);
+        path.lineTo(-27800f, 29740.0281f);
+        path.lineTo(-10100f, 29740.0281f);
+        path.lineTo(-2000f, 29740.0281f);
+        path.lineTo(13661.1813f, 29740.0281f);
+        path.lineTo(14999.6702f, 28457.9725f);
+        path.lineTo(19996.5851f, 28963.1496f);
+        path.lineTo(25961.1796f, 28963.1496f);
+        path.lineTo(31000f, 28300.0001f);
+        path.lineTo(34999.9988f, 28300.0001f);
+        path.lineTo(35499.9988f, 29800.0001f);
+        path.lineTo(36999.9988f, 29800.0001f);
+        path.lineTo(37499.9988f, 28800.0001f);
+        path.lineTo(43907.5703f, 28557.2891f);
+        path.lineTo(44288.7243f, 28014.8879f);
+        path.lineTo(65891.9909f, 26794.993f);
+        path.lineTo(71000f, 19500f);
+        path.lineTo(71000f, 16498.0399f);
+        path.lineTo(159090f, 9040f);
+        path.lineTo(159090f, -9040f);
+        path.lineTo(61838.22f, -17271.71f);
+        path.lineTo(49300f, -38950.01f);
+        path.lineTo(22927.9988f, -38935.8352f);
+        path.lineTo(7352.3736f, -35869.3739f);
+        path.lineTo(7352.3736f, -35869.3739f);
+        path.lineTo(7000.0309f, -35800.0062f);
+        path.lineTo(7000.031f, -35000f);
+        path.lineTo(-114700f, -28300f);
         path.close();
         return path;
     }

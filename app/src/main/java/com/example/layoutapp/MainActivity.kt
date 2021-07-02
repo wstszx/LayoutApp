@@ -335,14 +335,14 @@ class MainActivity : AppCompatActivity() {
         } else {
             val filteredList = ArrayList<Table>()
             for (mSourceDatum in mSourceData) {
-                if (mSourceDatum.number.toString().contains(s.toString())) {
+                if (mSourceDatum.number?.contains(s.toString()) == true) {
                     filteredList.add(mSourceDatum)
                 }
             }
             if (filteredList.size > 0) {
                 smartTable.setData(filteredList as List<Any>?)
             } else {
-                filteredList.add(Table(-1, "无", "无"))
+                filteredList.add(Table("-1", "无", "无"))
                 smartTable.setData(filteredList as List<Any>?)
             }
         }
@@ -364,8 +364,7 @@ class MainActivity : AppCompatActivity() {
 //            try {
 
             for (plan in planList) {
-                val table = Table(plan.goodno, plan.stano, plan.planstano)
-                mSourceData.add(table)
+
                 withContext(Dispatchers.IO) {
                     if (!StringUtils.isEmpty(plan.stano)) {
                         val stations = ApiService.create().getStation(plan.stano)
@@ -382,6 +381,8 @@ class MainActivity : AppCompatActivity() {
                     if (goodInfos.size > 0) {
                         val goodInfo = goodInfos[0]
                         plan.goodInfo = goodInfo
+                        val table = Table(goodInfo.goodname, plan.stano, plan.planstano)
+                        mSourceData.add(table)
                     }
                     Log.d(
                         "may",

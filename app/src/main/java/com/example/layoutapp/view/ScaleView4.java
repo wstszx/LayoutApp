@@ -7,6 +7,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
 
@@ -35,19 +36,18 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
 
 
     private Paint deskPaint;
-    private Path deckOutline;
+    private Path deskPath;
     private ArrayList<Plan> planList;
     private boolean isChecked;
     private boolean isFirstDraw = true;
 
     public Matrix deskMatrix = new Matrix();
     public float currentRotateDegrees = 1.0f;
-    public float currentScale = 1.0f;
-    public float realCurrentScale = 1.0f;
-    public float baseWidth;
-    public float baseHeight;
-    public float baseCenterX;
-    public float baseCenterY;
+    public float deskScale = 1.0f;
+    public float deskWidth;
+    public float deskHeight;
+    public float deskCenterX;
+    public float deskCenterY;
 
     private Path airOutline;
     private float baseAirWidth;
@@ -92,27 +92,15 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
     private float doubleFingerScrole = 0;
     //上次触碰的手指数量
     private int lastFingerNum = 0;
-    private float maxX;
-    private float minX;
-    private float maxY;
-    private float minY;
-    private float realBaseWidth;
-    private float realBaseHeight;
-    private float realBaseCenterX;
-    private float realBaseCenterY;
-    private float realDx;
-    private float realDy;
     private Path jkPath;
-    private Path lifts1Path;
-    private Path lifts2Path;
-    private float jkWidth;
-    private float jkCenterX;
-    private float jkCenterY;
-    private float jkHeight;
     private float jkScale;
     private Matrix jkMatrix;
     private Paint numberPaint;
     private float centerFontY;
+    private float jkWidth;
+    private float jkHeight;
+    private float jkCenterX;
+    private float jkCenterY;
 
     //缩放的三个状态
     public class ZoomMode {
@@ -150,6 +138,8 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
         numberPaint = new Paint();
         numberPaint.setColor(Color.RED);
         numberPaint.setAntiAlias(true);
+        numberPaint.setTextSize(18);
+        numberPaint.setTypeface(Typeface.DEFAULT_BOLD);
         numberPaint.setTextAlign(Paint.Align.CENTER);
         Paint.FontMetrics numberFontMetrics = numberPaint.getFontMetrics();
         centerFontY = (numberFontMetrics.bottom - numberFontMetrics.top) / 2 - numberFontMetrics.bottom;//计算文字居中的位移
@@ -158,50 +148,37 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
         deskMatrix = new Matrix();// 甲板矩阵
 
 //        甲板轮廓
-        deckOutline = AirUtils.getDeskPath();
-        maxX = 1560629.0393f;
-        minX = 1254232.4181f;
-        maxY = 615947.0784f;
-        minY = 543997.0784f;
+        deskPath = AirUtils.getRealDesk();
+        float deskMaxX = 159090f;
+        float deskMinX = -145790.6737f;
+        float deskMaxY = 38950.01f;
+        float deskMinY = -30850f;
 
 //        甲板宽高
-        baseWidth = (maxX - minX);
-        baseHeight = (maxY - minY);
+        deskWidth = (deskMaxX - deskMinX);
+        deskHeight = (deskMaxY - deskMinY);
 //算出甲板中心点坐标
-        baseCenterX = (maxX + minX) / 2;
-        baseCenterY = (maxY + minY) / 2;
-
-        //        真实轮廓大小
-        float realMaxX = 159090f;
-        float realMinX = -147306f;
-        float realMaxY = 41100f;
-        float realMinY = -33053f;
-
-//        真实甲板宽高
-        realBaseWidth = realMaxX - realMinX;
-        realBaseHeight = realMaxY - realMinY;
-
-        //真实甲板中心点坐标
-        realBaseCenterX = (realMaxX + realMinX) / 2;
-        realBaseCenterY = (realMaxY + realMinY) / 2;
-
+        deskCenterX = (deskMaxX + deskMinX) / 2;
+        deskCenterY = (deskMaxY + deskMinY) / 2;
 
         //        机库轮廓
-        jkPath = AirUtils.getJK();
-//        lifts1Path = AirUtils.getLifts1();
-//        lifts2Path = AirUtils.getLifts2();
+        jkPath = AirUtils.getRealJK();
+//        真实机库大小
+        float jkMaxX = 35000f;
+        float jkMinX = -118000f;
+        float jkMaxY = 13000f;
+        float jkMinY = -28998.3247f;
 
-        float jkPathMaxX = 1436539.0393f;
-        float jkPathMinX = 1283539.0393f;
-        float jkPathMaxY = 696313.9600f;
-        float jkPathMinY = 654315.6353f;
+        //        真实机库宽高
+        jkWidth = jkMaxX - jkMinX;
+        jkHeight = jkMaxY - jkMinY;
+
+        //真实甲板中心点坐标
+        jkCenterX = (jkMaxX + jkMinX) / 2;
+        jkCenterY = (jkMaxY + jkMinY) / 2;
+
         jkMatrix = new Matrix();// 机库矩阵
-//        机库宽高
-        jkWidth = jkPathMaxX - jkPathMinX;
-        jkHeight = jkPathMaxY - jkPathMinY;
-//        机库中心点坐标
-        jkCenterX = (jkPathMaxX + jkPathMinX) / 2;
-        jkCenterY = (jkPathMaxY + jkPathMinY) / 2;
+
     }
 
     @Override
@@ -213,64 +190,41 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
         Log.d("ScaleView", "onMeasure: widthMeasureSpec:" + width + "heightMeasureSpec:" + height + "width:" + getWidth() + "height:" + getHeight());
 
 //        图片比例
-        float ratioT = baseWidth / baseHeight;
+        float ratioT = deskWidth / deskHeight;
 //        控件比例
         float ratioScreen = width * 1.0f / height;
 
 
         if (ratioT > ratioScreen) {
-            this.currentScale = width / baseWidth;
-            realCurrentScale = width / realBaseWidth;
+            this.deskScale = width / deskWidth;
             bitmapOriginPoint.x = 0;
-            bitmapOriginPoint.y = viewSize.y / 2 - currentScale * baseHeight / 2;
+            bitmapOriginPoint.y = viewSize.y / 2 - deskScale * deskHeight / 2;
             Log.d("ScaleViewSize", "bitmapOriginPoint.x : " + bitmapOriginPoint.x + ", bitmapOriginPoint.y : " + bitmapOriginPoint.y);
         } else {
-            this.currentScale = height / baseHeight;
-            realCurrentScale = height / realBaseHeight;
-            bitmapOriginPoint.x = viewSize.x / 2 - currentScale * baseWidth / 2;
+            this.deskScale = height / deskHeight;
+            bitmapOriginPoint.x = viewSize.x / 2 - deskScale * deskWidth / 2;
             bitmapOriginPoint.y = 0;
         }
-        float dx = (width / 2f - this.currentScale * baseCenterX);
-        float dy = (height / 4f - this.currentScale * baseCenterY);
+        float deskDx = (width / 2f - this.deskScale * deskCenterX);
+        float deskDy = (height / 4f - this.deskScale * deskCenterY);
 
-//        计算甲板原点位移
-        realDx = (width / 2f - this.realCurrentScale * realBaseCenterX);
-        realDy = (height / 2f - this.realCurrentScale * realBaseCenterY);
-        Log.d("ScaleView", "onMeasure: dx:" + dx + "dy:" + dy);
+        this.deskMatrix.setScale(this.deskScale, this.deskScale);
+        this.deskMatrix.postTranslate(deskDx, deskDy);
 
-        this.deskMatrix.setScale(this.currentScale, this.currentScale);
-        this.deskMatrix.postTranslate(dx, dy);
+        float jkDx = (width / 2f - this.deskScale * jkCenterX + (jkCenterX - deskCenterX) * deskScale);
+        float jkDy = (height / 4f * 3 - this.deskScale * jkCenterY+ (jkCenterY - deskCenterY) * deskScale);
+        jkMatrix.setScale(this.deskScale, this.deskScale);
+        jkMatrix.postTranslate(jkDx, jkDy);
 
-
-        float jkDy = (height / 4f * 3 - this.currentScale * jkCenterY);
-        jkMatrix.setScale(this.currentScale, this.currentScale);
-        jkMatrix.postTranslate(dx, jkDy);
-
-//根据甲板计算机库的缩放
-//        float jkRatio = jkWidth / jkHeight;
-//        if (jkRatio > ratioScreen) {
-//            jkScale = width / jkWidth;
-//        } else {
-//            jkScale = height / jkHeight;
-//        }
-
-//        计算机库位移
-
-
-        scaleSize.set(currentScale * baseWidth, currentScale * baseHeight);
+        scaleSize.set(deskScale * deskWidth, deskScale * deskHeight);
 
         //保存下最初的缩放比例
-        originScale.set(currentScale, currentScale);
-        doubleFingerScrole = currentScale;
+        originScale.set(deskScale, deskScale);
+        doubleFingerScrole = deskScale;
 
 
 //        showCenter();
 
-//        float airDx = (width / 2f - this.currentScale * baseAirCenterX);
-//        float airDy = (height / 2f - this.currentScale * baseAirCenterY);
-
-//        this.airMatrix.setScale(this.currentScale, this.currentScale);
-//        this.airMatrix.postTranslate(airDx, airDy);
     }
 
     @Override
@@ -301,11 +255,11 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
                 if (!isChecked) {
                     if (plan.getStatypeno() == 0) {
                         //                        判断显示在甲板还是机库  0机库 1甲板
-                        canvas.translate(width / 2 + realBaseCenterX * realCurrentScale + plan.getCox() * realCurrentScale,
-                                height / 4 * 3 + realBaseCenterY * realCurrentScale - plan.getCoy() * realCurrentScale);
+                        canvas.translate(width / 2 + deskCenterX * deskScale + plan.getCox() * deskScale,
+                                height / 4 * 3 + deskCenterY * deskScale - plan.getCoy() * deskScale);
                     } else if (plan.getStatypeno() == 1) {
-                        canvas.translate(width / 2 + realBaseCenterX * realCurrentScale + plan.getCox() * realCurrentScale,
-                                height / 4 + realBaseCenterY * realCurrentScale - plan.getCoy() * realCurrentScale);
+                        canvas.translate(width / 2 + deskCenterX * deskScale + plan.getCox() * deskScale,
+                                height / 4 + deskCenterY * deskScale - plan.getCoy() * deskScale);
                     }
                     canvas.rotate(360 - plan.getAngle());
                     //                机型1-7    2567 直18   3直9    1,4歼15
@@ -314,7 +268,7 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
 //                        绘制飞机编号
                         canvas.drawText(goodInfo.getGoodname(), 0,
                                 centerFontY, numberPaint);
-                        canvas.scale(this.realCurrentScale, this.realCurrentScale);
+                        canvas.scale(this.deskScale, this.deskScale);
                         int typeNo = goodInfo.getTypeno();
                         switch (typeNo) {
                             case 2:
@@ -349,11 +303,11 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
                     if (!StringUtils.isEmpty(plan.getPlanstano())) {
 //                        判断显示在甲板还是机库
                         if (plan.getPlanstatypeno() == 0) {
-                            canvas.translate(width / 2 + realBaseCenterX * realCurrentScale + plan.getPlancox() * realCurrentScale,
-                                    height / 4 * 3 + realBaseCenterY * realCurrentScale - plan.getPlancoy() * realCurrentScale);
+                            canvas.translate(width / 2 + deskCenterX * deskScale + plan.getPlancox() * deskScale,
+                                    height / 4 * 3 + deskCenterY * deskScale - plan.getPlancoy() * deskScale);
                         } else if (plan.getPlanstatypeno() == 1) {
-                            canvas.translate(width / 2 + realBaseCenterX * realCurrentScale + plan.getPlancox() * realCurrentScale,
-                                    height / 4 + realBaseCenterY * realCurrentScale - plan.getPlancoy() * realCurrentScale);
+                            canvas.translate(width / 2 + deskCenterX * deskScale + plan.getPlancox() * deskScale,
+                                    height / 4 + deskCenterY * deskScale - plan.getPlancoy() * deskScale);
                         }
                         canvas.rotate(360 - plan.getPlanangle());
                         //                机型1-7    2567 直18   3直9    1,4歼15
@@ -362,7 +316,7 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
                             //                        绘制飞机编号
                             canvas.drawText(goodInfo.getGoodname(), 0,
                                     centerFontY, numberPaint);
-                            canvas.scale(this.realCurrentScale, this.realCurrentScale);
+                            canvas.scale(this.deskScale, this.deskScale);
                             int typeNo = goodInfo.getTypeno();
                             switch (typeNo) {
                                 case 2:
@@ -402,10 +356,10 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
         }
         canvas.save();
         canvas.concat(this.deskMatrix);
-        canvas.drawPath(deckOutline, deskPaint);
+        canvas.drawPath(deskPath, deskPaint);
         canvas.restore();
         canvas.concat(jkMatrix);
-        canvas.drawPath(AirUtils.getJK(), deskPaint);
+        canvas.drawPath(jkPath, deskPaint);
     }
 
     public void drawAir(@NotNull ArrayList<Plan> planList, boolean isChecked) {
@@ -415,17 +369,17 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
 //        for (int i = 0; i < planList.size(); i++) {
 //            Plan plan = planList.get(i);
 //            Matrix matrix = new Matrix();
-//            matrix.setScale(this.realCurrentScale, this.realCurrentScale);
+//            matrix.setScale(this.deskScale, this.deskScale);
 //            matrix.postRotate(360 - plan.getAngle());
 ////            位移到开始或结束坐标位置
-////            realBaseCenter * realCurrentScale 真实坐标相对原点的偏移
+////            realBaseCenter * deskScale 真实坐标相对原点的偏移
 ////            Log.d("mylog", "drawAir: " + width / 2 + "=-==" + height / 2);
 //            if (!isChecked) {
-//                matrix.postTranslate(realDx + realBaseCenterX * realCurrentScale + plan.getCox() * realCurrentScale,
-//                        realDy + realBaseCenterY * realCurrentScale - plan.getCoy() * realCurrentScale);
+//                matrix.postTranslate(realDx + realBaseCenterX * deskScale + plan.getCox() * deskScale,
+//                        realDy + realBaseCenterY * deskScale - plan.getCoy() * deskScale);
 //            } else {
-//                matrix.postTranslate(realDx + realBaseCenterX * realCurrentScale + plan.getPlancox() * realCurrentScale,
-//                        realDy + realBaseCenterY * realCurrentScale - plan.getPlancoy() * realCurrentScale);
+//                matrix.postTranslate(realDx + realBaseCenterX * deskScale + plan.getPlancox() * deskScale,
+//                        realDy + realBaseCenterY * deskScale - plan.getPlancoy() * deskScale);
 //            }
 //            plan.setMatrix(matrix);
 //        }

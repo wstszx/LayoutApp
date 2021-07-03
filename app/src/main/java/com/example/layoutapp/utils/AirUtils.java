@@ -1,50 +1,9 @@
 package com.example.layoutapp.utils;
 
 import android.graphics.Path;
+import android.graphics.PointF;
 
 public class AirUtils {
-
-    public static Path getDeskPath() {
-        Path path = new Path();
-        path.moveTo(1254232.4181f, 565097.1457f);
-        path.lineTo(1286039.0393f, 562697.0784f);
-        path.lineTo(1286039.0393f, 557597.0784f);
-        path.lineTo(1286839.0393f, 556797.0784f);
-        path.lineTo(1290339.0393f, 556797.0784f);
-        path.lineTo(1296940.1657f, 556097.0864f);
-        path.lineTo(1297689.0393f, 556097.0864f);
-        path.lineTo(1297689.0393f, 552056.6517f);
-        path.lineTo(1298539.0104f, 551952.2884f);
-        path.lineTo(1298539.0393f, 551097.0784f);
-        path.lineTo(1299239.0393f, 550097.0784f);
-        path.lineTo(1378539.0393f, 550097.0784f);
-        path.lineTo(1378539.0393f, 547497.0784f);
-        path.lineTo(1379289.0393f, 547497.0784f);
-        path.lineTo(1379289.0393f, 543997.0784f);
-        path.lineTo(1383552.2039f, 543997.0784f);
-        path.lineTo(1384289.0393f, 547497.0784f);
-        path.lineTo(1385539.0393f, 547496.8832f);
-        path.lineTo(1385539.0393f, 550097.0784f);
-        path.lineTo(1408539.0703f, 550097.0784f);
-        path.lineTo(1408891.4117f, 549227.7047f);
-        path.lineTo(1424467.0381f, 546161.2537f);
-        path.lineTo(1450847.0592f, 546161.2537f);
-        path.lineTo(1463129.5192f, 567870.4485f);
-        path.lineTo(1560629.0393f, 576241.8312f);
-        path.lineTo(1560629.0393f, 594137.0784f);
-        path.lineTo(1472539.0393f, 601595.5584f);
-        path.lineTo(1472539.0393f, 602664.3384f);
-        path.lineTo(1472539.0393f, 604597.0784f);
-        path.lineTo(1467431.0302f, 611892.0714f);
-        path.lineTo(1445446.6096f, 613654.3675f);
-        path.lineTo(1415200.2206f, 614837.1065f);
-        path.lineTo(1336312.9217f, 615947.0784f);
-        path.lineTo(1334941.7895f, 612903.3409f);
-        path.lineTo(1259144.7305f, 605097.0784f);
-        path.lineTo(1254232.4181f, 565097.1457f);
-        path.close();
-        return path;
-    }
 
     public static Path getJ15Collapse() {
         Path path = new Path();
@@ -104,6 +63,19 @@ public class AirUtils {
 
         return path;
     }
+
+    public static PointF getJ15CollapseDistance() {
+        float j15CollapseMaxX = 13812f;
+        float j15CollapseMinX = -7372.99f;
+        float j15CollapseMaxY = 3519.99f;
+        float j15CollapseMinY = -3519.96f;
+
+        float j15CollapseDx = (j15CollapseMaxX + j15CollapseMinX) / 2;
+        float j15CollapseDy = (j15CollapseMaxY + j15CollapseMinY) / 2;
+
+        return new PointF(j15CollapseDx, j15CollapseDy);
+    }
+
 
     public static Path getJ15Expand() {
         Path path = new Path();
@@ -173,6 +145,19 @@ public class AirUtils {
 
         return path;
     }
+
+    public static PointF getJ15ExpandDistance() {
+        float j15ExpandMaxX = 12940.2f;
+        float j15ExpandMinX = -7372.99f;
+        float j15ExpandMaxY = 7350.14f;
+        float j15ExpandMinY = -7350.11f;
+
+        float j15ExpandDx = (j15ExpandMaxX + j15ExpandMinX) / 2;
+        float j15ExpandDy = (j15ExpandMaxY + j15ExpandMinY) / 2;
+
+        return new PointF(j15ExpandDx, j15ExpandDy);
+    }
+
 
     public static Path getJ18Collapse() {
         Path path = new Path();
@@ -305,6 +290,19 @@ public class AirUtils {
         return path;
     }
 
+    public static PointF getJ18CollapseDistance() {
+        float j18CollapseMaxX = 7736.0346f;
+        float j18CollapseMinX = -10494.3f;
+        float j18CollapseMaxY = 2764.27f;
+        float j18CollapseMinY = -2654.91f;
+
+        float j18CollapseDx = (j18CollapseMaxX + j18CollapseMinX) / 2;
+        float j18CollapseDy = (j18CollapseMaxY + j18CollapseMinY) / 2;
+
+        return new PointF(j18CollapseDx, j18CollapseDy);
+    }
+
+
     public static Path getJ18Expand() {
         Path path = new Path();
         path.moveTo(9434.0464f, 55.8736f);
@@ -407,6 +405,18 @@ public class AirUtils {
         return path;
     }
 
+    public static PointF getJ18ExpandDistance() {
+        float j18ExpandMaxX = 9434.0464f;
+        float j18ExpandMinX = -13724.8897f;
+        float j18ExpandMaxY = 8253.244f;
+        float j18ExpandMinY = -8270.9731f;
+
+        float j18ExpandDx = (j18ExpandMaxX + j18ExpandMinX) / 2;
+        float j18ExpandDy = (j18ExpandMaxY + j18ExpandMinY) / 2;
+
+        return new PointF(j18ExpandDx, j18ExpandDy);
+    }
+
     public static Path getZ20Expand() {
         Path path = new Path();
         path.moveTo(7662f, 30f);
@@ -503,6 +513,19 @@ public class AirUtils {
         return path;
     }
 
+    public static PointF getZ9ExpandDistance() {
+        float z9ExpandMaxX = 5242f;
+        float z9ExpandMinX = -6955.9f;
+        float z9ExpandMaxY = 1602.9f;
+        float z9ExpandMinY = -1602.9f;
+
+        float z9ExpandDx = (z9ExpandMaxX + z9ExpandMinX) / 2;
+        float z9ExpandDy = (z9ExpandMaxY + z9ExpandMinY) / 2;
+
+        return new PointF(z9ExpandDx, z9ExpandDy);
+    }
+
+
     public static Path getZ9Collapse() {
         Path path = new Path();
         path.moveTo(5242f, 0f);
@@ -530,6 +553,19 @@ public class AirUtils {
         path.close();
         return path;
     }
+
+    public static PointF getZ9CollapseDistance() {
+        float z9CollapseMaxX = 5242f;
+        float z9CollapseMinX = -6956f;
+        float z9CollapseMaxY = 1605f;
+        float z9CollapseMinY = -1605f;
+
+        float z9CollapseDx = (z9CollapseMaxX + z9CollapseMinX) / 2;
+        float z9CollapseDy = (z9CollapseMaxY + z9CollapseMinY) / 2;
+
+        return new PointF(z9CollapseDx, z9CollapseDy);
+    }
+
 
     public static Path getZ9ExpandCircle() {
         Path path = new Path();
@@ -561,7 +597,7 @@ public class AirUtils {
 
     public static Path getLifts1() {
         Path path = new Path();
-        path.lineTo(15400f, -14000f);
+        path.moveTo(15400f, -14000f);
         path.lineTo(31404.0011f, -14000f);
         path.lineTo(31406.6931f, -27993.4827f);
         path.lineTo(26525.025f, -28971.0275f);
@@ -573,7 +609,7 @@ public class AirUtils {
 
     public static Path getLifts2() {
         Path path = new Path();
-        path.lineTo(-82600f, -14000f);
+        path.moveTo(-82600f, -14000f);
         path.lineTo(-66595.9989f, -14000f);
         path.lineTo(-66593.3069f, -27993.4827f);
         path.lineTo(-71474.975f, -28971.0275f);
@@ -601,7 +637,6 @@ public class AirUtils {
         path.lineTo(1318536.3477f, 695309.1179f);
         path.lineTo(1318539.0393f, 680315.6353f);
         path.lineTo(1283539.0393f, 680315.6353f);
-//        path.lineTo(1283539.0393f, 654315.6353f);
         path.close();
         return path;
     }

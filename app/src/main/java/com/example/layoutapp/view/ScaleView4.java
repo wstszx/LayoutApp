@@ -39,7 +39,6 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
     private Path deskPath;
     private ArrayList<Plan> planList;
     private boolean isChecked;
-    private boolean isFirstDraw = true;
 
     public Matrix deskMatrix = new Matrix();
     public float currentRotateDegrees = 1.0f;
@@ -49,11 +48,6 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
     public float deskCenterX;
     public float deskCenterY;
 
-    private Path airOutline;
-    private float baseAirWidth;
-    private float baseAirHeight;
-    private float baseAirCenterX;
-    private float baseAirCenterY;
     private ArrayList<Matrix> matrixList;
     private int left;
     private int top;
@@ -93,7 +87,6 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
     //上次触碰的手指数量
     private int lastFingerNum = 0;
     private Path jkPath;
-    private float jkScale;
     private Matrix jkMatrix;
     private Paint numberPaint;
     private float centerFontY;
@@ -254,7 +247,7 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
 //                移动到真实坐标原点
                 if (!isChecked) {
                     if (plan.getStatypeno() == 0) {
-                        //                        判断显示在甲板还是机库  0机库 1甲板
+                        //判断显示在甲板还是机库  0机库 1甲板
                         canvas.translate(width / 2 + deskCenterX * deskScale + plan.getCox() * deskScale,
                                 height / 4 * 3 + deskCenterY * deskScale - plan.getCoy() * deskScale);
                     } else if (plan.getStatypeno() == 1) {
@@ -365,6 +358,8 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
     public void drawAir(@NotNull ArrayList<Plan> planList, boolean isChecked) {
         this.planList = planList;
         this.isChecked = isChecked;
+        invalidate();
+
 //        matrixList = new ArrayList<>();
 //        for (int i = 0; i < planList.size(); i++) {
 //            Plan plan = planList.get(i);
@@ -383,7 +378,6 @@ public class ScaleView4 extends androidx.appcompat.widget.AppCompatImageView {
 //            }
 //            plan.setMatrix(matrix);
 //        }
-        invalidate();
     }
 
 //    @Override

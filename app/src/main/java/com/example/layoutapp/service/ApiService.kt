@@ -19,13 +19,13 @@ interface ApiService {
     @GET("/TaskOrder")
     fun getTaskByDate(
         @Query("date") date: String,
-    ): Call<ArrayList<Task>>
+    ): Call<MutableList<Task>>
 
     //    通过id获取任务列表
     @GET("/TaskOrder")
     fun getTaskById(
         @Query("min_id") min_id: Int,
-    ): Call<ArrayList<Task>>
+    ): Call<MutableList<Task>>
 
     //    获取指定计划
     @GET("/PlanLayout")
@@ -54,8 +54,8 @@ interface ApiService {
                 .addInterceptor(logger)
                 .build()
 
-//            val urlStr = SPUtils.getInstance().getString("url", "http://192.168.101.10:8087")
-            val urlStr = SPUtils.getInstance().getString("url", "http://www.wstszx.com")
+            val urlStr = SPUtils.getInstance().getString("url", "http://192.168.191.1:8087")
+//            val urlStr = SPUtils.getInstance().getString("url", "http://www.wstszx.com")
             return Retrofit.Builder()
                 .baseUrl(urlStr)
                 .client(client)

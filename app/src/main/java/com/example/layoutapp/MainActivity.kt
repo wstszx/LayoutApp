@@ -36,13 +36,14 @@ import com.example.layoutapp.service.ApiService
 import com.example.layoutapp.service.BigTextIntentService
 import com.example.layoutapp.utils.MockDatabase
 import com.example.layoutapp.utils.NotificationUtil
-import com.example.layoutapp.view.ScaleView4
+import com.example.layoutapp.view.ScaleView1
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.switchmaterial.SwitchMaterial
 import kotlinx.coroutines.*
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
     private lateinit var smartTable: com.bin.david.form.core.SmartTable<Any>
@@ -50,7 +51,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var bottomSheetAdapter: BottomSheetAdapter
     lateinit var view: View
     private lateinit var switchMaterial: SwitchMaterial
-    private lateinit var ivPic: ScaleView4
+    private lateinit var ivPic: ScaleView1
     private lateinit var tvPos: TextView
     private val a = arrayOf("top", "com.cn", "com", "net", "cn", "cc", "gov", "cn", "hk");
     private lateinit var mSourceData: ArrayList<Table>
@@ -85,65 +86,65 @@ class MainActivity : AppCompatActivity() {
     inner class PollingTask : TimerTask() {
         override fun run() {
             Log.d("mylog", "run: ")
-//            if (StringUtils.isEmpty(this@MainActivity.min_id)) {
-
-//            } else {
             getTaskById(this@MainActivity.min_id)
-//            }
         }
     }
 
     private fun getTaskByDate(nowDate: String) {
-        ApiService.create().getTaskByDate(nowDate)
-            .enqueue(object : Callback<ArrayList<Task>> {
+        ApiService.create().getTaskByDate("2021-07-04")
+            .enqueue(object : Callback<MutableList<Task>> {
                 override fun onResponse(
-                    call: retrofit2.Call<ArrayList<Task>>,
-                    response: Response<ArrayList<Task>>
+                    call: retrofit2.Call<MutableList<Task>>,
+                    response: Response<MutableList<Task>>
                 ) {
-                    val taskList: ArrayList<Task>? = response.body()
+                    val taskList: MutableList<Task>? = response.body()
                     if (taskList != null && taskList.size > 0) {
                         this@MainActivity.min_id = taskList.last().id + 1
-//                        SPUtils.getInstance().put("min_id", (taskList.last().id + 1).toString())
-                        bottomSheetAdapter.data = taskList
+                        val last = taskList.last()
+                        planId = last.plan_id
+                        //                        SPUtils.getInstance().put("min_id", (taskList.last().id + 1).toString())
+                        bottomSheetAdapter.data = taskList.asReversed()
                         bottomSheetAdapter.notifyDataSetChanged()
-                        getPlan(taskList[0].plan_id)
-                        timer.schedule(pollingTask, 0, 5000 * 1000)
+                        getPlan(planId)
+                        timer.schedule(pollingTask, 0, 5 * 1000.toLong())
                     }
                 }
 
                 override fun onFailure(
-                    call: retrofit2.Call<ArrayList<Task>>,
+                    call: retrofit2.Call<MutableList<Task>>,
                     t: Throwable
                 ) {
 
                 }
+
             })
     }
 
     private fun getTaskById(minId: Int) {
         ApiService.create().getTaskById(minId)
-            .enqueue(object : Callback<ArrayList<Task>?> {
+            .enqueue(object : Callback<MutableList<Task>?> {
                 override fun onResponse(
-                    call: retrofit2.Call<ArrayList<Task>?>,
-                    response: Response<ArrayList<Task>?>
+                    call: retrofit2.Call<MutableList<Task>?>,
+                    response: Response<MutableList<Task>?>
                 ) {
-                    val taskList: ArrayList<Task>? = response.body()
+                    val taskList: MutableList<Task>? = response.body()
                     if (taskList != null && taskList.size > 0) {
-                        if (isShowPlan) {
-                            getPlan(taskList[0].plan_id)
-                            isShowPlan = false
-                        }
+//                        if (isShowPlan) {
+//                            getPlan(taskList[0].plan_id)
+//                            isShowPlan = false
+//                        }
                         val last = taskList.last()
                         planId = last.plan_id
                         this@MainActivity.min_id = last.id + 1
 //                        SPUtils.getInstance().put("min_id", (last.id + 1).toString())
-                        bottomSheetAdapter.data = taskList
+                        bottomSheetAdapter.data = taskList.asReversed()
                         bottomSheetAdapter.notifyDataSetChanged()
+                        getPlan(taskList[0].plan_id)
                         generateBigTextStyleNotification(last)
                     }
                 }
 
-                override fun onFailure(call: retrofit2.Call<ArrayList<Task>?>, t: Throwable) {
+                override fun onFailure(call: retrofit2.Call<MutableList<Task>?>, t: Throwable) {
 
                 }
             })
@@ -165,41 +166,6 @@ class MainActivity : AppCompatActivity() {
 //        val seekBar = activityMainBinding.seekBar
         ivPic = activityMainBinding.ivPic
         tvPos = activityMainBinding.tvPos
-//        val svg = SVG.getFromResource(resources, R.raw.test2)
-//        svg.documentWidth = 800f
-//        svg.documentHeight = 250f
-//        val createBitmap = Bitmap.createBitmap(800, 250, Bitmap.Config.ARGB_8888)
-//        val canvas = Canvas(createBitmap)
-//        canvas.drawColor(Color.WHITE)
-//        svg.renderToCanvas(canvas)
-//        ivPic.background = BitmapDrawable(resources, createBitmap)
-
-
-//        val drawable =
-//            ResourcesCompat.getDrawable(resources, R.drawable.desk_tranlate, null) as BitmapDrawable
-//        val copyBitmap = drawable.bitmap.copy(Bitmap.Config.ARGB_8888, true)
-//        val canvas = Canvas(copyBitmap)
-//        val paint = Paint()
-//        // 抗锯齿
-//        paint.isAntiAlias = true;
-//        // 防抖动
-//        paint.isDither = true;
-//        paint.textSize = 20F;
-//        paint.color = Color.parseColor("#ff0000");
-//        canvas.drawText(
-//            "我是画上去的",
-//            ((copyBitmap.width / 5).toFloat()),
-//            ((copyBitmap.height / 2).toFloat()),
-//            paint
-//        )
-//        ivPic.setImageBitmap(copyBitmap)
-
-
-//        ivPic.isZoomEnabled = false
-//        ivPic.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM)
-//        ivPic.maxScale = 2f
-//        ivPic.setImage(ImageSource.resource(R.drawable.desk_tranlate))
-//        ivPic.setBackgroundResource(R.drawable.ic_desk_test)
 
         smartTable = activityMainBinding.smartTable
         switchMaterial = activityMainBinding.switchMaterial
@@ -248,6 +214,18 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        switchMaterial.let {
+            it.setOnClickListener {
+                Log.d("mylog", "onCreate: " + switchMaterial.isChecked)
+                switchStartAndEnd(switchMaterial.isChecked)
+            }
+        }
+
+        bottomSheetDialog = BottomSheetDialog(this)
+        bottomSheetDialog.setContentView(view)
+
+        activityMainBinding.ivToggle.setOnClickListener { bottomSheetDialog.show() }
+
 //        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
 //            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
 //                Log.d("mylog", "onProgressChanged: " + progress)
@@ -280,18 +258,7 @@ class MainActivity : AppCompatActivity() {
 ////                Log.d("mylog", "ivPic.scale2: " + ivPic.scale)
 //            }
 //        }
-        switchMaterial.let {
-            it.setOnClickListener {
-                Log.d("mylog", "onCreate: " + switchMaterial.isChecked)
-                switchStartAndEnd(switchMaterial.isChecked)
 
-            }
-        }
-
-        bottomSheetDialog = BottomSheetDialog(this)
-        bottomSheetDialog.setContentView(view)
-
-        activityMainBinding.ivToggle.setOnClickListener { bottomSheetDialog.show() }
 
     }
 
@@ -361,58 +328,57 @@ class MainActivity : AppCompatActivity() {
         mSourceData: ArrayList<Table>
     ) {
         GlobalScope.launch(Dispatchers.Main) {
-//            try {
+            try {
 
-            for (plan in planList) {
+                for (plan in planList) {
 
-                withContext(Dispatchers.IO) {
-                    if (!StringUtils.isEmpty(plan.stano)) {
-                        val stations = ApiService.create().getStation(plan.stano)
-                        if (stations.size > 0) {
-                            val station = stations[0]
-                            plan.cox = station.cox
-                            plan.coy = station.coy
-                            plan.angle = station.angle
-                            plan.statypeno = station.typeno
+                    withContext(Dispatchers.IO) {
+                        if (!StringUtils.isEmpty(plan.stano)) {
+                            val stations = ApiService.create().getStation(plan.stano)
+                            if (stations.size > 0) {
+                                val station = stations[0]
+                                plan.cox = station.cox
+                                plan.coy = station.coy
+                                plan.angle = station.angle
+                                plan.statypeno = station.typeno
+                            }
                         }
-                    }
 
-                    val goodInfos = ApiService.create().getGoodInfo(plan.goodno)
-                    if (goodInfos.size > 0) {
-                        val goodInfo = goodInfos[0]
-                        plan.goodInfo = goodInfo
-                        val table = Table(goodInfo.goodname, plan.stano, plan.planstano)
-                        mSourceData.add(table)
-                    }
-                    Log.d(
-                        "may",
-                        "plan.cox: ${plan.cox}plan.coy: ${plan.coy}plan.angle: ${plan.angle}"
-                    )
-                }
-
-                withContext(Dispatchers.IO) {
-                    if (!StringUtils.isEmpty(plan.planstano)) {
-                        val planStations = ApiService.create().getStation(plan.planstano)
-                        if (planStations.size > 0) {
-                            val planStation = planStations[0]
-                            plan.plancox = planStation.cox
-                            plan.plancoy = planStation.coy
-                            plan.planangle = planStation.angle
-                            plan.planstatypeno = planStation.typeno
+                        val goodInfos = ApiService.create().getGoodInfo(plan.goodno)
+                        if (goodInfos.size > 0) {
+                            val goodInfo = goodInfos[0]
+                            plan.goodInfo = goodInfo
+                            val table = Table(goodInfo.goodname.trim(), plan.stano, plan.planstano)
+                            mSourceData.add(table)
                         }
+                        Log.d(
+                            "may",
+                            "plan.cox: ${plan.cox}plan.coy: ${plan.coy}plan.angle: ${plan.angle}"
+                        )
                     }
 
-                    Log.d(
-                        "may",
-                        "plan.plancox: ${plan.plancox}plan.plancoy: ${plan.plancoy}plan.planangle: ${plan.planangle}"
-                    )
+                    withContext(Dispatchers.IO) {
+                        if (!StringUtils.isEmpty(plan.planstano)) {
+                            val planStations = ApiService.create().getStation(plan.planstano)
+                            if (planStations.size > 0) {
+                                val planStation = planStations[0]
+                                plan.plancox = planStation.cox
+                                plan.plancoy = planStation.coy
+                                plan.planangle = planStation.angle
+                                plan.planstatypeno = planStation.typeno
+                            }
+                        }
+
+                        Log.d(
+                            "may",
+                            "plan.plancox: ${plan.plancox}plan.plancoy: ${plan.plancoy}plan.planangle: ${plan.planangle}"
+                        )
+                    }
                 }
+                Log.d("may===", "isMainThread=" + ThreadUtils.isMainThread())
+            } catch (e: Exception) {
+                ToastUtils.showShort(e.message)
             }
-            Log.d("may===", "isMainThread=" + ThreadUtils.isMainThread())
-
-//            } catch (e: Exception) {
-//                ToastUtils.showShort("获取站位信息失败")
-//            }
             ivPic.drawAir(planList, false)
             smartTable.setData(mSourceData as List<Any>?)
             smartTable.setZoom(false)
@@ -422,7 +388,6 @@ class MainActivity : AppCompatActivity() {
             config.isShowTableTitle = false
             config.horizontalPadding = 0
         }
-
     }
 
 
@@ -453,7 +418,8 @@ class MainActivity : AppCompatActivity() {
                                 val isIp = RegexUtils.isIP(ip)
                                 if (isIp) {
                                     materialDialog.cancel()
-                                    SPUtils.getInstance().put("url", etUrl.text.toString())
+                                    SPUtils.getInstance()
+                                        .put("url", "http://" + etUrl.text.toString())
                                     ToastUtils.showShort("已更换新的网址")
                                 } else {
                                     ToastUtils.showShort("请输入正确的网址")
@@ -465,7 +431,7 @@ class MainActivity : AppCompatActivity() {
                             val isIp = RegexUtils.isIP(etUrl.text)
                             if (isIp) {
                                 materialDialog.cancel()
-                                SPUtils.getInstance().put("url", etUrl.text.toString())
+                                SPUtils.getInstance().put("url", "http://" + etUrl.text.toString())
                                 ToastUtils.showShort("已更换新的网址")
                             } else {
                                 ToastUtils.showShort("请输入正确的网址")

@@ -13,7 +13,8 @@ import com.example.layoutapp.databinding.ItemLegendBinding
 
 class BottomSheetAdapter :
     RecyclerView.Adapter<BottomSheetAdapter.ViewHolder>() {
-    var data = ArrayList<Task>()
+
+    var data: MutableList<Task> = mutableListOf()
     private lateinit var onItemClickListener: OnItemClickListener
     var currentIndex = 0
 

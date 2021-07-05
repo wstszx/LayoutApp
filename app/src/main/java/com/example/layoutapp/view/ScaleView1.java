@@ -3,19 +3,21 @@ package com.example.layoutapp.view;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PointF;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 
 import androidx.annotation.Nullable;
 
+import com.blankj.utilcode.util.StringUtils;
+import com.example.layoutapp.bean.GoodInfo;
 import com.example.layoutapp.bean.Plan;
-import com.example.layoutapp.bean.Position;
-import com.example.layoutapp.utils.SvgPathToAndroidPath;
+import com.example.layoutapp.utils.AirUtils1;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -33,54 +35,79 @@ public class ScaleView1 extends androidx.appcompat.widget.AppCompatImageView {
 //    新疆地图
 //    private final String path = "M153.889,69.508L156.216,69.494L154.788,74.019L156.81300000000002,76.399L157.049,78.065L161.574,82.589L162.76500000000001,86.042L168.71800000000002,86.399L171.33800000000002,88.664H172.76700000000002L176.22000000000003,96.043L179.67100000000002,104.974L177.88700000000003,110.331L178.24500000000003,112.35600000000001L175.03000000000003,117.83300000000001L175.86300000000003,122.11900000000001L187.05500000000004,126.88200000000002L199.08000000000004,128.67000000000002L211.58300000000003,137.241L215.63200000000003,138.67000000000002L215.86900000000003,140.931L218.48800000000003,146.40900000000002L221.10700000000003,153.555L224.44000000000003,159.508L222.53700000000003,161.77100000000002V165.818L218.25100000000003,167.84400000000002L207.65500000000003,172.12800000000001L200.74800000000002,177.847L195.86700000000002,180.107L195.03300000000002,183.56L196.46300000000002,200.11L192.532,199.514L190.74900000000002,200.94500000000002L164.43400000000003,206.06400000000002L160.74300000000002,208.92000000000002L161.10100000000003,215.82600000000002L169.07900000000004,222.37400000000002L166.45900000000003,226.66000000000003L162.76900000000003,228.32800000000003L162.17200000000003,230.35200000000003L163.00700000000003,232.61100000000002H165.02800000000002L166.22000000000003,234.04000000000002L158.48200000000003,236.657L153.95700000000002,234.99L151.57500000000002,233.566H145.86L135.62,228.924H129.074L123.95300000000002,230.352H118.23900000000002L109.30800000000002,235.231L102.16500000000002,234.397L95.02000000000002,236.897L89.06400000000002,234.98999999999998L85.37500000000003,231.77899999999997L75.85000000000002,230.35199999999998L69.65900000000002,234.63199999999998L66.20700000000002,233.20699999999997L63.349000000000025,230.94399999999996L56.44200000000002,229.27699999999996L55.37200000000002,228.08799999999997L52.51500000000002,227.85099999999997L42.73300000000002,233.79599999999996L32.69600000000002,232.54599999999996L31.87400000000002,232.18699999999995L32.98700000000002,223.56399999999996L28.463000000000022,222.37299999999996L19.057000000000023,215.47099999999998L16.437000000000022,215.22999999999996L14.414000000000023,210.70499999999996L15.841000000000022,206.06199999999995L15.364000000000022,203.80199999999996L11.913000000000022,201.53599999999997L10.721000000000021,199.27599999999998L3.5780000000000216,195.22699999999998V194.03799999999998L7.030000000000022,192.60699999999997L9.053000000000022,193.79699999999997L11.078000000000022,191.77199999999996L10.480000000000022,184.98699999999997L11.078000000000022,179.27099999999996L6.432000000000023,174.62899999999996L3.3370000000000224,175.46199999999996L2.1480000000000223,172.12599999999995L3.933000000000022,168.67399999999995L2.981000000000022,165.45999999999995L6.0190000000000214,162.71099999999996L7.267000000000022,161.52899999999997V158.91099999999997L11.552000000000021,156.88699999999997L15.83800000000002,156.05399999999997L19.649000000000022,154.62499999999997L22.748000000000022,155.45699999999997L25.008000000000024,154.62499999999997L25.841000000000022,155.21999999999997L26.197000000000024,158.07899999999998L28.219000000000023,158.91099999999997L32.98400000000002,158.67299999999997C32.98400000000002,158.67299999999997,36.550000000000026,153.94399999999996,38.462000000000025,152.59999999999997C40.373000000000026,151.25399999999996,49.65200000000002,154.98099999999997,49.65200000000002,154.98099999999997L55.36900000000002,150.93299999999996L71.92100000000002,147.24399999999997L72.99000000000002,144.97999999999996L74.42000000000003,138.66999999999996L79.06300000000003,134.97999999999996H80.49600000000004V133.07399999999996L80.73200000000004,117.23799999999996L81.56500000000004,114.02599999999995L77.04400000000004,112.35799999999995L76.80400000000004,111.16699999999994L81.56600000000005,109.73899999999995L93.95000000000005,108.66599999999995L95.85500000000005,111.16699999999996L100.14200000000005,112.11899999999996L101.33400000000005,112.35799999999996L102.99900000000005,110.09599999999996L100.73400000000005,107.83299999999996L109.90300000000005,89.25899999999996L111.33400000000005,88.30599999999995L119.66900000000004,92.35299999999995H123.35800000000003L125.02500000000003,94.61699999999995L133.00400000000005,92.11499999999995L135.02700000000004,78.90299999999995L138.47900000000004,76.63799999999995L142.52700000000004,76.39999999999995L145.38600000000005,72.94799999999995L146.45700000000005,69.49399999999996L148.72000000000006,68.30299999999995L153.889,69.508Z";
 
-//    private final double[][] airPositions = {
-//            {11217.9775280898, 0},
-//            {5235.05617977529, -1246.44194756556},
-//            {2243.59550561798, -1745.01872659178},
-//            {1246.44194756554, -4237.90262172287},
-//            {-1246.44194756553, -4487.19101123596},
-//            {-1495.73033707864, -1994.3071161049},
-//            {-3490.03745318351, -2243.595505618},
-//            {-4985.76779026217, -3739.32584269665},
-//            {-5982.9213483146, -3490.03745318353},
-//            {-5235.05617977527, -1495.73033707868},
-//            {-5235.05617977527, 1495.73033707862},
-//            {-5982.9213483146, 3490.0374531835},
-//            {-4985.76779026217, 3739.32584269662},
-//            {-3490.03745318351, 2243.59550561797},
-//            {-1495.73033707864, 1994.30711610484},
-//            {-1246.44194756553, 4487.19101123593},
-//            {1246.44194756554, 4237.90262172284},
-//            {2243.59550561798, 1745.01872659175},
-//            {5235.05617977529, 1246.44194756553}
-//    };
 
     private Paint deskPaint;
-    private Path deckOutline;
+    private Path deskPath;
     private ArrayList<Plan> planList;
-    private boolean isFirstDraw = true;
+    private boolean isChecked;
 
-    public Matrix currentMatrix = new Matrix();
+    public Matrix deskMatrix = new Matrix();
     public float currentRotateDegrees = 1.0f;
-    public float currentScale = 1.0f;
-    public float baseWidth;
-    public float baseHeight;
-    public float baseCenterX;
-    public float baseCenterY;
+    public float deskScale = 1.0f;
+    public float deskWidth;
+    public float deskHeight;
+    public float deskCenterX;
+    public float deskCenterY;
 
-    public Position center;
-    private Path airOutline;
-    private float baseAirWidth;
-    private float baseAirHeight;
-    private float baseAirCenterX;
-    private float baseAirCenterY;
     private ArrayList<Matrix> matrixList;
     private int left;
     private int top;
     private Paint airPaint;
     private float width;
     private float height;
-    private ScaleGestureDetector sgd;
+    //imageView的大小
+    private PointF viewSize;
+    //图片的大小
+    private PointF imageSize;
+    //缩放后图片的大小
+    private PointF scaleSize = new PointF();
+    //最初的宽高的缩放比例
+    private PointF originScale = new PointF();
+    //imageview中bitmap的xy实时坐标
+    private PointF bitmapOriginPoint = new PointF();
+    //点击的点
+    private PointF clickPoint = new PointF();
+    //设置的双击检查时间限制
+    private long doubleClickTimeSpan = 250;
+    //上次点击的时间
+    private long lastClickTime = 0;
+    //双击放大的倍数
+    private int doubleClickZoom = 2;
+    //当前缩放的模式
+    private int zoomInMode = ZoomMode.Ordinary;
+    //临时坐标比例数据
+    private PointF tempPoint = new PointF();
+    //最大缩放比例
+    private float maxScrole = 4;
+    //两点之间的距离
+    private float doublePointDistance = 0;
+    //双指缩放时候的中心点
+    private PointF doublePointCenter = new PointF();
+    //两指缩放的比例
+    private float doubleFingerScrole = 0;
+    //上次触碰的手指数量
+    private int lastFingerNum = 0;
+    private Path jkPath;
+    private Matrix jkMatrix;
+    private Paint numberPaint;
+    private float centerFontY;
+    private float jkWidth;
+    private float jkHeight;
+    private float jkCenterX;
+    private float jkCenterY;
+    private float deskDx;
+    private float deskDy;
+    private float jkDx;
+    private float jkDy;
+    private Paint dashPaint;
+
+    //缩放的三个状态
+    public class ZoomMode {
+        public final static int Ordinary = 0;//普通
+        public final static int ZoomIn = 1;//双击放大
+        public final static int TowFingerZoom = 2;//双指缩放
+    }
+
 
     public ScaleView1(Context context) {
         this(context, null);
@@ -96,205 +123,66 @@ public class ScaleView1 extends androidx.appcompat.widget.AppCompatImageView {
     }
 
     private void init() {
+//        setOnTouchListener(this);
+        setScaleType(ScaleType.MATRIX);
+
         deskPaint = new Paint();
         deskPaint.setStyle(Paint.Style.STROKE);
         deskPaint.setAntiAlias(true);
 
         airPaint = new Paint();
-        airPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        airPaint.setStyle(Paint.Style.STROKE);
         airPaint.setAntiAlias(true);
-        airPaint.setColor(Color.BLUE);
 
-        SvgPathToAndroidPath lParser = new SvgPathToAndroidPath();
-        center = new Position((float) (this.getWidth() / 2), (float) (this.getHeight() / 2));
+        numberPaint = new Paint();
+        numberPaint.setColor(Color.RED);
+        numberPaint.setAntiAlias(true);
+        numberPaint.setTextSize(18);
+        numberPaint.setTypeface(Typeface.DEFAULT_BOLD);
+        numberPaint.setTextAlign(Paint.Align.CENTER);
+        Paint.FontMetrics numberFontMetrics = numberPaint.getFontMetrics();
+        centerFontY = (numberFontMetrics.bottom - numberFontMetrics.top) / 2 - numberFontMetrics.bottom;//计算文字居中的位移
 
-        currentMatrix = new Matrix();
+//        虚线paint
+        dashPaint = new Paint();
+        dashPaint.setAntiAlias(true);
+        dashPaint.setStyle(Paint.Style.STROKE);
+        dashPaint.setPathEffect(new DashPathEffect(new float[]{1000, 1000}, 0));
 
-//        parserPath = lParser.parser(path);
+        deskMatrix = new Matrix();// 甲板矩阵
 
-//        positions = new ArrayList<>();
-//        Position position = new Position(1500, 239.99999999999923);
-//        Position position1 = new Position(978.260869565223, 306.66666666666697);
-//        Position position2 = new Position(717.3913043478296, 333.3333333333338);
-//        Position position3 = new Position(630.4347826086984, 466.66666666666765);
-//        Position position4 = new Position(413.04347826087246, 480.00000000000006);
-//        Position position5 = new Position(391.30434782608955, 346.66666666666777);
-//        Position position6 = new Position(217.39130434782766, 360.0000000000007);
-
-
-//        positions.add(position);
-//        positions.add(position1);
-//        positions.add(position2);
-//        positions.add(position3);
-//        positions.add(position4);
-//        positions.add(position5);
-//        positions.add(position6);
-
-        deckOutline = new Path();
-        deckOutline.moveTo(13461.5730337079f, 15580.5243445693f);
-        deckOutline.lineTo(13710.861423221f, 14583.3707865169f);
-        deckOutline.lineTo(13212.2846441948f, 14583.3707865169f);
-        deckOutline.lineTo(18447.34082397f, -22809.8876404494f);
-        deckOutline.lineTo(19195.2059925094f, -23059.1760299626f);
-        deckOutline.lineTo(19693.7827715356f, -24305.6179775281f);
-        deckOutline.lineTo(26673.8576779026f, -23308.4644194757f);
-        deckOutline.lineTo(32906.0674157303f, -30288.5393258427f);
-        deckOutline.lineTo(63069.9625468165f, -32781.4232209738f);
-        deckOutline.lineTo(63069.9625468165f, -35025.0187265918f);
-        deckOutline.lineTo(63568.5393258427f, -35025.0187265918f);
-        deckOutline.lineTo(63568.5393258427f, -37019.3258426966f);
-        deckOutline.lineTo(66310.7116104869f, -37019.3258426966f);
-        deckOutline.lineTo(66310.7116104869f, -38764.3445692884f);
-        deckOutline.lineTo(91987.4157303371f, -38764.3445692884f);
-        deckOutline.lineTo(91987.4157303371f, -39013.6329588015f);
-        deckOutline.lineTo(104701.123595506f, -39262.9213483146f);
-        deckOutline.lineTo(105199.700374532f, -40509.3632958802f);
-        deckOutline.lineTo(108191.161048689f, -40509.3632958802f);
-        deckOutline.lineTo(108689.737827715f, -39013.6329588015f);
-        deckOutline.lineTo(129879.25093633f, -39013.6329588015f);
-        deckOutline.lineTo(130128.539325843f, -38764.3445692884f);
-        deckOutline.lineTo(140598.651685393f, -38764.3445692884f);
-        deckOutline.lineTo(141097.228464419f, -39512.2097378277f);
-        deckOutline.lineTo(143839.400749064f, -39512.2097378277f);
-        deckOutline.lineTo(144337.97752809f, -38764.3445692884f);
-        deckOutline.lineTo(170014.68164794f, -38764.3445692884f);
-        deckOutline.lineTo(170263.970037453f, -39013.6329588015f);
-        deckOutline.lineTo(190207.041198502f, -39013.6329588015f);
-        deckOutline.lineTo(190207.041198502f, -38764.3445692884f);
-        deckOutline.lineTo(216133.033707865f, -38764.3445692884f);
-        deckOutline.lineTo(216133.033707865f, -39013.6329588015f);
-        deckOutline.lineTo(243804.04494382f, -39013.6329588015f);
-        deckOutline.lineTo(245050.486891386f, -38265.7677902622f);
-        deckOutline.lineTo(246296.928838951f, -39512.2097378277f);
-        deckOutline.lineTo(251282.696629213f, -36271.4606741573f);
-        deckOutline.lineTo(253526.292134831f, -32282.8464419476f);
-        deckOutline.lineTo(267486.441947566f, -22560.5992509363f);
-        deckOutline.lineTo(273220.074906367f, -22560.5992509363f);
-        deckOutline.lineTo(274965.093632959f, -20067.7153558052f);
-        deckOutline.lineTo(279950.861423221f, -19818.4269662921f);
-        deckOutline.lineTo(281695.880149813f, -21563.4456928839f);
-        deckOutline.lineTo(325321.348314607f, -17574.8314606742f);
-        deckOutline.lineTo(326817.078651685f, -16328.3895131086f);
-        deckOutline.lineTo(337536.479400749f, -15331.2359550562f);
-        deckOutline.lineTo(337536.479400749f, -17325.5430711611f);
-        deckOutline.lineTo(344267.265917603f, -16577.6779026217f);
-        deckOutline.lineTo(343768.689138577f, -14832.6591760299f);
-        deckOutline.lineTo(344765.842696629f, -14084.7940074906f);
-        deckOutline.lineTo(346012.284644195f, -14084.7940074906f);
-        deckOutline.lineTo(346012.284644195f, 12090.4868913858f);
-        deckOutline.lineTo(345015.131086142f, 12090.4868913858f);
-        deckOutline.lineTo(344017.97752809f, 12838.3520599251f);
-        deckOutline.lineTo(327315.655430712f, 13835.5056179775f);
-        deckOutline.lineTo(325321.348314607f, 15580.5243445693f);
-        deckOutline.lineTo(293911.011235955f, 18322.6966292135f);
-        deckOutline.lineTo(277956.554307116f, 18322.6966292135f);
-        deckOutline.lineTo(275962.247191011f, 19569.138576779f);
-        deckOutline.lineTo(266489.288389513f, 19818.4269662921f);
-        deckOutline.lineTo(239815.430711611f, 39512.2097378277f);
-        deckOutline.lineTo(237571.835205993f, 39512.2097378277f);
-        deckOutline.lineTo(237571.835205993f, 40509.3632958801f);
-        deckOutline.lineTo(209402.247191011f, 40260.074906367f);
-        deckOutline.lineTo(188711.310861423f, 36271.4606741573f);
-        deckOutline.lineTo(184971.985018727f, 36271.4606741573f);
-        deckOutline.lineTo(184722.696629213f, 37019.3258426966f);
-        deckOutline.lineTo(176246.891385768f, 37019.3258426966f);
-        deckOutline.lineTo(176246.891385768f, 38764.3445692884f);
-        deckOutline.lineTo(175249.737827715f, 38764.3445692884f);
-        deckOutline.lineTo(175249.737827715f, 36271.4606741573f);
-        deckOutline.lineTo(166524.644194757f, 36271.4606741573f);
-        deckOutline.lineTo(166275.355805243f, 36271.4606741573f);
-        deckOutline.lineTo(165776.779026217f, 37019.3258426966f);
-        deckOutline.lineTo(157799.550561798f, 37019.3258426966f);
-        deckOutline.lineTo(157051.685393258f, 37767.191011236f);
-        deckOutline.lineTo(150071.610486891f, 37767.191011236f);
-        deckOutline.lineTo(149323.745318352f, 37019.3258426966f);
-        deckOutline.lineTo(122649.887640449f, 37019.3258426966f);
-        deckOutline.lineTo(122649.887640449f, 39512.2097378277f);
-        deckOutline.lineTo(116417.677902622f, 39512.2097378277f);
-        deckOutline.lineTo(116417.677902622f, 37019.3258426966f);
-        deckOutline.lineTo(110434.756554307f, 37019.3258426966f);
-        deckOutline.lineTo(109936.179775281f, 37268.6142322097f);
-        deckOutline.lineTo(109437.602996255f, 37268.6142322097f);
-        deckOutline.lineTo(108939.026217228f, 37019.3258426966f);
-        deckOutline.lineTo(60327.7902621723f, 37019.3258426966f);
-        deckOutline.lineTo(60327.7902621723f, 36770.0374531835f);
-        deckOutline.lineTo(55840.5992509363f, 36770.0374531835f);
-        deckOutline.lineTo(50854.8314606742f, 19070.5617977528f);
-        deckOutline.lineTo(48860.5243445693f, 22311.3108614232f);
-        deckOutline.lineTo(45121.1985018727f, 22062.0224719101f);
-        deckOutline.lineTo(44124.0449438202f, 18571.9850187266f);
-        deckOutline.close();
-
-        float maxX = 346012.284644195f;
-        float minX = 13212.2846441948f;
-        float maxY = 40509.3632958801f;
-        float minY = -40509.3632958802f;
+//        甲板轮廓
+        deskPath = AirUtils1.getRealDesk1();
+        float deskMaxX = 159090f;
+        float deskMinX = -147306f;
+        float deskMaxY = 33053f;
+        float deskMinY = -41100f;
 
 //        甲板宽高
-        baseWidth = (maxX - minX);
-        baseHeight = (maxY - minY);
+        deskWidth = (deskMaxX - deskMinX);
+        deskHeight = (deskMaxY - deskMinY);
 //算出甲板中心点坐标
-        baseCenterX = (maxX + minX) / 2;
-        baseCenterY = (maxY + minY) / 2;
+        deskCenterX = (deskMaxX + deskMinX) / 2;
+        deskCenterY = (deskMaxY + deskMinY) / 2;
 
-//飞机轮廓
-        airOutline = new Path();
-        airOutline.moveTo(11217.9775280898f, 0);
-        airOutline.lineTo(5235.05617977529f, -1246.44194756556f);
-        airOutline.lineTo(2243.59550561798f, -1745.01872659178f);
-        airOutline.lineTo(1246.44194756554f, -4237.90262172287f);
-        airOutline.lineTo(-1246.44194756553f, -4487.19101123596f);
-        airOutline.lineTo(-1495.73033707864f, -1994.3071161049f);
-        airOutline.lineTo(-3490.03745318351f, -2243.595505618f);
-        airOutline.lineTo(-4985.76779026217f, -3739.32584269665f);
-        airOutline.lineTo(-5982.9213483146f, -3490.03745318353f);
-        airOutline.lineTo(-5235.05617977527f, -1495.73033707868f);
-        airOutline.lineTo(-5235.05617977527f, 1495.73033707862f);
-        airOutline.lineTo(-5982.9213483146f, 3490.0374531835f);
-        airOutline.lineTo(-4985.76779026217f, 3739.32584269662f);
-        airOutline.lineTo(-3490.03745318351f, 2243.59550561797f);
-        airOutline.lineTo(-1495.73033707864f, 1994.30711610484f);
-        airOutline.lineTo(-1246.44194756553f, 4487.19101123593f);
-        airOutline.lineTo(1246.44194756554f, 4237.90262172284f);
-        airOutline.lineTo(2243.59550561798f, 1745.01872659175f);
-        airOutline.lineTo(5235.05617977529f, 1246.44194756553f);
-        airOutline.close();
+        //        机库轮廓
+        jkPath = AirUtils1.getRealJK();
+//        真实机库大小
+        float jkMaxX = 35000f;
+        float jkMinX = -118000f;
+        float jkMaxY = 13000f;
+        float jkMinY = -28998.3247f;
 
-        float airMaxX = 11217.9775280898f;
-        float airMinX = -5982.9213483146f;
-        float airMaxY = 4487.19101123593f;
-        float airMinY = -4487.19101123596f;
+        //        真实机库宽高
+        jkWidth = jkMaxX - jkMinX;
+        jkHeight = jkMaxY - jkMinY;
 
-//        飞机宽高
-        baseAirWidth = (airMaxX - airMinX);
-        baseAirHeight = (airMaxY - airMinY);
+        //真实机库中心点坐标
+        jkCenterX = (jkMaxX + jkMinX) / 2;
+        jkCenterY = (jkMaxY + jkMinY) / 2;
 
-        //飞机中心点坐标
-        baseAirCenterX = (airMaxX + airMinX) / 2;
-        baseAirCenterY = (airMaxY + airMinY) / 2;
+        jkMatrix = new Matrix();// 机库矩阵
 
-
-        sgd = new ScaleGestureDetector(getContext(), new ZoomListener());
-
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction() & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_DOWN:
-
-                break;
-        }
-//        sgd.onTouchEvent(event);
-        return true;
-    }
-
-    public static class ZoomListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
-        @Override
-        public boolean onScale(ScaleGestureDetector detector) {
-            float scaleFactor = detector.getScaleFactor();
-            return true;
-        }
     }
 
     @Override
@@ -302,36 +190,46 @@ public class ScaleView1 extends androidx.appcompat.widget.AppCompatImageView {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int width = MeasureSpec.getSize(widthMeasureSpec);
         int height = MeasureSpec.getSize(heightMeasureSpec);
-//        int height1 = heightSize - getPaddingTop() - getPaddingBottom();
+        viewSize = new PointF(width, height);
         Log.d("ScaleView", "onMeasure: widthMeasureSpec:" + width + "heightMeasureSpec:" + height + "width:" + getWidth() + "height:" + getHeight());
 
 //        图片比例
-        float ratioT = baseWidth / baseHeight;
+        float ratioT = deskWidth / deskHeight;
 //        控件比例
         float ratioScreen = width * 1.0f / height;
 
-//        float newScale = 1.0f;
 
         if (ratioT > ratioScreen) {
-            this.currentScale = width / baseWidth;
+            this.deskScale = width / deskWidth;
+            bitmapOriginPoint.x = 0;
+            bitmapOriginPoint.y = viewSize.y / 2 - deskScale * deskHeight / 2;
+            Log.d("ScaleViewSize", "bitmapOriginPoint.x : " + bitmapOriginPoint.x + ", bitmapOriginPoint.y : " + bitmapOriginPoint.y);
         } else {
-            this.currentScale = height / baseHeight;
+            this.deskScale = height / deskHeight;
+            bitmapOriginPoint.x = viewSize.x / 2 - deskScale * deskWidth / 2;
+            bitmapOriginPoint.y = 0;
         }
-        float dx = (width / 2f - this.currentScale * baseCenterX);
-        float dy = (height / 2f - this.currentScale * baseCenterY);
-        Log.d("ScaleView", "onMeasure: dx:" + dx + "dy:" + dy);
+        deskDx = (width / 2f - this.deskScale * deskCenterX);
+        deskDy = (height / 4f - this.deskScale * deskCenterY);
 
-        this.currentMatrix.setScale(this.currentScale, this.currentScale);
-        this.currentMatrix.postTranslate(dx, dy);
+        this.deskMatrix.setScale(this.deskScale, this.deskScale);
+        this.deskMatrix.postTranslate(deskDx, deskDy);
+
+        jkDx = (width / 2f - this.deskScale * jkCenterX + (jkCenterX - deskCenterX) * deskScale);
+        jkDy = (height / 4f * 3 - this.deskScale * jkCenterY + (jkCenterY - deskCenterY) * deskScale);
+        jkMatrix.setScale(this.deskScale, this.deskScale);
+        jkMatrix.postTranslate(jkDx, jkDy);
+
+        scaleSize.set(deskScale * deskWidth, deskScale * deskHeight);
+
+        //保存下最初的缩放比例
+        originScale.set(deskScale, deskScale);
+        doubleFingerScrole = deskScale;
 
 
-//        float airDx = (width / 2f - this.currentScale * baseAirCenterX);
-//        float airDy = (height / 2f - this.currentScale * baseAirCenterY);
+//        showCenter();
 
-//        this.airMatrix.setScale(this.currentScale, this.currentScale);
-//        this.airMatrix.postTranslate(airDx, airDy);
     }
-
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -345,65 +243,538 @@ public class ScaleView1 extends androidx.appcompat.widget.AppCompatImageView {
         left = getLeft();
         top = getTop();
 
-        if (isFirstDraw) {
-            this.currentMatrix.postTranslate(left, top);
-            isFirstDraw = false;
-            Log.d("ScaleViewSize", "left : " + left + ", top : " + top);
-        }
-        canvas.save();
+        if (planList != null && planList.size() > 0) {
+            for (Plan plan : planList) {
+                canvas.save();
+                if (StringUtils.isEmpty(plan.getPlanstano())) {
+                    airPaint.setColor(Color.BLACK);
+                } else {
+                    if (plan.getAlternative() == 0) {
+                        airPaint.setColor(Color.BLUE);
+                    } else if (plan.getAlternative() == 1) {
+                        airPaint.setColor(Color.YELLOW);
+                    }
+                }
+//                移动到真实坐标原点
+                if (!isChecked) {
+                    //判断显示在甲板还是机库  0机库 1甲板
+                    if (plan.getStatypeno() == 0) {
+                        canvas.translate(jkDx + plan.getCox() * deskScale,
+                                jkDy - plan.getCoy() * deskScale);
+                    } else if (plan.getStatypeno() == 1) {
+                        canvas.translate(deskDx + plan.getCox() * deskScale,
+                                deskDy - plan.getCoy() * deskScale);
+                    }
+                    canvas.rotate(360 - plan.getAngle());
+                    //                机型1-7    2567 直18   3直9    1,4歼15
+                    GoodInfo goodInfo = plan.getGoodInfo();
+                    if (goodInfo != null) {
+//                        绘制飞机编号
+                        canvas.drawText(plan.getStano() + "-" + goodInfo.getGoodname().trim(), 0,
+                                centerFontY, numberPaint);
+                        canvas.scale(this.deskScale, this.deskScale);
+                        int typeNo = goodInfo.getTypeno();
+                        switch (typeNo) {
+                            case 2:
+                            case 5:
+                            case 6:
+                            case 7:
+                                if (plan.getShapetype() == 0) {
+                                    canvas.drawPath(AirUtils1.getJ18Collapse(), airPaint);
+                                } else if (plan.getShapetype() == 1) {
+                                    canvas.drawPath(AirUtils1.getJ18Expand(), airPaint);
+                                }
+                                break;
+                            case 3:
+                                if (plan.getShapetype() == 0) {
+                                    canvas.drawPath(AirUtils1.getZ9Collapse(), airPaint);
+                                } else if (plan.getShapetype() == 1) {
+                                    canvas.drawPath(AirUtils1.getZ9Expand(), airPaint);
+                                    canvas.drawPath(AirUtils1.getZ9ExpandCircle(), airPaint);
+                                }
+                                break;
+                            case 1:
+                            case 4:
+                                if (plan.getShapetype() == 0) {
+                                    canvas.drawPath(AirUtils1.getJ15Collapse(), airPaint);
+                                } else if (plan.getShapetype() == 1) {
+                                    canvas.drawPath(AirUtils1.getJ15Expand(), airPaint);
+                                }
+                                break;
+                        }
+                    }
+                } else {
+                    if (!StringUtils.isEmpty(plan.getPlanstano()) && !StringUtils.equals(plan.getPlanstano(), "InSky")) {
+//                        判断显示在甲板还是机库
+                        if (plan.getPlanstatypeno() == 0) {
+                            canvas.translate(jkDx + plan.getPlancox() * deskScale,
+                                    jkDy - plan.getPlancoy() * deskScale);
+                        } else if (plan.getPlanstatypeno() == 1) {
+                            canvas.translate(deskDx + plan.getPlancox() * deskScale,
+                                    deskDy - plan.getPlancoy() * deskScale);
+                        }
+                        canvas.rotate(360 - plan.getPlanangle());
+                        //                机型1-7    2567 直18   3直9    1,4歼15
+                        GoodInfo goodInfo = plan.getGoodInfo();
+                        if (goodInfo != null) {
+                            //                        绘制飞机编号
+                            canvas.drawText(plan.getPlanstano() + "-" + goodInfo.getGoodname().trim(), 0,
+                                    centerFontY, numberPaint);
+                            canvas.scale(this.deskScale, this.deskScale);
+                            int typeNo = goodInfo.getTypeno();
+                            switch (typeNo) {
+                                case 2:
+                                case 5:
+                                case 6:
+                                case 7:
+                                    if (plan.getShapetype() == 0) {
+                                        canvas.drawPath(AirUtils1.getJ18Collapse(), airPaint);
+                                    } else if (plan.getShapetype() == 1) {
+                                        canvas.drawPath(AirUtils1.getJ18Expand(), airPaint);
+                                    }
+                                    break;
+                                case 3:
+                                    if (plan.getShapetype() == 0) {
+                                        canvas.drawPath(AirUtils1.getZ9Collapse(), airPaint);
+                                    } else if (plan.getShapetype() == 1) {
+                                        canvas.drawPath(AirUtils1.getZ9Expand(), airPaint);
+                                        canvas.drawPath(AirUtils1.getZ9ExpandCircle(), airPaint);
+                                    }
+                                    break;
+                                case 1:
+                                case 4:
+                                    if (plan.getShapetype() == 0) {
+                                        canvas.drawPath(AirUtils1.getJ15Collapse(), airPaint);
+                                    } else if (plan.getShapetype() == 1) {
+                                        canvas.drawPath(AirUtils1.getJ15Expand(), airPaint);
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                }
 
-        canvas.setMatrix(this.currentMatrix);
-        canvas.drawPath(deckOutline, deskPaint);
-
-
-        if (matrixList != null && matrixList.size() > 0) {
-            for (Matrix matrix : matrixList) {
+                Log.d("mylog", "plan.getCox(): " + plan.getCox() + "plan.getCoy():" + plan.getCoy());
                 canvas.restore();
-                canvas.setMatrix(matrix);
-                canvas.drawPath(airOutline, airPaint);
             }
         }
+        canvas.save();
+        canvas.concat(this.deskMatrix);
+        canvas.drawPath(deskPath, deskPaint);
+        canvas.drawPath(AirUtils1.getFJLifts1(), deskPaint);
+        canvas.drawPath(AirUtils1.getFJLifts2(), deskPaint);
+        canvas.drawPath(AirUtils1.getRunway1(), deskPaint);
+        canvas.drawPath(AirUtils1.getRunway2(), deskPaint);
+        canvas.drawPath(AirUtils1.getRunway3(), deskPaint);
+        canvas.drawPath(AirUtils1.getTakeoffLine1(), deskPaint);
+        canvas.drawPath(AirUtils1.getTakeoffLine2(), deskPaint);
+        canvas.drawPath(AirUtils1.getInterceptionCable1(), deskPaint);
+        canvas.drawPath(AirUtils1.getInterceptionCable2(), deskPaint);
+        canvas.drawPath(AirUtils1.getInterceptionCable3(), deskPaint);
+        canvas.drawPath(AirUtils1.getInterceptionCable4(), deskPaint);
+        canvas.drawPath(AirUtils1.getJianDao(), deskPaint);
+
+//        画直升机起降位置
+//        画里圆
+        canvas.drawCircle(AirUtils1.ZSJQJPointInfo.centerPF1.x,
+                AirUtils1.ZSJQJPointInfo.centerPF1.y,
+                AirUtils1.ZSJQJPointInfo.circleWidth.x, deskPaint);
+        canvas.drawCircle(AirUtils1.ZSJQJPointInfo.centerPF2.x,
+                AirUtils1.ZSJQJPointInfo.centerPF2.y,
+                AirUtils1.ZSJQJPointInfo.circleWidth.x, deskPaint);
+        canvas.drawCircle(AirUtils1.ZSJQJPointInfo.centerPF3.x,
+                AirUtils1.ZSJQJPointInfo.centerPF3.y,
+                AirUtils1.ZSJQJPointInfo.circleWidth.x, deskPaint);
+        canvas.drawCircle(AirUtils1.ZSJQJPointInfo.centerPF4.x,
+                AirUtils1.ZSJQJPointInfo.centerPF4.y,
+                AirUtils1.ZSJQJPointInfo.circleWidth.x, deskPaint);
+//画外圆
+        canvas.drawCircle(AirUtils1.ZSJQJPointInfo.centerPF1.x,
+                AirUtils1.ZSJQJPointInfo.centerPF1.y,
+                AirUtils1.ZSJQJPointInfo.circleWidth.y, dashPaint);
+        canvas.drawCircle(AirUtils1.ZSJQJPointInfo.centerPF2.x,
+                AirUtils1.ZSJQJPointInfo.centerPF2.y,
+                AirUtils1.ZSJQJPointInfo.circleWidth.y, dashPaint);
+        canvas.drawCircle(AirUtils1.ZSJQJPointInfo.centerPF3.x,
+                AirUtils1.ZSJQJPointInfo.centerPF3.y,
+                AirUtils1.ZSJQJPointInfo.circleWidth.y, dashPaint);
+        canvas.drawCircle(AirUtils1.ZSJQJPointInfo.centerPF4.x,
+                AirUtils1.ZSJQJPointInfo.centerPF4.y,
+                AirUtils1.ZSJQJPointInfo.circleWidth.y, dashPaint);
+
+        canvas.drawLine(AirUtils1.ZSJQJPointInfo.linePF1[0],
+                AirUtils1.ZSJQJPointInfo.linePF1[1],
+                AirUtils1.ZSJQJPointInfo.linePF1[2],
+                AirUtils1.ZSJQJPointInfo.linePF1[3], deskPaint);
+        canvas.drawLine(AirUtils1.ZSJQJPointInfo.linePF2[0],
+                AirUtils1.ZSJQJPointInfo.linePF2[1],
+                AirUtils1.ZSJQJPointInfo.linePF2[2],
+                AirUtils1.ZSJQJPointInfo.linePF2[3], deskPaint);
+        canvas.drawLine(AirUtils1.ZSJQJPointInfo.linePF3[0],
+                AirUtils1.ZSJQJPointInfo.linePF3[1],
+                AirUtils1.ZSJQJPointInfo.linePF3[2],
+                AirUtils1.ZSJQJPointInfo.linePF3[3], deskPaint);
+        canvas.drawLine(AirUtils1.ZSJQJPointInfo.linePF4[0],
+                AirUtils1.ZSJQJPointInfo.linePF4[1],
+                AirUtils1.ZSJQJPointInfo.linePF4[2],
+                AirUtils1.ZSJQJPointInfo.linePF4[3], deskPaint);
+//        画文字
+//        canvas.drawText("1", AirUtils1.ZSJQJPointInfo.centerPF1.x, AirUtils1.ZSJQJPointInfo.centerPF1.y + centerFontY, deskPaint);
+//        canvas.drawText("2", AirUtils1.ZSJQJPointInfo.centerPF2.x, AirUtils1.ZSJQJPointInfo.centerPF2.y + centerFontY, deskPaint);
+//        canvas.drawText("3", AirUtils1.ZSJQJPointInfo.centerPF3.x, AirUtils1.ZSJQJPointInfo.centerPF3.y + centerFontY, deskPaint);
+//        canvas.drawText("4", AirUtils1.ZSJQJPointInfo.centerPF4.x, AirUtils1.ZSJQJPointInfo.centerPF4.y + centerFontY, deskPaint);
+
+//        canvas.drawPath(AirUtils1.getSafeArea(),deskPaint);
+//        canvas.drawPath(AirUtils1.getSafeArea1(),deskPaint);
+
+//画机库
+        canvas.restore();
+        canvas.concat(jkMatrix);
+        canvas.drawPath(jkPath, deskPaint);
+        canvas.drawPath(AirUtils1.getFJLifts1(), deskPaint);
+        canvas.drawPath(AirUtils1.getFJLifts2(), deskPaint);
+        canvas.drawCircle(AirUtils1.getTurntable1().x, AirUtils1.getTurntable1().y, 3500, deskPaint);
+        canvas.drawCircle(AirUtils1.getTurntable2().x, AirUtils1.getTurntable2().y, 3500, deskPaint);
+        canvas.drawPath(AirUtils1.getFireCurtain1(), deskPaint);
+        canvas.drawPath(AirUtils1.getFireCurtain2(), deskPaint);
+        canvas.drawPath(AirUtils1.getFireCurtain3(), deskPaint);
+        canvas.drawPath(AirUtils1.getHangarDoor1(), deskPaint);
+        canvas.drawPath(AirUtils1.getHangarDoor2(), deskPaint);
     }
 
     public void drawAir(@NotNull ArrayList<Plan> planList, boolean isChecked) {
         this.planList = planList;
-        matrixList = new ArrayList<>();
-        for (int i = 0; i < planList.size(); i++) {
-            Matrix matrix = new Matrix();
-            matrix.setScale(this.currentScale, this.currentScale);
-            matrix.postRotate(planList.get(i).getAngle());
-//            位移到开始或结束坐标位置
-            if (isChecked) {
-                matrix.postTranslate(planList.get(i).getCox() * currentScale + left, planList.get(i).getCoy() * currentScale + top);
-            } else {
-                matrix.postTranslate(planList.get(i).getPlancox() * currentScale + left, planList.get(i).getPlancoy() * currentScale + top);
-            }
-            matrixList.add(matrix);
-        }
+        this.isChecked = isChecked;
         invalidate();
+
+//        matrixList = new ArrayList<>();
+//        for (int i = 0; i < planList.size(); i++) {
+//            Plan plan = planList.get(i);
+//            Matrix matrix = new Matrix();
+//            matrix.setScale(this.deskScale, this.deskScale);
+//            matrix.postRotate(360 - plan.getAngle());
+////            位移到开始或结束坐标位置
+////            realBaseCenter * deskScale 真实坐标相对原点的偏移
+////            Log.d("mylog", "drawAir: " + width / 2 + "=-==" + height / 2);
+//            if (!isChecked) {
+//                matrix.postTranslate(realDx + realBaseCenterX * deskScale + plan.getCox() * deskScale,
+//                        realDy + realBaseCenterY * deskScale - plan.getCoy() * deskScale);
+//            } else {
+//                matrix.postTranslate(realDx + realBaseCenterX * deskScale + plan.getPlancox() * deskScale,
+//                        realDy + realBaseCenterY * deskScale - plan.getPlancoy() * deskScale);
+//            }
+//            plan.setMatrix(matrix);
+//        }
     }
 
+//    @Override
+//    public boolean onTouch(View v, MotionEvent event) {
+//        switch (event.getAction() & MotionEvent.ACTION_MASK) {
+//            case MotionEvent.ACTION_DOWN:
+//                //手指按下事件
+//                //记录被点击的点的坐标
+//                clickPoint.set(event.getX(), event.getY());
+//                Log.d("ScaleViewSize", "event.getRawX() : " + event.getRawX() + ", event.getRawY() : " + event.getRawY());
+//                //判断屏幕上此时被按住的点的个数，当前屏幕只有一个点被点击的时候触发
+//                if (event.getPointerCount() == 1) {
+//                    //设置一个点击的间隔时长，来判断是不是双击
+//                    if (System.currentTimeMillis() - lastClickTime <= doubleClickTimeSpan) {
+//                        //如果图片此时缩放模式是普通模式，就触发双击放大
+//                        if (zoomInMode == ZoomMode.Ordinary) {
+//                            //分别记录被点击的点到图片左上角x,y轴的距离与图片x,y轴边长的比例，方便在进行缩放后，算出这个点对应的坐标点
+//                            tempPoint.set((clickPoint.x - bitmapOriginPoint.x) / scaleSize.x, (clickPoint.y - bitmapOriginPoint.y) / scaleSize.y);
+//                            //进行缩放
+//                            scaleImage(new PointF(originScale.x * doubleClickZoom, originScale.y * doubleClickZoom));
+//                            //获取缩放后，图片左上角的xy坐标
+//                            getBitmapOffset();
+//                            Log.e("kzg", "9**********************bitmapOriginPoint:" + bitmapOriginPoint);
+//                            //平移图片，使得被点击的点的位置不变。这里是计算缩放后被点击的xy坐标，与原始点击的位置的xy坐标值，计算出差值，然后做平移动作
+//                            float v1 = clickPoint.x - (bitmapOriginPoint.x + tempPoint.x * scaleSize.x);
+//                            float v2 = clickPoint.y - (bitmapOriginPoint.y + tempPoint.y * scaleSize.y + viewSize.y / 2 - baseHeight * currentScale / 2);
+//
+////                            translationImage(new PointF(clickPoint.x - (bitmapOriginPoint.x + tempPoint.x * scaleSize.x),
+////                                    clickPoint.y - (bitmapOriginPoint.y + tempPoint.y * scaleSize.y  + viewSize.y / 2 - baseHeight * originScale.x * doubleClickZoom / 2)));
+//
+//                            zoomInMode = ZoomMode.ZoomIn;
+//                            doubleFingerScrole = originScale.x * doubleClickZoom;
+//                        } else {
+//                            //双击还原
+//                            showCenter();
+//                            zoomInMode = ZoomMode.Ordinary;
+//                        }
+//                    } else {
+//                        lastClickTime = System.currentTimeMillis();
+//                    }
+//                }
+//                break;
+//            case MotionEvent.ACTION_POINTER_DOWN:
+//                //屏幕上已经有一个点按住 再按下一点时触发该事件
+//                //计算最初的两个手指之间的距离
+//                doublePointDistance = getDoubleFingerDistance(event);
+//                break;
+//            case MotionEvent.ACTION_POINTER_UP:
+//                //屏幕上已经有两个点按住 再松开一点时触发该事件
+//                //当有一个手指离开屏幕后，就修改状态，这样如果双击屏幕就能恢复到初始大小
+//                zoomInMode = ZoomMode.ZoomIn;
+//                //记录此时的双指缩放比例
+//                doubleFingerScrole = scaleSize.x / baseWidth * currentScale;
+//                //记录此时屏幕触碰的点的数量
+//                lastFingerNum = 1;
+//                //判断缩放后的比例，如果小于最初的那个比例，就恢复到最初的大小
+//                if (scaleSize.x < viewSize.x && scaleSize.y < viewSize.y) {
+//                    zoomInMode = ZoomMode.Ordinary;
+//                    showCenter();
+//                }
+//                break;
+//            case MotionEvent.ACTION_MOVE:
+//                //手指移动时触发事件
+//                /**************************************移动*******************************************/
+//                if (zoomInMode != ZoomMode.Ordinary) {
+//                    //如果是多指，计算中心点为假设的点击的点
+//                    float currentX = 0;
+//                    float currentY = 0;
+//                    //获取此时屏幕上被触碰的点有多少个
+//                    int pointCount = event.getPointerCount();
+//                    //计算出中间点所在的坐标
+//                    for (int i = 0; i < pointCount; i++) {
+//                        currentX += event.getX(i);
+//                        currentY += event.getY(i);
+//                    }
+//                    currentX /= pointCount;
+//                    currentY /= pointCount;
+//                    //当屏幕被触碰的点的数量变化时，将最新算出来的中心点看作是被点击的点
+//                    if (lastFingerNum != event.getPointerCount()) {
+//                        clickPoint.x = currentX;
+//                        clickPoint.y = currentY;
+//                        lastFingerNum = event.getPointerCount();
+//                    }
+//                    //将移动手指时，实时计算出来的中心点坐标，减去被点击点的坐标就得到了需要移动的距离
+//                    float moveX = currentX - clickPoint.x;
+//                    float moveY = currentY - clickPoint.y;
+//                    //计算边界，使得不能已出边界，但是如果是双指缩放时移动，因为存在缩放效果，
+//                    //所以此时的边界判断无效
+//                    float[] moveFloat = moveBorderDistance(moveX, moveY);
+//                    //处理移动图片的事件
+//                    translationImage(new PointF(moveFloat[0], moveFloat[1]));
+//                    clickPoint.set(currentX, currentY);
+//                }
+//                /**************************************缩放*******************************************/
+//                //判断当前是两个手指接触到屏幕才处理缩放事件
+//                if (event.getPointerCount() == 2) {
+//                    //如果此时缩放后的大小，大于等于了设置的最大缩放的大小，就不处理
+//                    if ((scaleSize.x / baseWidth * currentScale >= originScale.x * maxScrole || scaleSize.y / baseHeight * currentScale >= originScale.y * maxScrole) && getDoubleFingerDistance(event) - doublePointDistance > 0) {
+//                        break;
+//                    }
+//                    //这里设置当双指缩放的的距离变化量大于50，并且当前不是在双指缩放状态下，就计算中心点，等一些操作
+//                    if (Math.abs(getDoubleFingerDistance(event) - doublePointDistance) > 50 && zoomInMode != ZoomMode.TowFingerZoom) {
+//                        //计算两个手指之间的中心点，当作放大的中心点
+//                        doublePointCenter.set((event.getX(0) + event.getX(1)) / 2, (event.getY(0) + event.getY(1)) / 2);
+//                        //将双指的中心点就假设为点击的点
+//                        clickPoint.set(doublePointCenter);
+//                        //下面就和双击放大基本一样
+//                        getBitmapOffset();
+//                        //分别记录被点击的点到图片左上角x,y轴的距离与图片x,y轴边长的比例，方便在进行缩放后，算出这个点对应的坐标点
+//                        tempPoint.set((clickPoint.x - bitmapOriginPoint.x) / scaleSize.x, (clickPoint.y - bitmapOriginPoint.y) / scaleSize.y);
+//                        //设置进入双指缩放状态
+//                        zoomInMode = ZoomMode.TowFingerZoom;
+//                    }
+//                    //如果已经进入双指缩放状态，就直接计算缩放的比例，并进行位移
+//                    if (zoomInMode == ZoomMode.TowFingerZoom) {
+//                        //用当前的缩放比例与此时双指间距离的缩放比例相乘，就得到对应的图片应该缩放的比例
+//                        float scrole = doubleFingerScrole * getDoubleFingerDistance(event) / doublePointDistance;
+//                        //这里也是和双击放大时一样的
+//                        scaleImage(new PointF(scrole, scrole));
+//                        getBitmapOffset();
+//                        translationImage(new PointF(clickPoint.x - (bitmapOriginPoint.x + tempPoint.x * scaleSize.x), clickPoint.y - (bitmapOriginPoint.y + tempPoint.y * scaleSize.y)));
+//                    }
+//                }
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                //手指松开时触发事件
+//                Log.e("kzg", "***********************ACTION_UP");
+//                lastFingerNum = 0;
+//                break;
+//        }
+//        return true;
+//    }
 
-    public void mapCenterWithPoint(float x, float y) {
-        float[] goal = {x, y};
-        this.currentMatrix.mapPoints(goal);
-        float deltaX = this.getWidth() / 2.0f - goal[0];
-        float deltaY = this.getHeight() / 2.0f - goal[1];
-        this.currentMatrix.postTranslate(deltaX, deltaY);
-    }
+    /**
+     * 设置图片居中等比显示
+     */
+//    private void showCenter() {
+//        Log.d("ScaleView", "showCenter: ");
+//        float scalex = width / baseWidth;
+//        float scaley = height / baseHeight;
+//
+//        float scale = Math.min(scalex, scaley);
+//        scaleImage(new PointF(scale, scale));
+//
+//        //移动图片，并保存最初的图片左上角（即原点）所在坐标
+//        if (scalex < scaley) {
+//            translationImage(new PointF(0, viewSize.y / 2 - scaleSize.y / 2));
+//            bitmapOriginPoint.x = 0;
+//            bitmapOriginPoint.y = viewSize.y / 2 - scaleSize.y / 2;
+//        } else {
+//            translationImage(new PointF(viewSize.x / 2 - scaleSize.x / 2, 0));
+//            bitmapOriginPoint.x = viewSize.x / 2 - scaleSize.x / 2;
+//            bitmapOriginPoint.y = 0;
+//        }
+//        //保存下最初的缩放比例
+//        originScale.set(scale, scale);
+//        doubleFingerScrole = scale;
+//    }
 
-    public void setCurrentRotateDegrees(float degrees, float x, float y) {
-        currentMatrix.postRotate(degrees - this.currentRotateDegrees, x, y);
+//    public void scaleImage(PointF scaleXY) {
+//        deskMatrix.setScale(scaleXY.x, scaleXY.y);
+//        scaleSize.set(scaleXY.x * baseWidth, scaleXY.y * baseHeight);
+//        setImageMatrix(deskMatrix);
+//    }
 
-        currentRotateDegrees = degrees % 360;
-    }
+    /**
+     * 对图片进行x和y轴方向的平移
+     *
+     * @param pointF
+     */
+//    public void translationImage(PointF pointF) {
+//        Log.d("ScaleView", "translationImage: ");
+//        deskMatrix.postTranslate(pointF.x, pointF.y);
+//        setImageMatrix(deskMatrix);
+//    }
 
-    public void rotate(float d) {
-        mapCenterWithPoint((float) center.getX(), (float) center.getY());
-        setCurrentRotateDegrees(d * 360, this.getWidth() / 2.0f, this.getHeight() / 2.0f);
-    }
+    /**
+     * 防止移动图片超过边界，计算边界情况
+     *
+     * @param moveX
+     * @param moveY
+     * @return
+     */
+//    public float[] moveBorderDistance(float moveX, float moveY) {
+//        //计算bitmap的左上角坐标
+//        getBitmapOffset();
+//        Log.e("kzg", "**********************moveBorderDistance--bitmapOriginPoint:" + bitmapOriginPoint);
+//        //计算bitmap的右下角坐标
+//        float bitmapRightBottomX = bitmapOriginPoint.x + scaleSize.x;
+//        float bitmapRightBottomY = bitmapOriginPoint.y + scaleSize.y;
+//
+//        if (moveY > 0) {
+//            //向下滑
+//            if (bitmapOriginPoint.y + moveY > 0) {
+//                if (bitmapOriginPoint.y < 0) {
+//                    moveY = -bitmapOriginPoint.y;
+//                } else {
+//                    moveY = 0;
+//                }
+//            }
+//        } else if (moveY < 0) {
+//            //向上滑
+//            if (bitmapRightBottomY + moveY < viewSize.y) {
+//                if (bitmapRightBottomY > viewSize.y) {
+//                    moveY = -(bitmapRightBottomY - viewSize.y);
+//                } else {
+//                    moveY = 0;
+//                }
+//            }
+//        }
+//
+//        if (moveX > 0) {
+//            //向右滑
+//            if (bitmapOriginPoint.x + moveX > 0) {
+//                if (bitmapOriginPoint.x < 0) {
+//                    moveX = -bitmapOriginPoint.x;
+//                } else {
+//                    moveX = 0;
+//                }
+//            }
+//        } else if (moveX < 0) {
+//            //向左滑
+//            if (bitmapRightBottomX + moveX < viewSize.x) {
+//                if (bitmapRightBottomX > viewSize.x) {
+//                    moveX = -(bitmapRightBottomX - viewSize.x);
+//                } else {
+//                    moveX = 0;
+//                }
+//            }
+//        }
+//        return new float[]{moveX, moveY};
+//    }
 
-    public void scaleImg(int progress) {
-        currentMatrix.postScale(progress, progress, width / 2, height / 2);
-    }
+    /**
+     * 获取view中bitmap的坐标点
+     */
+//    public void getBitmapOffset() {
+//        float[] value = new float[9];
+//        float[] offset = new float[2];
+//        Matrix imageMatrix = getImageMatrix();
+//        imageMatrix.getValues(value);
+//        offset[0] = value[2];
+//        offset[1] = value[5];
+//        bitmapOriginPoint.set(offset[0], offset[1]);
+//    }
+
+
+    /**
+     * 计算零个手指间的距离
+     * <p>
+     * //     * @param event
+     *
+     * @return
+     */
+//    public static float getDoubleFingerDistance(MotionEvent event) {
+//        float x = event.getX(0) - event.getX(1);
+//        float y = event.getY(0) - event.getY(1);
+//        return (float) Math.sqrt(x * x + y * y);
+//    }
+
+
+//    private PointF midPoint(MotionEvent event) {
+//        return MapMath.getMidPointBetweenTwoPoints(event.getX(0), event.getY(0)
+//                , event.getX(1), event.getY(1));
+//    }
+//
+//    private float distance(MotionEvent event, PointF mid) {
+//        return MapMath.getDistanceBetweenTwoPoints(event.getX(0), event.getY(0)
+//                , mid.x, mid.y);
+//    }
+//
+//    private float rotation(MotionEvent event, PointF mid) {
+//        return MapMath.getDegreeBetweenTwoPoints(event.getX(0), event.getY(0)
+//                , mid.x, mid.y);
+//    }
+//
+//    public static class ZoomListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+//        @Override
+//        public boolean onScale(ScaleGestureDetector detector) {
+//            float scaleFactor = detector.getScaleFactor();
+//            return true;
+//        }
+//    }
+
+
+//    public void mapCenterWithPoint(float x, float y) {
+//        float[] goal = {x, y};
+//        this.deskMatrix.mapPoints(goal);
+//        float deltaX = this.getWidth() / 2.0f - goal[0];
+//        float deltaY = this.getHeight() / 2.0f - goal[1];
+//        this.deskMatrix.postTranslate(deltaX, deltaY);
+//    }
+//
+//    public void setCurrentRotateDegrees(float degrees, float x, float y) {
+//        deskMatrix.postRotate(degrees - this.currentRotateDegrees, x, y);
+//
+//        currentRotateDegrees = degrees % 360;
+//    }
+//
+//    public void rotate(float d) {
+//        mapCenterWithPoint((float) center.getX(), (float) center.getY());
+//        setCurrentRotateDegrees(d * 360, this.getWidth() / 2.0f, this.getHeight() / 2.0f);
+//    }
+//
+//    public void scaleImg(int progress) {
+////        deskMatrix.setScale(originScale.x * doubleClickZoom,originScale.y * doubleClickZoom);
+//        deskMatrix.setScale(originScale.x * 3f, originScale.y * 3f);
+////        deskMatrix.postTranslate(200, 200);
+//        invalidate();
+////        setImageMatrix(deskMatrix);
+////        deskMatrix.postScale(progress, progress, width / 2, height / 2);
+//    }
 }

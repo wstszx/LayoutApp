@@ -173,7 +173,7 @@
 
         </com.bin.david.form.core.SmartTable>
 
-        <com.example.layoutapp.view.ScaleView4
+        <com.example.layoutapp.view.ScaleView1
             android:id="@+id/iv_pic"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -182,26 +182,27 @@
             app:layout_constraintEnd_toStartOf="@id/smart_table"
             app:layout_constraintStart_toEndOf="@id/iv_toggle"
             app:layout_constraintTop_toBottomOf="@id/iv_setup" />
-        <!--                <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView-->
-        <!--                    android:id="@+id/iv_pic"-->
-        <!--                    android:layout_width="0dp"-->
-        <!--                    android:layout_height="0dp"-->
-        <!--                    android:layout_margin="8dp"-->
-        <!--                    app:layout_constraintBottom_toTopOf="@id/iv_less"-->
-        <!--                    app:layout_constraintEnd_toStartOf="@id/smart_table"-->
-        <!--                    app:layout_constraintStart_toEndOf="@id/iv_less"-->
-        <!--                    app:layout_constraintTop_toBottomOf="@id/iv_setup" />-->
-        <!--                <com.example.layoutapp.view.PinchImageView-->
-        <!--                    android:id="@+id/iv_pic"-->
-        <!--                    android:layout_width="0dp"-->
-        <!--                    android:layout_height="0dp"-->
-        <!--                    android:layout_margin="16dp"-->
-        <!--                    android:scaleType="centerCrop"-->
-        <!--                    app:layout_constraintBottom_toTopOf="@id/iv_less"-->
-        <!--                    app:layout_constraintEnd_toStartOf="@id/smart_table"-->
-        <!--                    app:layout_constraintStart_toEndOf="@id/iv_less"-->
-        <!--                    app:layout_constraintTop_toBottomOf="@id/iv_setup"-->
-        <!--                     />-->
+        <!--        <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView-->
+        <!--            android:id="@+id/iv_pic"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="0dp"-->
+        <!--            android:layout_margin="8dp"-->
+        <!--            app:layout_constraintBottom_toTopOf="@id/iv_toggle"-->
+        <!--            app:layout_constraintEnd_toStartOf="@id/smart_table"-->
+        <!--            app:layout_constraintStart_toEndOf="@id/iv_toggle"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/iv_setup" />-->
+        <!--                        <com.example.layoutapp.view.PinchImageView-->
+        <!--                            android:id="@+id/iv_pic"-->
+        <!--                            android:layout_width="0dp"-->
+        <!--                            android:layout_height="0dp"-->
+        <!--                            android:layout_margin="16dp"-->
+        <!--                            android:scaleType="centerCrop"-->
+        <!--                            app:src="@drawable/ic_svgviewer"-->
+        <!--                            app:layout_constraintBottom_toTopOf="@id/iv_toggle"-->
+        <!--                            app:layout_constraintEnd_toStartOf="@id/smart_table"-->
+        <!--                            app:layout_constraintStart_toEndOf="@id/iv_toggle"-->
+        <!--                            app:layout_constraintTop_toBottomOf="@id/iv_setup"-->
+        <!--                             />-->
 
         <!--        <ImageView-->
         <!--            android:id="@+id/iv_pic"-->

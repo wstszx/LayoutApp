@@ -62,9 +62,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var timer: Timer
     private lateinit var pollingTask: PollingTask
     private lateinit var notifyReceiver: NotifyReceiver
-    private var min_id: Int = 0
     private lateinit var planId: String
-    private var createTime: Long = 0
+    private var id: Int = 0
     private lateinit var currentTask: Task
 
 
@@ -101,10 +100,10 @@ class MainActivity : AppCompatActivity() {
                     if (taskList != null && taskList.size > 0) {
                         sortTaskList(taskList)
                         currentTask = taskList[0]
-                        if (currentTask.create_time > createTime) {
+                        if (currentTask.id > id) {
                             bottomSheetAdapter.data = taskList
                             bottomSheetAdapter.notifyDataSetChanged()
-                            createTime = currentTask.create_time
+                            id = currentTask.id
                             planId = currentTask.plan_id
                             getPlan(planId)
                             generateBigTextStyleNotification(currentTask)
@@ -116,7 +115,7 @@ class MainActivity : AppCompatActivity() {
                     call: retrofit2.Call<MutableList<Task>>,
                     t: Throwable
                 ) {
-
+                    ToastUtils.showShort(t.message)
                 }
 
             })
@@ -124,7 +123,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun sortTaskList(taskList: MutableList<Task>) {
         Log.d("mylog", "sortTaskList1: $taskList")
-        taskList.sortByDescending { it.create_time }
+        taskList.sortByDescending { it.id }
         Log.d("mylog", "sortTaskList2: $taskList")
 
     }

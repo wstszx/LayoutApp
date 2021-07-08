@@ -173,7 +173,7 @@
 
         </com.bin.david.form.core.SmartTable>
 
-        <com.example.layoutapp.view.ScaleView1
+        <com.example.layoutapp.view.ScaleView
             android:id="@+id/iv_pic"
             android:layout_width="0dp"
             android:layout_height="0dp"

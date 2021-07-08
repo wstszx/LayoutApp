@@ -3,6 +3,7 @@ package com.example.layoutapp.view;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -14,9 +15,8 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import com.blankj.utilcode.util.StringUtils;
-import com.example.layoutapp.bean.GoodInfo;
 import com.example.layoutapp.bean.Plan;
-import com.example.layoutapp.utils.AirUtils1;
+import com.example.layoutapp.utils.AirUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -94,6 +94,11 @@ public class ScaleView extends androidx.appcompat.widget.AppCompatImageView {
     private float jkHeight;
     private float jkCenterX;
     private float jkCenterY;
+    private float deskDx;
+    private float deskDy;
+    private float jkDx;
+    private float jkDy;
+    private Paint dashPaint;
 
     //缩放的三个状态
     public class ZoomMode {
@@ -123,10 +128,13 @@ public class ScaleView extends androidx.appcompat.widget.AppCompatImageView {
         deskPaint = new Paint();
         deskPaint.setStyle(Paint.Style.STROKE);
         deskPaint.setAntiAlias(true);
+        deskPaint.setTypeface(Typeface.DEFAULT_BOLD);
+
 
         airPaint = new Paint();
         airPaint.setStyle(Paint.Style.STROKE);
         airPaint.setAntiAlias(true);
+        airPaint.setTypeface(Typeface.DEFAULT_BOLD);
 
         numberPaint = new Paint();
         numberPaint.setColor(Color.RED);
@@ -137,15 +145,20 @@ public class ScaleView extends androidx.appcompat.widget.AppCompatImageView {
         Paint.FontMetrics numberFontMetrics = numberPaint.getFontMetrics();
         centerFontY = (numberFontMetrics.bottom - numberFontMetrics.top) / 2 - numberFontMetrics.bottom;//计算文字居中的位移
 
+//        虚线paint
+        dashPaint = new Paint();
+        dashPaint.setAntiAlias(true);
+        dashPaint.setStyle(Paint.Style.STROKE);
+        dashPaint.setPathEffect(new DashPathEffect(new float[]{1000, 1000}, 0));
 
         deskMatrix = new Matrix();// 甲板矩阵
 
 //        甲板轮廓
-        deskPath = AirUtils1.getRealDesk();
+        deskPath = AirUtils.getRealDesk1();
         float deskMaxX = 159090f;
-        float deskMinX = -145790.6737f;
-        float deskMaxY = 38950.01f;
-        float deskMinY = -30850f;
+        float deskMinX = -147306f;
+        float deskMaxY = 33053f;
+        float deskMinY = -41100f;
 
 //        甲板宽高
         deskWidth = (deskMaxX - deskMinX);
@@ -155,7 +168,7 @@ public class ScaleView extends androidx.appcompat.widget.AppCompatImageView {
         deskCenterY = (deskMaxY + deskMinY) / 2;
 
         //        机库轮廓
-        jkPath = AirUtils1.getRealJK();
+        jkPath = AirUtils.getRealJK();
 //        真实机库大小
         float jkMaxX = 35000f;
         float jkMinX = -118000f;
@@ -198,14 +211,14 @@ public class ScaleView extends androidx.appcompat.widget.AppCompatImageView {
             bitmapOriginPoint.x = viewSize.x / 2 - deskScale * deskWidth / 2;
             bitmapOriginPoint.y = 0;
         }
-        float deskDx = (width / 2f - this.deskScale * deskCenterX);
-        float deskDy = (height / 4f - this.deskScale * deskCenterY);
+        deskDx = (width / 2f - this.deskScale * deskCenterX);
+        deskDy = (height / 4f - this.deskScale * deskCenterY);
 
         this.deskMatrix.setScale(this.deskScale, this.deskScale);
         this.deskMatrix.postTranslate(deskDx, deskDy);
 
-        float jkDx = (width / 2f - this.deskScale * jkCenterX + (jkCenterX - deskCenterX) * deskScale);
-        float jkDy = (height / 4f * 3 - this.deskScale * jkCenterY + (jkCenterY - deskCenterY) * deskScale);
+        jkDx = (width / 2f - this.deskScale * jkCenterX + (jkCenterX - deskCenterX) * deskScale);
+        jkDy = (height / 4f * 3 - this.deskScale * jkCenterY + (jkCenterY - deskCenterY) * deskScale);
         jkMatrix.setScale(this.deskScale, this.deskScale);
         jkMatrix.postTranslate(jkDx, jkDy);
 
@@ -246,115 +259,173 @@ public class ScaleView extends androidx.appcompat.widget.AppCompatImageView {
                 }
 //                移动到真实坐标原点
                 if (!isChecked) {
-                    if (plan.getStatypeno() == 0) {
-                        //判断显示在甲板还是机库  0机库 1甲板
-                        canvas.translate(width / 2 + jkCenterX * deskScale + plan.getCox() * deskScale,
-                                height / 4 * 3 + deskCenterY * deskScale - plan.getCoy() * deskScale);
-                    } else if (plan.getStatypeno() == 1) {
-                        canvas.translate(width / 2 + deskCenterX * deskScale + plan.getCox() * deskScale,
-                                height / 4 + deskCenterY * deskScale - plan.getCoy() * deskScale);
-//                        canvas.translate(width / 2 + deskCenterX * deskScale + plan.getCox() * deskScale - Math.abs(AirUtils1.getJ15ExpandDistance().x * deskScale),
-//                                height / 4 + deskCenterY * deskScale - plan.getCoy() * deskScale - Math.abs(AirUtils1.getJ15ExpandDistance().y) * deskScale);
+                    //判断显示在甲板还是机库  0机库 1甲板
+                    if (plan.getStationtype1() == 0) {
+                        canvas.translate(jkDx + plan.getCox1() * deskScale,
+                                jkDy - plan.getCoy1() * deskScale);
+                    } else if (plan.getStationtype1() == 1) {
+                        canvas.translate(deskDx + plan.getCox1() * deskScale,
+                                deskDy - plan.getCoy1() * deskScale);
                     }
-                    canvas.rotate(360 - plan.getAngle());
+                    canvas.rotate(360 - plan.getAngle1());
                     //                机型1-7    2567 直18   3直9    1,4歼15
-                    GoodInfo goodInfo = plan.getGoodInfo();
-                    if (goodInfo != null) {
 //                        绘制飞机编号
-                        canvas.drawText(goodInfo.getGoodname().trim(), 0,
+                    canvas.drawText(plan.getStano() + "-" + plan.getGoodname(), 0,
+                            centerFontY, numberPaint);
+                    canvas.scale(this.deskScale, this.deskScale);
+                    switch (plan.getTypeno()) {
+                        case 2:
+                        case 5:
+                        case 6:
+                        case 7:
+                            if (plan.getShapetype() == 0) {
+                                canvas.drawPath(AirUtils.getJ18Collapse(), airPaint);
+                            } else if (plan.getShapetype() == 1) {
+                                canvas.drawPath(AirUtils.getJ18Expand(), airPaint);
+                            }
+                            break;
+                        case 3:
+                            if (plan.getShapetype() == 0) {
+                                canvas.drawPath(AirUtils.getZ9Collapse(), airPaint);
+                            } else if (plan.getShapetype() == 1) {
+                                canvas.drawPath(AirUtils.getZ9Expand(), airPaint);
+                                canvas.drawPath(AirUtils.getZ9ExpandCircle(), airPaint);
+                            }
+                            break;
+                        case 1:
+                        case 4:
+                            if (plan.getShapetype() == 0) {
+                                canvas.drawPath(AirUtils.getJ15Collapse(), airPaint);
+                            } else if (plan.getShapetype() == 1) {
+                                canvas.drawPath(AirUtils.getJ15Expand(), airPaint);
+                            }
+                            break;
+                    }
+                } else {
+                    if (!StringUtils.isEmpty(plan.getPlanstano()) && !StringUtils.equals(plan.getPlanstano(), "InSky")) {
+//                        判断显示在甲板还是机库
+                        if (plan.getStationtype2() == 0) {
+                            canvas.translate(jkDx + plan.getCox2() * deskScale,
+                                    jkDy - plan.getCoy2() * deskScale);
+                        } else if (plan.getStationtype2() == 1) {
+                            canvas.translate(deskDx + plan.getCox2() * deskScale,
+                                    deskDy - plan.getCoy2() * deskScale);
+                        }
+                        canvas.rotate(360 - plan.getAngle2());
+                        //                机型1-7    2567 直18   3直9    1,4歼15
+                        //                        绘制飞机编号
+                        canvas.drawText(plan.getPlanstano() + "-" + plan.getGoodname(), 0,
                                 centerFontY, numberPaint);
                         canvas.scale(this.deskScale, this.deskScale);
-                        int typeNo = goodInfo.getTypeno();
-                        switch (typeNo) {
+                        switch (plan.getTypeno()) {
                             case 2:
                             case 5:
                             case 6:
                             case 7:
-                                if (plan.getShapetype() == 0) {
-                                    canvas.drawPath(AirUtils1.getJ18Collapse(), airPaint);
-                                } else if (plan.getShapetype() == 1) {
-                                    canvas.drawPath(AirUtils1.getJ18Expand(), airPaint);
+                                if (plan.getPlanshapetype() == 0) {
+                                    canvas.drawPath(AirUtils.getJ18Collapse(), airPaint);
+                                } else if (plan.getPlanshapetype() == 1) {
+                                    canvas.drawPath(AirUtils.getJ18Expand(), airPaint);
                                 }
                                 break;
                             case 3:
-                                if (plan.getShapetype() == 0) {
-                                    canvas.drawPath(AirUtils1.getZ9Collapse(), airPaint);
-                                } else if (plan.getShapetype() == 1) {
-                                    canvas.drawPath(AirUtils1.getZ9Expand(), airPaint);
-                                    canvas.drawPath(AirUtils1.getZ9ExpandCircle(), airPaint);
+                                if (plan.getPlanshapetype() == 0) {
+                                    canvas.drawPath(AirUtils.getZ9Collapse(), airPaint);
+                                } else if (plan.getPlanshapetype() == 1) {
+                                    canvas.drawPath(AirUtils.getZ9Expand(), airPaint);
+                                    canvas.drawPath(AirUtils.getZ9ExpandCircle(), airPaint);
                                 }
                                 break;
                             case 1:
                             case 4:
-                                if (plan.getShapetype() == 0) {
-                                    canvas.drawPath(AirUtils1.getJ15Collapse(), airPaint);
-                                } else if (plan.getShapetype() == 1) {
-                                    canvas.drawPath(AirUtils1.getJ15Expand(), airPaint);
+                                if (plan.getPlanshapetype() == 0) {
+                                    canvas.drawPath(AirUtils.getJ15Collapse(), airPaint);
+                                } else if (plan.getPlanshapetype() == 1) {
+                                    canvas.drawPath(AirUtils.getJ15Expand(), airPaint);
                                 }
                                 break;
                         }
                     }
-                } else {
-                    if (!StringUtils.isEmpty(plan.getPlanstano())) {
-//                        判断显示在甲板还是机库
-                        if (plan.getPlanstatypeno() == 0) {
-                            canvas.translate(width / 2 + deskCenterX * deskScale + plan.getPlancox() * deskScale,
-                                    height / 4 * 3 + deskCenterY * deskScale - plan.getPlancoy() * deskScale);
-                        } else if (plan.getPlanstatypeno() == 1) {
-                            canvas.translate(width / 2 + deskCenterX * deskScale + plan.getPlancox() * deskScale,
-                                    height / 4 + deskCenterY * deskScale - plan.getPlancoy() * deskScale);
-                        }
-                        canvas.rotate(360 - plan.getPlanangle());
-                        //                机型1-7    2567 直18   3直9    1,4歼15
-                        GoodInfo goodInfo = plan.getGoodInfo();
-                        if (goodInfo != null) {
-                            //                        绘制飞机编号
-                            canvas.drawText(goodInfo.getGoodname().trim(), 0,
-                                    centerFontY, numberPaint);
-                            canvas.scale(this.deskScale, this.deskScale);
-                            int typeNo = goodInfo.getTypeno();
-                            switch (typeNo) {
-                                case 2:
-                                case 5:
-                                case 6:
-                                case 7:
-                                    if (plan.getShapetype() == 0) {
-                                        canvas.drawPath(AirUtils1.getJ18Collapse(), airPaint);
-                                    } else if (plan.getShapetype() == 1) {
-                                        canvas.drawPath(AirUtils1.getJ18Expand(), airPaint);
-                                    }
-                                    break;
-                                case 3:
-                                    if (plan.getShapetype() == 0) {
-                                        canvas.drawPath(AirUtils1.getZ9Collapse(), airPaint);
-                                    } else if (plan.getShapetype() == 1) {
-                                        canvas.drawPath(AirUtils1.getZ9Expand(), airPaint);
-                                        canvas.drawPath(AirUtils1.getZ9ExpandCircle(), airPaint);
-                                    }
-                                    break;
-                                case 1:
-                                case 4:
-                                    if (plan.getShapetype() == 0) {
-                                        canvas.drawPath(AirUtils1.getJ15Collapse(), airPaint);
-                                    } else if (plan.getShapetype() == 1) {
-                                        canvas.drawPath(AirUtils1.getJ15Expand(), airPaint);
-                                    }
-                                    break;
-                            }
-                        }
-                    }
                 }
 
-                Log.d("mylog", "plan.getCox(): " + plan.getCox() + "plan.getCoy():" + plan.getCoy());
                 canvas.restore();
             }
         }
         canvas.save();
+
         canvas.concat(this.deskMatrix);
+
         canvas.drawPath(deskPath, deskPaint);
+        canvas.drawPath(AirUtils.getFJLifts1(), deskPaint);
+        canvas.drawPath(AirUtils.getRunway1(), deskPaint);
+        canvas.drawPath(AirUtils.getTakeoffLine1(), deskPaint);
+        canvas.drawPath(AirUtils.getInterceptionCable1(), deskPaint);
+        canvas.drawPath(AirUtils.getJianDao(), deskPaint);
+        canvas.drawPath(AirUtils.getSafeArea(), deskPaint);
+        canvas.drawPath(AirUtils.getPianLiuBan(), deskPaint);
+        canvas.drawText("1fefefefef", AirUtils.ZSJQJPointInfo.centerPF1.x,
+                AirUtils.ZSJQJPointInfo.centerPF1.y, numberPaint);
+
+//        画直升机起降位置
+//        画里圆
+        canvas.drawCircle(AirUtils.ZSJQJPointInfo.centerPF1.x,
+                AirUtils.ZSJQJPointInfo.centerPF1.y,
+                AirUtils.ZSJQJPointInfo.circleWidth.x, deskPaint);
+        canvas.drawCircle(AirUtils.ZSJQJPointInfo.centerPF2.x,
+                AirUtils.ZSJQJPointInfo.centerPF2.y,
+                AirUtils.ZSJQJPointInfo.circleWidth.x, deskPaint);
+        canvas.drawCircle(AirUtils.ZSJQJPointInfo.centerPF3.x,
+                AirUtils.ZSJQJPointInfo.centerPF3.y,
+                AirUtils.ZSJQJPointInfo.circleWidth.x, deskPaint);
+        canvas.drawCircle(AirUtils.ZSJQJPointInfo.centerPF4.x,
+                AirUtils.ZSJQJPointInfo.centerPF4.y,
+                AirUtils.ZSJQJPointInfo.circleWidth.x, deskPaint);
+//画外圆
+        canvas.drawCircle(AirUtils.ZSJQJPointInfo.centerPF1.x,
+                AirUtils.ZSJQJPointInfo.centerPF1.y,
+                AirUtils.ZSJQJPointInfo.circleWidth.y, dashPaint);
+        canvas.drawCircle(AirUtils.ZSJQJPointInfo.centerPF2.x,
+                AirUtils.ZSJQJPointInfo.centerPF2.y,
+                AirUtils.ZSJQJPointInfo.circleWidth.y, dashPaint);
+        canvas.drawCircle(AirUtils.ZSJQJPointInfo.centerPF3.x,
+                AirUtils.ZSJQJPointInfo.centerPF3.y,
+                AirUtils.ZSJQJPointInfo.circleWidth.y, dashPaint);
+        canvas.drawCircle(AirUtils.ZSJQJPointInfo.centerPF4.x,
+                AirUtils.ZSJQJPointInfo.centerPF4.y,
+                AirUtils.ZSJQJPointInfo.circleWidth.y, dashPaint);
+
+        canvas.drawLine(AirUtils.ZSJQJPointInfo.linePF1[0],
+                AirUtils.ZSJQJPointInfo.linePF1[1],
+                AirUtils.ZSJQJPointInfo.linePF1[2],
+                AirUtils.ZSJQJPointInfo.linePF1[3], deskPaint);
+        canvas.drawLine(AirUtils.ZSJQJPointInfo.linePF2[0],
+                AirUtils.ZSJQJPointInfo.linePF2[1],
+                AirUtils.ZSJQJPointInfo.linePF2[2],
+                AirUtils.ZSJQJPointInfo.linePF2[3], deskPaint);
+        canvas.drawLine(AirUtils.ZSJQJPointInfo.linePF3[0],
+                AirUtils.ZSJQJPointInfo.linePF3[1],
+                AirUtils.ZSJQJPointInfo.linePF3[2],
+                AirUtils.ZSJQJPointInfo.linePF3[3], deskPaint);
+        canvas.drawLine(AirUtils.ZSJQJPointInfo.linePF4[0],
+                AirUtils.ZSJQJPointInfo.linePF4[1],
+                AirUtils.ZSJQJPointInfo.linePF4[2],
+                AirUtils.ZSJQJPointInfo.linePF4[3], deskPaint);
+//        画文字
+//        canvas.drawText("2", AirUtils1.ZSJQJPointInfo.centerPF2.x, AirUtils1.ZSJQJPointInfo.centerPF2.y + centerFontY, deskPaint);
+//        canvas.drawText("3", AirUtils1.ZSJQJPointInfo.centerPF3.x, AirUtils1.ZSJQJPointInfo.centerPF3.y + centerFontY, deskPaint);
+//        canvas.drawText("4", AirUtils1.ZSJQJPointInfo.centerPF4.x, AirUtils1.ZSJQJPointInfo.centerPF4.y + centerFontY, deskPaint);
+
+
+//画机库
         canvas.restore();
         canvas.concat(jkMatrix);
         canvas.drawPath(jkPath, deskPaint);
+        canvas.drawPath(AirUtils.getFJLifts1(), deskPaint);
+        canvas.drawCircle(AirUtils.getTurntable1().x, AirUtils.getTurntable1().y, 3500, deskPaint);
+        canvas.drawCircle(AirUtils.getTurntable2().x, AirUtils.getTurntable2().y, 3500, deskPaint);
+        canvas.drawPath(AirUtils.getFireCurtain1(), dashPaint);
+        canvas.drawPath(AirUtils.getHangarDoor1(), deskPaint);
+
     }
 
     public void drawAir(@NotNull ArrayList<Plan> planList, boolean isChecked) {

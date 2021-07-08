@@ -6,7 +6,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.*
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -36,10 +36,9 @@ import com.example.layoutapp.service.ApiService
 import com.example.layoutapp.service.BigTextIntentService
 import com.example.layoutapp.utils.MockDatabase
 import com.example.layoutapp.utils.NotificationUtil
-import com.example.layoutapp.view.ScaleView1
+import com.example.layoutapp.view.ScaleView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.switchmaterial.SwitchMaterial
-import kotlinx.coroutines.*
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
@@ -51,7 +50,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var bottomSheetAdapter: BottomSheetAdapter
     lateinit var view: View
     private lateinit var switchMaterial: SwitchMaterial
-    private lateinit var ivPic: ScaleView1
+    private lateinit var ivPic: ScaleView
     private lateinit var tvPos: TextView
     private val a = arrayOf("top", "com.cn", "com", "net", "cn", "cc", "gov", "cn", "hk");
     private lateinit var mSourceData: ArrayList<Table>
@@ -65,7 +64,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var notifyReceiver: NotifyReceiver
     private var min_id: Int = 0
     private lateinit var planId: String
-    private var isShowPlan: Boolean = true
+    private var createTime: Long = 0
+    private lateinit var currentTask: Task
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,23 +75,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initData() {
-//        min_id = SPUtils.getInstance().getString("min_id", "")
+        planList = arrayListOf()
         timer = Timer()
         pollingTask = PollingTask()
-        val nowDate = TimeUtils.getNowString().split(" ")[0]
-        getTaskByDate(nowDate)
-
+        timer.schedule(pollingTask, 0, 1 * 1000.toLong())
     }
 
     inner class PollingTask : TimerTask() {
         override fun run() {
             Log.d("mylog", "run: ")
-            getTaskById(this@MainActivity.min_id)
+            getTaskByDate()
         }
     }
 
-    private fun getTaskByDate(nowDate: String) {
-        ApiService.create().getTaskByDate("2021-07-04")
+    private fun getTaskByDate() {
+        val nowDate = TimeUtils.getNowString().split(" ")[0]
+
+        ApiService.create().getTaskByDate(nowDate)
             .enqueue(object : Callback<MutableList<Task>> {
                 override fun onResponse(
                     call: retrofit2.Call<MutableList<Task>>,
@@ -99,14 +99,16 @@ class MainActivity : AppCompatActivity() {
                 ) {
                     val taskList: MutableList<Task>? = response.body()
                     if (taskList != null && taskList.size > 0) {
-                        this@MainActivity.min_id = taskList.last().id + 1
-                        val last = taskList.last()
-                        planId = last.plan_id
-                        //                        SPUtils.getInstance().put("min_id", (taskList.last().id + 1).toString())
-                        bottomSheetAdapter.data = taskList.asReversed()
-                        bottomSheetAdapter.notifyDataSetChanged()
-                        getPlan(planId)
-                        timer.schedule(pollingTask, 0, 5 * 1000.toLong())
+                        sortTaskList(taskList)
+                        currentTask = taskList[0]
+                        if (currentTask.create_time > createTime) {
+                            bottomSheetAdapter.data = taskList
+                            bottomSheetAdapter.notifyDataSetChanged()
+                            createTime = currentTask.create_time
+                            planId = currentTask.plan_id
+                            getPlan(planId)
+                            generateBigTextStyleNotification(currentTask)
+                        }
                     }
                 }
 
@@ -120,35 +122,40 @@ class MainActivity : AppCompatActivity() {
             })
     }
 
-    private fun getTaskById(minId: Int) {
-        ApiService.create().getTaskById(minId)
-            .enqueue(object : Callback<MutableList<Task>?> {
-                override fun onResponse(
-                    call: retrofit2.Call<MutableList<Task>?>,
-                    response: Response<MutableList<Task>?>
-                ) {
-                    val taskList: MutableList<Task>? = response.body()
-                    if (taskList != null && taskList.size > 0) {
-//                        if (isShowPlan) {
-//                            getPlan(taskList[0].plan_id)
-//                            isShowPlan = false
-//                        }
-                        val last = taskList.last()
-                        planId = last.plan_id
-                        this@MainActivity.min_id = last.id + 1
-//                        SPUtils.getInstance().put("min_id", (last.id + 1).toString())
-                        bottomSheetAdapter.data = taskList.asReversed()
-                        bottomSheetAdapter.notifyDataSetChanged()
-                        getPlan(taskList[0].plan_id)
-                        generateBigTextStyleNotification(last)
-                    }
-                }
+    private fun sortTaskList(taskList: MutableList<Task>) {
+        Log.d("mylog", "sortTaskList1: $taskList")
+        taskList.sortByDescending { it.create_time }
+        Log.d("mylog", "sortTaskList2: $taskList")
 
-                override fun onFailure(call: retrofit2.Call<MutableList<Task>?>, t: Throwable) {
-
-                }
-            })
     }
+
+//    private fun getTaskById(minId: Int) {
+//        ApiService.create().getTaskById(minId)
+//            .enqueue(object : Callback<MutableList<Task>?> {
+//                override fun onResponse(
+//                    call: retrofit2.Call<MutableList<Task>?>,
+//                    response: Response<MutableList<Task>?>
+//                ) {
+//                    val taskList: MutableList<Task>? = response.body()
+//                    if (taskList != null && taskList.size > 0) {
+////                        if (isShowPlan) {
+////                            getPlan(taskList[0].plan_id)
+////                            isShowPlan = false
+////                        }
+//                        val last = taskList.last()
+//                        planId = last.plan_id
+////                        SPUtils.getInstance().put("min_id", (last.id + 1).toString())
+//                        bottomSheetAdapter.data = taskList.asReversed()
+//                        bottomSheetAdapter.notifyDataSetChanged()
+//                        getPlan(taskList[0].plan_id)
+//                    }
+//                }
+//
+//                override fun onFailure(call: retrofit2.Call<MutableList<Task>?>, t: Throwable) {
+//
+//                }
+//            })
+//    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -188,8 +195,9 @@ class MainActivity : AppCompatActivity() {
         recyclerview.itemAnimator = null
 
         bottomSheetAdapter.setOnItemClickListener(object : BottomSheetAdapter.OnItemClickListener {
-            override fun onItemClick(view: View, position: Int, item: Task) {
-                getPlan(item.plan_id)
+            override fun onItemClick(view: View, position: Int, task: Task) {
+                currentTask = task
+                getPlan(task.plan_id)
             }
 
             override fun onItemLongClick(view: View, position: Int) {
@@ -258,13 +266,10 @@ class MainActivity : AppCompatActivity() {
 ////                Log.d("mylog", "ivPic.scale2: " + ivPic.scale)
 //            }
 //        }
-
-
     }
 
     private fun getPlan(planId: String) {
         switchMaterial.isChecked = false
-        planList = arrayListOf()
         ApiService.create().getPlan(planId)
             .enqueue(object : Callback<ArrayList<Plan>?> {
                 override fun onResponse(
@@ -327,67 +332,70 @@ class MainActivity : AppCompatActivity() {
         planList: ArrayList<Plan>,
         mSourceData: ArrayList<Table>
     ) {
-        GlobalScope.launch(Dispatchers.Main) {
-            try {
-
-                for (plan in planList) {
-
-                    withContext(Dispatchers.IO) {
-                        if (!StringUtils.isEmpty(plan.stano)) {
-                            val stations = ApiService.create().getStation(plan.stano)
-                            if (stations.size > 0) {
-                                val station = stations[0]
-                                plan.cox = station.cox
-                                plan.coy = station.coy
-                                plan.angle = station.angle
-                                plan.statypeno = station.typeno
-                            }
-                        }
-
-                        val goodInfos = ApiService.create().getGoodInfo(plan.goodno)
-                        if (goodInfos.size > 0) {
-                            val goodInfo = goodInfos[0]
-                            plan.goodInfo = goodInfo
-                            val table = Table(goodInfo.goodname.trim(), plan.stano, plan.planstano)
-                            mSourceData.add(table)
-                        }
-                        Log.d(
-                            "may",
-                            "plan.cox: ${plan.cox}plan.coy: ${plan.coy}plan.angle: ${plan.angle}"
-                        )
-                    }
-
-                    withContext(Dispatchers.IO) {
-                        if (!StringUtils.isEmpty(plan.planstano)) {
-                            val planStations = ApiService.create().getStation(plan.planstano)
-                            if (planStations.size > 0) {
-                                val planStation = planStations[0]
-                                plan.plancox = planStation.cox
-                                plan.plancoy = planStation.coy
-                                plan.planangle = planStation.angle
-                                plan.planstatypeno = planStation.typeno
-                            }
-                        }
-
-                        Log.d(
-                            "may",
-                            "plan.plancox: ${plan.plancox}plan.plancoy: ${plan.plancoy}plan.planangle: ${plan.planangle}"
-                        )
-                    }
-                }
-                Log.d("may===", "isMainThread=" + ThreadUtils.isMainThread())
-            } catch (e: Exception) {
-                ToastUtils.showShort(e.message)
-            }
-            ivPic.drawAir(planList, false)
-            smartTable.setData(mSourceData as List<Any>?)
-            smartTable.setZoom(false)
-            val config = smartTable.config
-            config.isShowXSequence = false
-            config.isShowYSequence = false
-            config.isShowTableTitle = false
-            config.horizontalPadding = 0
+//        GlobalScope.launch(Dispatchers.Main) {
+//            try {
+//
+//                for (plan in planList) {
+//
+//                    withContext(Dispatchers.IO) {
+//                        if (!StringUtils.isEmpty(plan.stano)) {
+//                            val stations = ApiService.create().getStation(plan.stano)
+//                            if (stations.size > 0) {
+//                                val station = stations[0]
+//                                plan.cox = station.cox
+//                                plan.coy = station.coy
+//                                plan.angle = station.angle
+//                                plan.statypeno = station.typeno
+//                            }
+//                        }
+//
+//                        val goodInfos = ApiService.create().getGoodInfo(plan.goodno)
+//                        if (goodInfos.size > 0) {
+//                            val goodInfo = goodInfos[0]
+//                            plan.goodInfo = goodInfo
+//
+//                        }
+//                        Log.d(
+//                            "may",
+//                            "plan.cox: ${plan.cox}plan.coy: ${plan.coy}plan.angle: ${plan.angle}"
+//                        )
+//                    }
+//
+//                    withContext(Dispatchers.IO) {
+//                        if (!StringUtils.isEmpty(plan.planstano)) {
+//                            val planStations = ApiService.create().getStation(plan.planstano)
+//                            if (planStations.size > 0) {
+//                                val planStation = planStations[0]
+//                                plan.plancox = planStation.cox
+//                                plan.plancoy = planStation.coy
+//                                plan.planangle = planStation.angle
+//                                plan.planstatypeno = planStation.typeno
+//                            }
+//                        }
+//
+//                        Log.d(
+//                            "may",
+//                            "plan.plancox: ${plan.plancox}plan.plancoy: ${plan.plancoy}plan.planangle: ${plan.planangle}"
+//                        )
+//                    }
+//                }
+//                Log.d("may===", "isMainThread=" + ThreadUtils.isMainThread())
+//            } catch (e: Exception) {
+//                ToastUtils.showShort(e.message)
+//            }
+//        }
+        for (plan in planList) {
+            val table = Table(plan.goodname, plan.stano, plan.planstano)
+            mSourceData.add(table)
         }
+        ivPic.drawAir(planList, false)
+        smartTable.setData(mSourceData as List<Any>?)
+        smartTable.setZoom(false)
+        val config = smartTable.config
+        config.isShowXSequence = false
+        config.isShowYSequence = false
+        config.isShowTableTitle = false
+        config.horizontalPadding = 0
     }
 
 
@@ -484,7 +492,7 @@ class MainActivity : AppCompatActivity() {
 
         // 0. Get your data (everything unique per Notification).
         val bigTextStyleReminderAppData: MockDatabase.BigTextStyleReminderAppData =
-            MockDatabase.getBigTextStyleData(task.plan_date)
+            MockDatabase.getBigTextStyleData(TimeUtils.millis2String(task.create_time))
 
 
         // 1. Create/Retrieve Notification Channel for O and beyond devices (26+).
@@ -621,7 +629,7 @@ class MainActivity : AppCompatActivity() {
                     switchMaterial.isChecked = false
                     if (bottomSheetAdapter.data.size > 0) {
                         for (index in bottomSheetAdapter.data.indices) {
-                            if (min_id == bottomSheetAdapter.data[index].id) {
+                            if (currentTask.id == bottomSheetAdapter.data[index].id) {
                                 bottomSheetAdapter.currentIndex = index
                                 bottomSheetAdapter.notifyDataSetChanged()
                             }

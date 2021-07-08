@@ -1,35 +1,32 @@
 package com.example.layoutapp.bean
 
-import android.graphics.Matrix
-
-
 data class Plan(
-    var planangle: Float = 0.0f,
-    var shapetype: Int = 1,
-    var waveno: Int? = null,
-    var planshapetype: Int = 1,
-    var alternative: Int = 0,
-    var stano: String? = null,
-    var plancoy: Float = 0.0f,
-    var coy: Float = 0.0f,
-    var plancox: Float = 0.0f,
-    var goodno: Int = 0,
-    var layoutid: Int? = null,
-    var cox: Float = 0.0f,
-    var plandate: String? = null,
-    var planstano: String?=null,
-    var historyid: String? = null,
-    var planorder: Any? = null,
-    var angle: Float = 0.0f,
-    var planid: Int? = null,
-    var state: String? = null,
-    var tag: Int? = null,
-    var initwaveno: Int? = null,
-    var matrix: Matrix? = null,
-    var goodInfo: GoodInfo?,
-    var statypeno: Int = 0,
-    var planstatypeno: Int = 0
+    val stationtype1: Int = 0,
+    val shapetype: Int = 0,
+    val goodname: String? = null,
+    val planshapetype: Int = 0,
+    val stationtype2: Int = -1,
+    val cox2: Float = 0f,
+    val cox1: Float = 0f,
+    val layoutid: Int? = null,
+    val id: Int? = null,
+    val state: String? = null,
+    val tag: Int? = null,
+    val initwaveno: Int? = null,
+    val waveno: Int? = null,
+    val alternative: Int = 0,
+    val coy1: Float = 0f,
+    val stano: String? = null,
+    val coy2: Float = 0f,
+    val goodno: Int? = null,
+    val plandate: String? = null,
+    val goodtypename: String? = null,
+    val planstano: String? = null,
+    val typeno: Int = 0,
+    val historyid: String? = null,
+    val planorder: Any? = null,
+    val planid: Int? = null,
+    val angle1: Float = 0f,
+    val angle2: Float = 0f
 )
-
-
 
